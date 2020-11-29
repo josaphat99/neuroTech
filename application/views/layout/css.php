@@ -6,5 +6,5 @@
 
 <!-- App styles -->
 <link rel="stylesheet" href=<?= base_url('assets/css/app.min.css')?>>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>

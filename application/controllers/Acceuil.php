@@ -12,7 +12,7 @@ class Acceuil extends CI_Controller {
 	
 	public function index()
 	{
-		$this->load->view('pages/acceuil');
+		$this->load->view('public/acceuil');
 		$this->load->view('layout/js');
 		$this->load->view('layout/footer');
 	}
