@@ -28,6 +28,13 @@
                         <p><span id="namespan"></span></p>
 
                         <div class="form-group form-group--float form-group--centered">
+                            <input type="text" class="form-control" name="lieudeconsultation" id="email">
+                            <label>Email</label>
+                            <i class="form-group__bar"></i>
+                        </div>
+                        <p><span id="emailspan"></span></p>
+
+                        <div class="form-group form-group--float form-group--centered">
                             <input type="text" class="form-control" name="lieudeconsultation" id="place">
                             <label>Lieu de consultation</label>
                             <i class="form-group__bar"></i>

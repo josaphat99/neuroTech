@@ -1,0 +1,44 @@
+<header class="header">
+    <div class="navigation-trigger hidden-xl-up" data-ma-action="aside-open" data-ma-target=".sidebar">
+        <div class="navigation-trigger__inner">
+            <i class="navigation-trigger__line"></i>
+            <i class="navigation-trigger__line"></i>
+            <i class="navigation-trigger__line"></i>
+        </div>
+    </div>
+
+    <div class="header__logo hidden-sm-down">
+        <h1><a href="#" style="font-family:JetBrains Mono;font-size:20px;font-weight:bold">neuroTech</a></h1>
+    </div>
+
+
+    <ul class="top-nav">       
+
+        <li class="dropdown">
+            <a href="#" data-toggle="dropdown"><i class="zmdi zmdi-account"></i> &nbsp;<?=ucfirst($this->session->type)?></a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu--block">
+                <div class="listview listview--hover">
+                    <div class="listview__header">
+                    <img class="user__img" src=<?=base_url("assets/img/avatar/avatar.png")?> alt=""> <?=ucfirst($this->session->nomcomplet)?>                    
+                    </div>
+
+                    <a href="#" class="listview__item">
+                        <div class="listview__content">
+                            <div class="listview__heading">
+                                Mon profile
+                            </div>                            
+                        </div>
+                    </a>
+
+                    <a href=<?=site_url("signinup/deconnexion")?> class="listview__item">
+                        <div class="listview__content">
+                            <div class="listview__heading">
+                                Deconnexion                                
+                            </div>                            
+                        </div>
+                    </a>                
+                </div>
+            </div>
+        </li>        
+    </ul>
+</header> 

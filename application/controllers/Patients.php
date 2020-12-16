@@ -9,7 +9,10 @@ class Patients extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->view('layout/header');
-		$this->load->view('layout/css');
+        $this->load->view('layout/css');
+        $this->load->view('layout/topbar');
+        $this->load->view('layout/sidebar');
+        $this->load->view('layout/preloader');
     }	
 
     //==========La charger le js et le footer====

@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/*
+* Cette class concerne la creation des comptes et le login
+*/
+
 class SignInUp extends CI_Controller
 {
     public function __construct()
@@ -59,6 +63,7 @@ class SignInUp extends CI_Controller
                 $session =[
                     "id"=>$res[0]->id,                    
                     "username"=>$res[0]->username,
+                    "nomcomplet"=>$res[0]->nomcomplet,
                     "mdp"=>$res[0]->mdp,
                     "type"=>$res[0]->type,
                     "connected"=>true,                    
@@ -73,7 +78,7 @@ class SignInUp extends CI_Controller
                 }               
                 else if(trim($res[0]->type) == trim("admin"))
                 {
-                    redirect('utilisateurs'); 
+                    redirect('utilisateur/index'); 
                 }
                 else{
                     redirect('patients'); 
@@ -82,9 +87,16 @@ class SignInUp extends CI_Controller
             else{
                 $session_flash = array("error_login" => "Login ou mot de passe incorrecte!! veuillez reesayer");
                 $this->session->set_flashdata($session_flash);
-                redirect("login");
+                redirect("signinup/connexion");
             }
 
         }
+    }
+
+    //se deconnecter de l'application
+    public function deconnexion()
+    {
+        $this->session->sess_destroy();
+		redirect("signinup/connexion");
     }
 }

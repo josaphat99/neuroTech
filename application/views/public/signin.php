@@ -37,7 +37,7 @@
 
                         <input type="text" value="login" name="login" hidden>
                         <p style="color:red"><?=$this->session->error_login?></p>
-                        <button type="submit" id="loginSub" class="btn btn--icon login__block__btn"><i class="zmdi zmdi-long-arrow-right"></i></button>                    
+                        <button type="submit" id="loginSub" class="btn btn--icon login__block__btn"><i class="zmdi zmdi-check"></i></button>                    
                     </form>                    
                 </div>         
             </div>
