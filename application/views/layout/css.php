@@ -8,5 +8,6 @@
 <!-- App styles -->
 <link rel="stylesheet" href=<?= base_url('assets/css/app.min.css')?>>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src=<?= base_url('assets/vendors/jquery/jquery.min.js')?>></script>
 </head>
 <body data-ma-theme="green">

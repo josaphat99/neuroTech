@@ -25,7 +25,7 @@
                 <li class="navigation__sub">
                     <a href="#"><i class="zmdi zmdi-assignment zmdi-hc-fw"></i>Exercices</a>
                     <ul>
-                        <li><a href="profile-about.html">Liste d'exercices</a></li>
+                        <li><a href=<?=site_url('exercice/index')?>>Liste d'exercices</a></li>
                         <li><a href=<?=site_url("exercice/add")?>>Nouvel exercice</a></li>                
                     </ul>
                 </li>

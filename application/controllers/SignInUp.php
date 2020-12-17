@@ -38,7 +38,8 @@ class SignInUp extends CI_Controller
 				"mdp" => $this->input->post("mdp"),
 			);
 			//add user
-			$this->utilisateur->add($data);
+            $this->utilisateur->add($data);
+            $this->session->set_flashdata(array('account_created'=>true));
 			redirect('signinup/connexion');
         }
     }
@@ -78,7 +79,7 @@ class SignInUp extends CI_Controller
                 }               
                 else if(trim($res[0]->type) == trim("admin"))
                 {
-                    redirect('utilisateur/index'); 
+                    redirect('exercice/index'); 
                 }
                 else{
                     redirect('patients'); 

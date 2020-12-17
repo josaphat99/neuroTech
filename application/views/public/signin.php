@@ -1,3 +1,18 @@
+<?php
+    if(($this->session->account_created))
+    {
+?>
+        <script>
+            Swal.fire({            
+            icon: 'success',
+            title: 'Compte creé avec succés',
+            showConfirmButton: false,
+            timer: 3000
+            })
+        </script>
+<?php
+    }
+?>
 <body data-ma-theme="green">
         <div class="login">
 

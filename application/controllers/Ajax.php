@@ -36,5 +36,7 @@ class Ajax extends CI_Controller
         }        
         echo $num_question.','.$html;
     }
+
+  
 }
 ?>

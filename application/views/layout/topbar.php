@@ -25,7 +25,7 @@
                     <a href="#" class="listview__item">
                         <div class="listview__content">
                             <div class="listview__heading">
-                                Mon profile
+                            <i class="zmdi zmdi-account" style="font-size: 20px;"></i>&nbsp;&nbsp; Mon profile
                             </div>                            
                         </div>
                     </a>
@@ -33,7 +33,7 @@
                     <a href=<?=site_url("signinup/deconnexion")?> class="listview__item">
                         <div class="listview__content">
                             <div class="listview__heading">
-                                Deconnexion                                
+                            <i class="zmdi zmdi-arrow-left" style="font-size: 20px;"></i>&nbsp;&nbsp;Deconnexion                                
                             </div>                            
                         </div>
                     </a>                

@@ -1,17 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Exercice_model extends Crud
+class Exercice_model extends CI_Model
 {
-    private $table = 'exercices';    
-
-    public function add($data)
+    public function get()
     {
-        $this->add_data($this->table,$data);
-    }
-
-    public function get($clause=[],$ordre = null)
-    {
-        return $this->get_data($this->table,$clause,$ordre);
+        $this->db->select("*,exercice.id as id")
+                 ->from('exercice')                 
+                 ->join('niveau','exercice.niveau_id = niveau.id')
+                 ->order_by('exercice.id','DESC');
+        
+        return $this->db->get()->result();
     }
 }

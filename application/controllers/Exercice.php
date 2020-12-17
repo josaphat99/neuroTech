@@ -14,11 +14,16 @@ class Exercice extends CI_Controller {
 		$this->load->view('layout/preloader');
 		//chargement des model============
 		$this->load->model("Niveau_model",'niveau');
-        $this->load->model("Crud");
-        
+		$this->load->model("Crud");
+		$this->load->model("Exercice_model",'exercice');
+		//verification du login
+		if(!$this->session->connected)
+		{
+			redirect('signinup/connexion');
+		}
 	}
 	
-	
+	//================Partie accecible que par l'admin==================
 
 	//=============add a new exercice=======================
 
@@ -63,7 +68,7 @@ class Exercice extends CI_Controller {
 			 //===creation de la transition===
 			 $this->db->trans_start();
 
-			 $id_exercice = count($this->Crud->get_data('exercice'))+1;	
+			 $id_exercice = $this->Crud->get_data_desc('exercice')[0]->id+1;	
 			 $nbquestion = $this->session->exercice['nbquestion'];	
 
 			 $data = array(
@@ -116,24 +121,54 @@ class Exercice extends CI_Controller {
 			$this->db->trans_commit();
 			//===destruction de la session===
 			$this->session->exercice = null;
-
-			redirect('exercice/add');
+			$this->session->set_flashdata(array('exercice_add'=>true));
+			
+			redirect('exercice/index');
 		}
 		
 	}
 	
-
-	//================Partie accecible que par l'admin==================
+	//delete exercice
+	public function delete()
+	{
+		$id = $this->input->post('id');
+		$this->Crud->delete_data('exercice',['id'=>$id]);
+		redirect('exercice/index');
+	}	
 	
 	//list de exercices
 	public function index()
 	{
-		if(trim($this->session->type) == trim('admin')){
-			$this->load->view('admin/exercice/index');
+		if(trim($this->session->type) == trim('admin'))
+		{
+			$exercice = $this->exercice->get();
+			$most_recommanded = $this->Crud->get_data('recommandation');
+			$r = count($this->Crud->get_data('recommandation'));
+			$dl = count($this->Crud->get_data('exercice',['niveau_id'=>1]));
+			$dm = count($this->Crud->get_data('exercice',['niveau_id'=>2]));
+			$ds = count($this->Crud->get_data('exercice',['niveau_id'=>3]));
+
+			foreach($exercice as $e)
+			{
+				//===on cree un nouvel attribut===
+				$e->nbquestion = count($this->Crud->get_data(
+					'question',['exercice_id'=>$e->id])
+				);
+			}
+
+			$d['exercices'] = $exercice;
+			$d['r'] = $r;
+			$d['dl'] = $dl;
+			$d['dm'] = $dm;
+			$d['ds'] = $ds;
+			$d['mr'] = $most_recommanded;
+
+			$this->load->view('admin/exercice/list',$d);
 			$this->load->view('layout/js');
 			$this->load->view('layout/footer');
 		}
-		else{
+		else
+		{
 			redirect('signinup/connexion');
 		}		
 	}
