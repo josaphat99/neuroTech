@@ -148,6 +148,7 @@
                     if(count($mr) > 0)
                     {
                 ?>                   
+
                 <table id="data-table" class="table table-bordered">
                     <thead class="thead-default">
                         <tr>
@@ -156,7 +157,7 @@
                             <th>Type</th>
                             <th>Maximum</th>
                             <th>Niveau</th>                            
-                            <th>Nombre de questions</th>
+                            <!-- <th>Nombre de questions</th> -->
                             <th>Actions</th>
                         </tr>
                     </thead>                    
@@ -169,11 +170,12 @@
                                     <td style="text-align: center;"><?=$num?></td>
                                     <td ><?=$r->titre?></td>
                                     <td><?=$r->type?></td>
+                                    <td><?=$r->maximum?></td>
                                     <td style="text-align: center;"><?=$r->nom?></td>                                    
-                                    <td style="text-align: center;"><?=$r->nbquestion?></td>
+                                    <!-- <td style="text-align: center;"><$r->nbquestion?></td> -->
                                     <td>
                                         <button class="btn btn-success btn--raised"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
-                                        <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("exercice/delete")?>" method="post" style="float:right;">                                
+                                        <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("exercice/delete_recommandation")?>" method="post" style="float:right;">                                
                                             <input type="hidden" value="<?=$r->id?>" name="id">
                                             <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
                                                 <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
@@ -190,6 +192,7 @@
                 }else{
                 ?>
                     <p class="text-center">Aucun exercice recommandé</p>
+                    <!-- <p><span id="minutes"></span>:<span id="seconds"></span></p> -->
                 <?php
                 }
                 ?>
@@ -229,4 +232,21 @@
             }
         })
     }  
+
+    $(function()
+    {
+        // var sec = 0;
+        // function pad ( val ) { return val > 9 ? val : "0" + val; }
+
+        // setInterval( function(){
+        //     // $("#seconds").html(10%3);
+        //     var s = ++sec;
+        //     $("#seconds").html(pad(s%60));
+        //     $("#minutes").html(pad(parseInt(sec/60,10)));   
+        //     if(s%60 == 5)
+        //     {
+        //         console.log("vous avez epuisé tout votre temps!!!");                
+        //     }
+        // }, 1000);
+    })
 </script>

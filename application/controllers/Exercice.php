@@ -13,9 +13,10 @@ class Exercice extends CI_Controller {
 		$this->load->view('layout/sidebar');
 		$this->load->view('layout/preloader');
 		//chargement des model============
-		$this->load->model("Niveau_model",'niveau');
+		$this->load->model("Niveau_model","niveau");
+		$this->load->model("Recommandation","recommandation");
 		$this->load->model("Crud");
-		$this->load->model("Exercice_model",'exercice');
+		$this->load->model("Exercice_model","exercice");
 		//verification du login
 		if(!$this->session->connected)
 		{
@@ -135,14 +136,21 @@ class Exercice extends CI_Controller {
 		$this->Crud->delete_data('exercice',['id'=>$id]);
 		redirect('exercice/index');
 	}	
-	
+
+	//delete a recommanded exercice
+	public function delete_recommandation()
+	{
+		$id = $this->input->post('id');
+		$this->Crud->delete_data('recommandation',['id'=>$id]);
+		redirect('exercice/index');
+	}	
 	//list de exercices
 	public function index()
 	{
 		if(trim($this->session->type) == trim('admin'))
 		{
 			$exercice = $this->exercice->get();
-			$most_recommanded = $this->Crud->get_data('recommandation');
+			$most_recommanded = $this->recommandation->get_most();
 			$r = count($this->Crud->get_data('recommandation'));
 			$dl = count($this->Crud->get_data('exercice',['niveau_id'=>1]));
 			$dm = count($this->Crud->get_data('exercice',['niveau_id'=>2]));
