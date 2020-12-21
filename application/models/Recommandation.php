@@ -68,4 +68,15 @@ class Recommandation extends CI_Model
         
         return $final_data;
     }
+
+    //===Selectionner les recommandations: une occurence pour un exercice
+    public function get_distinct()
+    {
+        $query = $this->db->query(
+            'SELECT DISTINCT exercice_id
+            FROM recommandation'           
+        );
+
+        return $query->result();  
+    }
 }

@@ -94,6 +94,7 @@
 
                 <div class="row">
                     <div style="margin:auto">                                                
+                        <button class="btn btn--icon login__block__btn back"><i class="zmdi zmdi-arrow-left"></i></button>&nbsp;&nbsp;
                         <button class="btn btn--icon login__block__btn Subtn"><i class="zmdi zmdi-arrow-right"></i></button>
                         <button class="btn login__block__btn ajouter" hidden>Ajouter</button>
                     </div> 
@@ -118,10 +119,12 @@
 
        $('#0').removeAttr('hidden');      
        $('#0').addClass('affiche');
-
+       
         $('.Subtn').click(function(e)
         {      
-            e.preventDefault();            
+            e.preventDefault();        
+            $('.back').removeAttr('disabled');
+
             for(var i =0; i < <?=$nbquestion?>; i++)
             { 
                 if($('#'+i).hasClass('affiche'))
@@ -191,7 +194,8 @@
                         if(j+1 == <?=$nbquestion?>)
                         {
                             $('.ajouter').removeAttr('hidden');
-                            $('.Subtn').attr('hidden',true);                       
+                            $('.Subtn').attr('hidden',true);     
+                            $('.back').attr('hidden',true);                  
                         }    
 
                         $('#'+i).removeClass('affiche');  
@@ -209,7 +213,8 @@
         if(<?=$nbquestion?> == 1)
         {
             $('.ajouter').removeAttr('hidden');
-            $('.Subtn').attr('hidden',true);                       
+            $('.Subtn').attr('hidden',true);  
+            $('.back').attr('hidden',true);                     
         } 
 
         //===En cliquant sur le bouton ajouter===
@@ -270,6 +275,32 @@
                 }
             }
         })
+    /*bouton back*/
+    //===A la premiere question===
+        if($('#'+0).hasClass('affiche'))
+        {            
+            $('.back').attr('disabled',true);
+        }
+    //===Au clic===
+        $('.back').click(function(e)
+        {
+            e.preventDefault();
+            for(var i =0; i < <?=$nbquestion?>; i++)
+            {
+                if($('#'+i).hasClass('affiche'))
+                {
+                    var j = i - 1;
+
+                    $('#'+i).removeClass('affiche');  
+                    $('#'+i).attr('hidden',true);
+                    $('#'+j).removeAttr('hidden');
+                    $('#'+j).addClass('affiche');                                          
+                        
+                    i++;break; 
+                }
+            }
+        })
+    //===Fin bouton back===
     //===Fin gestion questions===
 
     //===Gestion du type de question===    

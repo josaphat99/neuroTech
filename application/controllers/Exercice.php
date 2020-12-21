@@ -151,7 +151,7 @@ class Exercice extends CI_Controller {
 		{
 			$exercice = $this->exercice->get();
 			$most_recommanded = $this->recommandation->get_most();
-			$r = count($this->Crud->get_data('recommandation'));
+			$r = count($this->recommandation->get_distinct());
 			$dl = count($this->Crud->get_data('exercice',['niveau_id'=>1]));
 			$dm = count($this->Crud->get_data('exercice',['niveau_id'=>2]));
 			$ds = count($this->Crud->get_data('exercice',['niveau_id'=>3]));
