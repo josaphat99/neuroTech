@@ -214,7 +214,7 @@
     {
         Swal.fire({
         title: 'Voulez-vous vraiment supprimer cet exercice?',
-        text: "Vous ne serez plus capable de la récupérer!",
+        text: "Vous ne serez plus capable de le récupérer!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

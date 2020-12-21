@@ -37,6 +37,46 @@ class Ajax extends CI_Controller
         echo $num_question.','.$html;
     }
 
-  
+    public function add_user()
+    {
+        //===Chargement du model===
+        $this->load->model('Crud');
+        //===-------------------===
+        $d['nomcomplet'] = $this->input->post('nomcomplet');
+        $d['email'] = $this->input->post('email');
+        $d['type'] = 'patient';
+        $d['username'] = $this->input->post('username');
+        $d['mdp'] = $this->input->post('mdp');
+        $d['lieudeconsultation'] = $this->input->post('lieudeconsultation');
+        //===Insertion===
+        $this->Crud->add_data('utilisateur',$d);
+        
+        //===Recuperation===
+        $users = $this->Crud->get_data_desc('utilisateur');
+        $html = '';
+        $num = 0;
+
+        foreach($users as $u)
+        { 
+            $num++;
+            $html .= '<tr>
+                <td style="text-align: center;">'.$num.'</td>
+                <td >'.$u->nomcomplet.'</td>
+                <td>'.$u->type.'</td>
+                <td>'.$u->username.'</td>
+                <td>
+                    <button class="btn btn-success btn--raised"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
+                    <form id="form-delete" onclick="javascript:confirmation($(this));return false;"action='.site_url("utilisateur/delete").' method="post" style="float:right;">                                
+                        <input type="hidden" value='.$u->id.' name="id">
+                        <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
+                            <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                        </button>
+                    </form>                                                                                 
+                </td>
+            </tr>';   
+        }
+
+        echo $html;
+    }
 }
 ?>

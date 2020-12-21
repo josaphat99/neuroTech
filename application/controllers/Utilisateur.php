@@ -17,6 +17,12 @@ class Utilisateur extends CI_Controller {
 		$this->load->view('layout/preloader');
 		//chargement des model============
 		$this->load->model("Utilisateur_model",'utilisateur');
+		$this->load->model("Crud");
+
+		if(!$this->session->connected)
+		{
+			redirect('signinup/connexion');
+		}
 	}
 	
 	
@@ -33,8 +39,11 @@ class Utilisateur extends CI_Controller {
 	//list de users
 	public function index()
 	{
-		if(trim($this->session->type) == trim('admin')){
-			$this->load->view('admin/index');
+		if(trim($this->session->type) == trim('admin'))
+		{
+			$d['patients'] = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
+			$d['admins'] = $this->Crud->get_data('utilisateur',['type'=>'admin']);
+			$this->load->view('admin/users',$d);
 			$this->load->view('layout/js');
 			$this->load->view('layout/footer');
 		}
@@ -42,5 +51,12 @@ class Utilisateur extends CI_Controller {
 			redirect('login');
 		}		
 	}
-
+	
+	//delete user
+	public function delete()
+	{
+		$id = $this->input->post('id');
+		$this->Crud->delete_data('utilisateur',['id'=>$id]);
+		redirect('utilisateur/index');
+	}
 }

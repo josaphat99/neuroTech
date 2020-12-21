@@ -18,8 +18,7 @@
                 <li class="navigation__sub">
                     <a href="#"><i class="zmdi zmdi-account"></i> Utilisateurs</a>
                     <ul>
-                        <li><a href="profile-about.html"><i class="zmdi zmdi-collection-item"></i>&nbsp;Liste d'utilisateurs</a></li>
-                        <li><a href="messages.html"><i class="zmdi zmdi-plus"></i> Nouvel utilisateur</a></li>                
+                        <li><a href=<?=site_url('utilisateur/index')?>>Liste d'utilisateurs</a></li>               
                     </ul>
                 </li>
                 <li class="navigation__sub">
