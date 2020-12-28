@@ -52,7 +52,7 @@ class Ajax extends CI_Controller
         $this->Crud->add_data('utilisateur',$d);
         
        //===recuperation des donnees dans la BD===
-       $patients = $this->Crud->get_data_desc('utilisateur');
+       $patients = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
        $html = '';
        $num = 0;
 
@@ -60,26 +60,26 @@ class Ajax extends CI_Controller
        { 
            $num++;
            $html .= '<tr>
-               <td style="text-align: center;">'.$num.'</td>                                    
-               <td class="td"'.$p->id.'>'.$p->nomcomplet.'</td>
-               <td class="td-form"'.$p->id.' hidden><input id="nomcomplet-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>
-               <td class="td"'.$p->id.'>'.$p->type.'</td>
-               <td class="td-form"'.$p->id.' hidden><input id="type-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->type.'"></td>
-               <td class="td"'.$p->id.'>'.$p->username.'</td>
-               <td class="td-form"'.$p->id.' hidden><input id="username-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
-               <td class="td"'.$p->id.'>'.$p->email.'</td>
-               <td class="td-form"'.$p->id.' hidden><input id="email-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->email.'"></td>
-               <td>
-                   <button class="btn btn-success btn--raised edit" id="edit-"'.$p->id.'><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
-                   <button class="btn btn-success btn--raised animated bounceIn check" id="check-"'.$p->id.' hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
-                   <form id="form-delete" onclick="javascript:confirmation($(this));return false;"action="'.site_url("utilisateur/delete").'" method="post" style="float:right;">                                
-                       <input type="hidden" value='.$p->id.' name="id">
-                       <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
-                           <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
-                       </button>
-                   </form>                                                                                 
-               </td>
-           </tr>';   
+                <td style="text-align: center;">'.$num.'</td>                                    
+                <td class="td'.$p->id.'">'.$p->nomcomplet.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="nomcomplet-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>
+                <td class="td'.$p->id.'">'.$p->type.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="type-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->type.'"></td>
+                <td class="td'.$p->id.'">'.$p->username.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="username-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
+                <td class="td'.$p->id.'">'.$p->email.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="email-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->email.'"></td>
+                <td>
+                    <button class="btn btn-success btn--raised edit" id="edit-'.$p->id.'"><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
+                    <button class="btn btn-success btn--raised animated bounceIn check" id="check-'.$p->id.'" hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
+                    <form id="form-delete" onclick="javascript:confirmation($(this));return false;"action="'.site_url("utilisateur/delete").'" method="post" style="float:right;">                                
+                        <input type="hidden" value='.$p->id.' name="id">
+                        <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
+                            <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                        </button>
+                    </form>                                                                                 
+                </td>
+            </tr>';    
        }
 
        echo $html;
@@ -102,7 +102,7 @@ class Ajax extends CI_Controller
         $this->Crud->update_data('utilisateur',['id'=>$id],$d);
 
         //===recuperation des donnees dans la BD===
-        $patients = $this->Crud->get_data_desc('utilisateur');
+        $patients = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
         $html = '';
         $num = 0;
 
@@ -111,17 +111,17 @@ class Ajax extends CI_Controller
             $num++;
             $html .= '<tr>
                 <td style="text-align: center;">'.$num.'</td>                                    
-                <td class="td"'.$p->id.'>'.$p->nomcomplet.'</td>
-                <td class="td-form"'.$p->id.' hidden><input id="nomcomplet-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>
-                <td class="td"'.$p->id.'>'.$p->type.'</td>
-                <td class="td-form"'.$p->id.' hidden><input id="type-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->type.'"></td>
-                <td class="td"'.$p->id.'>'.$p->username.'</td>
-                <td class="td-form"'.$p->id.' hidden><input id="username-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
-                <td class="td"'.$p->id.'>'.$p->email.'</td>
-                <td class="td-form"'.$p->id.' hidden><input id="email-"'.$p->id.' class="form-control animated bounceIn" type="text" value="'.$p->email.'"></td>
+                <td class="td'.$p->id.'">'.$p->nomcomplet.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="nomcomplet-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>
+                <td class="td'.$p->id.'">'.$p->type.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="type-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->type.'"></td>
+                <td class="td'.$p->id.'">'.$p->username.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="username-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
+                <td class="td'.$p->id.'">'.$p->email.'</td>
+                <td class="td-form'.$p->id.'" hidden><input id="email-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->email.'"></td>
                 <td>
-                    <button class="btn btn-success btn--raised edit" id="edit-"'.$p->id.'><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
-                    <button class="btn btn-success btn--raised animated bounceIn check" id="check-"'.$p->id.' hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
+                    <button class="btn btn-success btn--raised edit" id="edit-'.$p->id.'"><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
+                    <button class="btn btn-success btn--raised animated bounceIn check" id="check-'.$p->id.'" hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
                     <form id="form-delete" onclick="javascript:confirmation($(this));return false;"action="'.site_url("utilisateur/delete").'" method="post" style="float:right;">                                
                         <input type="hidden" value='.$p->id.' name="id">
                         <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">

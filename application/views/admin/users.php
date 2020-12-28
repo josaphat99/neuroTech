@@ -215,13 +215,10 @@
             }
            
         })
-         //===Bouton edit===
-        
+         //===Bouton edit===        
          $('.edit').click(function(e)
         {
             e.preventDefault();
-
-            console.log('on click edit');
 
             var id = e.target.getAttribute('id').split('-')[1];
            
@@ -251,6 +248,7 @@
                         $('.td-form'+id).attr('hidden',true); 
                         $('#edit-'+id).removeAttr('hidden');
                         $('#check-'+id).attr('hidden',true);
+                        console.log(data);
                     }
                 )
         })
