@@ -22,7 +22,7 @@
                     <img class="user__img" src=<?=base_url("assets/img/avatar/avatar.png")?> alt=""> <?=ucfirst($this->session->nomcomplet)?>                    
                     </div>
 
-                    <a href="#" class="listview__item">
+                    <a href=<?=site_url("signinup/profile")?> class="listview__item">
                         <div class="listview__content">
                             <div class="listview__heading">
                             <i class="zmdi zmdi-account" style="font-size: 20px;"></i>&nbsp;&nbsp; Mon profile

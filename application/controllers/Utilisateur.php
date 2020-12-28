@@ -42,7 +42,8 @@ class Utilisateur extends CI_Controller {
 		if(trim($this->session->type) == trim('admin'))
 		{
 			$d['patients'] = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
-			$d['admins'] = $this->Crud->get_data('utilisateur',['type'=>'admin']);
+			$d['admins'] = $this->Crud->get_data('utilisateur',['type'=>'admin']);			
+			$d['add'] = $this->load->view('admin/add',[],true);
 			$this->load->view('admin/users',$d);
 			$this->load->view('layout/js');
 			$this->load->view('layout/footer');

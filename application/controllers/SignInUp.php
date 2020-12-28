@@ -67,6 +67,7 @@ class SignInUp extends CI_Controller
                     "nomcomplet"=>$res[0]->nomcomplet,
                     "mdp"=>$res[0]->mdp,
                     "type"=>$res[0]->type,
+                    "email"=>$res[0]->email,
                     "connected"=>true,                    
                 ];
 
@@ -100,4 +101,44 @@ class SignInUp extends CI_Controller
         $this->session->sess_destroy();
 		redirect("signinup/connexion");
     }
+
+    //===profile===
+    public function profile()
+    {
+        //===chargement du model===
+        $this->load->model('Crud');
+
+        //===l'id d'utilisateur===
+        $id = $this->session->id;
+
+        if(count($_POST)<=0)
+        {
+            $d['user'] = $this->Crud->get_data('utilisateur',['id'=>$id]);
+
+            //===Passage a la vue===
+            $this->load->view('layout/topbar');
+            $this->load->view('layout/sidebar');
+            $this->load->view('layout/preloader');
+            $this->load->view('public/profile',$d);
+            $this->load->view('layout/js');
+            $this->load->view('layout/footer');
+        }
+        else
+        {
+            $this->Crud->update_data('utilisateur',['id'=>$id],$_POST);
+
+            if($this->session->type == 'admin')
+            {
+                redirect('utilisateur/index');
+            }
+            else
+            {
+                redirect('patient/index');
+            }
+
+        }
+  
+    }
+
+    
 }

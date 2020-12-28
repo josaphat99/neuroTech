@@ -96,11 +96,10 @@ class Exercice extends CI_Controller {
 			 		'exercice_id' => $id_exercice
 			 	);
 
-			 	//===-------insertion-------------===
-			 	$this->Crud->add_data('question',$d);
-			 	//===------------------------------===
+			 	//===-------insertion--------------===
+				$this->Crud->add_data('question',$d);
 
-				 //===-------insertion des assertions------===
+				//===-------insertion des assertions------===
 				$id_question = $this->Crud->get_data_desc('question')[0]->id; //recupere le dernier id
 				
 			 	$nbassert = $this->input->post('nbassert'.$i);
@@ -114,7 +113,22 @@ class Exercice extends CI_Controller {
 
 			 		$this->Crud->add_data('assertion',$t);
 			 	}
-			 	//===---Fin assertions---===
+				 //===---Fin assertions---===
+
+				  //===Insertion de l'image===
+				  if($_FILES['image'.$i]['name'] != null)
+				  {
+					 $fichier = 'fichier'.md5(time())."_".$_FILES['image'.$i]['name'];
+					 move_uploaded_file($_FILES['image'.$i]['tmp_name'], './assets/files/questions/'.$fichier);
+					 $d = array(
+						 'image' => $fichier,
+						 'main' => true,
+						 'question_id'=> $id_question
+					 );
+					 
+					 $this->Crud->add_data('image',$d);
+				  }				 
+				  //===------------------------------===
 			}
 			//===---Fin questions---===
 

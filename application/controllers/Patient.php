@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Patients extends CI_Controller {
+class Patient extends CI_Controller {
 
     //========Le constructeur=================
 
@@ -25,7 +25,7 @@ class Patients extends CI_Controller {
 
     public function index()
     {
-        $this->load->view('patients/index');
+        $this->load->view('patient/index');
         $this->js_footer();
     }
     

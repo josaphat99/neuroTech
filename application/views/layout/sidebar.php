@@ -6,7 +6,7 @@
             <div>
                 <?php $t = explode(' ',$this->session->nomcomplet); $t_size = count($t);?>
                 <div class="user__name"><?=$t[$t_size-1].' '.$t[0]?></div>
-                <div class="user__email"><?=explode(' ',strtolower($this->session->nomcomplet))[0]?>@gmail.com</div>
+                <div class="user__email"><?=$this->session->email?></div>
             </div>
         </div>       
     </div>

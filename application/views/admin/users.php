@@ -47,6 +47,7 @@
                             <th>Nom complet</th>
                             <th>Type</th>
                             <th>Nom d'utilisateur</th>
+                            <th>Email</th>
                             <th>Actions</th>
                         </tr>
                     </thead>                    
@@ -56,12 +57,18 @@
                             foreach($patients as $p)
                             { $num++?> 
                                 <tr>
-                                    <td style="text-align: center;"><?=$num?></td>
-                                    <td ><?=$p->nomcomplet?></td>
-                                    <td><?=$p->type?></td>
-                                    <td><?=$p->username?></td>
+                                    <td style="text-align: center;"><?=$num?></td>                                    
+                                    <td class=<?="td".$p->id?>><?=$p->nomcomplet?></td>
+                                    <td class=<?="td-form".$p->id?> hidden><input id=<?="nomcomplet-".$p->id?> class="form-control animated bounceIn" type="text" value="<?=$p->nomcomplet?>"></td>
+                                    <td class=<?="td".$p->id?>><?=$p->type?></td>
+                                    <td class=<?="td-form".$p->id?> hidden><input id=<?="type-".$p->id?> class="form-control animated bounceIn" type="text" value=<?=$p->type?>></td>
+                                    <td class=<?="td".$p->id?>><?=$p->username?></td>
+                                    <td class=<?="td-form".$p->id?> hidden><input id=<?="username-".$p->id?> class="form-control animated bounceIn" type="text" value=<?=$p->username?>></td>
+                                    <td class=<?="td".$p->id?>><?=$p->email?></td>
+                                    <td class=<?="td-form".$p->id?> hidden><input id=<?="email-".$p->id?> class="form-control animated bounceIn" type="text" value=<?=$p->email?>></td>
                                     <td>
-                                        <button class="btn btn-success btn--raised"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
+                                        <button class="btn btn-success btn--raised edit" id=<?='edit-'.$p->id?>><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
+                                        <button class="btn btn-success btn--raised animated bounceIn check" id=<?='check-'.$p->id?> hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
                                         <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("utilisateur/delete")?>" method="post" style="float:right;">                                
                                             <input type="hidden" value="<?=$p->id?>" name="id">
                                             <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
@@ -80,56 +87,7 @@
     </div>
     <hr id="hr1">
     <br>
-    
-    <div class="card animated flipInX" id="add" hidden>
-        <div class="card-body">
-            <header class="content__title">
-                <h1><b>Patients</b></h1>
-            </header>            
-            <form class="row">
-                <div class="col-md-6 offset-md-3">
-                    <div class="form-group form-group--float">                        
-                        <input type="text" class="form-control" id="nomcomplet">
-                        <label>Nom complet</label>
-                        <i class="form-group__bar"></i>
-                    </div>                    
-
-                    <div class="form-group form-group--float">                        
-                        <input type="email" class="form-control" id="email">
-                        <label>Email</label>
-                        <i class="form-group__bar"></i>
-                    </div>
-
-                    <div class="form-group form-group--float">                        
-                        <input type="text" class="form-control" id="username">
-                        <label>Nom d'utilisateur</label>
-                        <i class="form-group__bar"></i>
-                    </div>
-
-                    <div class="form-group form-group--float">                        
-                        <input type="password" class="form-control" id="mdp">
-                        <label>Mot de passe</label>
-                        <i class="form-group__bar"></i>
-                    </div>
-
-                    <div class="form-group form-group--float">                        
-                        <input type="text" class="form-control" id="lieudeconsultation">
-                        <label>Lieu de consultation</label>
-                        <i class="form-group__bar"></i>
-                    </div>
-
-                    <div class="text-center">
-                        <p id="error_message" class="text-red animated fadeInUp" hidden>Veuillez remplir tous les champs</p>
-                        <button type="submit" id="submit" class="btn btn--icon login__block__btn">
-                            <i class="zmdi zmdi-check"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <hr id="hr" hidden>
-    <br id="br" hidden>
+    <?=$add?>    
     <div class="card animated zoomIn">
         <div class="card-body">
         <header class="content__title">
@@ -143,6 +101,7 @@
                             <th>Nom complet</th>
                             <th>Type</th>
                             <th>Nom d'utilisateur</th>
+                            <th>Email</th>
                         </tr>
                     </thead>                    
                     <tbody id="t-body-admin">
@@ -155,6 +114,7 @@
                                     <td ><?=$a->nomcomplet?></td>
                                     <td><?=$a->type?></td>
                                     <td><?=$a->username?></td>
+                                    <td><?=$a->email?></td>
                                 </tr>
                         <?php
                             }
@@ -255,5 +215,46 @@
             }
            
         })
+         //===Bouton edit===
+        
+         $('.edit').click(function(e)
+        {
+            e.preventDefault();
+
+            console.log('on click edit');
+
+            var id = e.target.getAttribute('id').split('-')[1];
+           
+            $('.td'+id).attr('hidden',true);
+            $('.td-form'+id).removeAttr('hidden'); 
+            $('#edit-'+id).attr('hidden',true);
+            $('#check-'+id).removeAttr('hidden');
+        })
+
+        $('.check').click(function(e)
+        {
+            e.preventDefault();
+
+            var id = e.target.getAttribute('id').split('-')[1];
+
+            var nomcomplet = $('#nomcomplet-'+id).val();
+            var type = $('#type-'+id).val();
+            var username = $('#username-'+id).val();
+            var email = $('#email-'+id).val();
+
+            $.post('<?=site_url('ajax/edit_user')?>', { nomcomplet: nomcomplet, email: email, username:username,
+                type:type,id:id},
+                    function(data,textStatus, jqXHR) 
+                    {
+                        $("#user_space").html(data);
+                        $('.td'+id).removeAttr('hidden');
+                        $('.td-form'+id).attr('hidden',true); 
+                        $('#edit-'+id).removeAttr('hidden');
+                        $('#check-'+id).attr('hidden',true);
+                    }
+                )
+        })
+       
+        
     })
 </script>

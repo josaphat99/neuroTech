@@ -4,7 +4,7 @@
         <h1><b>Nouvel exercice</b></h1>            
         </header>
 
-        <form action=<?=site_url("exercice/add")?> method="post" id="form">
+        <form action=<?=site_url("exercice/add")?> method="post" id="form" enctype="multipart/form-data">
         <?php
             $nbquestion = $this->session->exercice['nbquestion'];
             for($i=0;$i < $nbquestion;$i++)
@@ -36,7 +36,9 @@
                             <label>Cote</label>
                             <i class="form-group__bar"></i>
                         </div>
-
+                        <input type="file" class="form-control image" name=<?="image".$i?> id=<?="image".$i?> autocomplete="off">                        
+                        <button class="btn btn-light add-image" id=<?=$i?>>Ajouter une image</button>
+                        <small id=<?="image-name".$i?>>Aucun fichier choisi</small>
                     </div>
 
                     <div class="col-md-6">      
@@ -400,4 +402,4 @@
 })  
 </script>
 
-
+<script src=<?=base_url("assets/js/image.js")?>></script>
