@@ -37,6 +37,37 @@ class Ajax extends CI_Controller
         echo $num_question.','.$html;
     }
 
+    public function image()
+    {
+        $nbimg = $this->input->post('nbimg');
+        $num_question = $this->input->post('num_question');
+        $num_question = $num_question + 1;
+        $html = '<p><small>La premiere image doit etre l\'image principale</small></p>';
+        //===affichage des champs par rapport au nombre saisi===
+        /*
+        *Les name des imagess seront de la forme img12 pour dire: deuxieme image
+        *de la premiere question.border
+        *Les id seront de la meme forme, et le labels : assert12_label 
+        *Les checkbox seront de la form checkbox12 : idem image
+        */
+
+        for($i = 0; $i < $nbimg; $i++)
+        {
+            $j = $i + 1;
+
+            $html .= '<div class="col-md-8"  style="margin-top:-33px">            
+                        <div class="form-group form-group--float">
+                            <input type="file" class="form-control " name="img'.$num_question.$j.'" id="img'.$num_question.$j.'" hidden>
+                            <button class="btn btn-success btn-image" id="btn-img'.$num_question.$j.'">Image '.$j.'</button>
+                            <small id="small-img'.$num_question.$j.'">Aucun fichier choisi</small> 
+                            <i class="form-group__bar"></i>
+                        </div>      
+                    </div>                          
+                    ';
+        }        
+        echo $num_question.','.$html;
+    }
+    
     public function add_user()
     {
         //===Chargement du model===
@@ -135,5 +166,7 @@ class Ajax extends CI_Controller
         echo $html;
         
     }
+
+   
 }
 ?>

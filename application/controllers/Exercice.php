@@ -115,7 +115,8 @@ class Exercice extends CI_Controller {
 			 	}
 				 //===---Fin assertions---===
 
-				  //===Insertion de l'image===
+				  //===Insertion des images===
+				  
 				  if($_FILES['image'.$i]['name'] != null)
 				  {
 					 $fichier = 'fichier'.md5(time())."_".$_FILES['image'.$i]['name'];

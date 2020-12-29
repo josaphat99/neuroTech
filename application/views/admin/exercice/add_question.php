@@ -24,7 +24,7 @@
                 <h6 class="card-subtitle">Veuillez completer les questions en specifiant le type:</h6>
                 <button type="button" class="btn btn-success">Question <?=$i+1?></button>
                <div class="row">
-                <div class="col-md-6">
+                    <div class="col-md-6">
                         <h3 class="card-body__title"></h3>
                         <div class="form-group form-group--float">
                             <input type="text" class="form-control" name=<?="question".$i?> id=<?="question".$i?> autocomplete="off">
@@ -36,9 +36,31 @@
                             <label>Cote</label>
                             <i class="form-group__bar"></i>
                         </div>
-                        <input type="file" class="form-control image" name=<?="image".$i?> id=<?="image".$i?> autocomplete="off">                        
-                        <button class="btn btn-light add-image" id=<?=$i?>>Ajouter une image</button>
-                        <small id=<?="image-name".$i?>>Aucun fichier choisi</small>
+                        <!-- <input type="file" class="form-control image" name=<"image".$i?> id=<"image".$i?> autocomplete="off">                         -->
+                        <button class="btn btn-light add-image" id=<?="addimage-".$i?>>Ajouter des images</button>
+                        <!-- <small id=<"image-name".$i?>>Aucun fichier choisi</small> -->
+                        <div class="row" id=<?="img-div".$i?> hidden style="margin-top: 30px;">
+                            <div class="col-md-8 col-xs-3 col-sm-3" style="margin-top:-33px">
+                                <div class="form-group form-group--float animated fadeInLeft">
+                                    <input type="text" class="form-control nbimg" name=<?="nbimg".$i?> id=<?="nbimg-".$i?> autocomplete="off">
+                                    <label id=<?="nbimg_label".$i?>>Nombre d'images</label>
+                                    <i class="form-group__bar"></i>
+                                </div>
+                                <p class="text-red animated fadeIn" id=<?="error_image".$i?> hidden>Veuillez saisir le nombre d'images</p>
+                                <p class="text-red animated fadeIn" id=<?="error_nb_image".$i?> hidden>Vous ne pouvez avoir qu'au plus 5 images</p>
+                            </div>
+                            <!--icon plus pour les images-->
+                            <div class="col-md-2 col-sm-2 text-center">
+                                <button class="btn btn--icon login__block__btn  animated bounceIn plus-image" id=<?="plus-image-".$i?> title="Selectionner les images" hidden>
+                                    <i class="zmdi zmdi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row animated bounceInUp" id=<?="image_space".$i?> hidden>      
+                         <!--Partie images-->         
+                       </div>
+                       
                     </div>
 
                     <div class="col-md-6">      
@@ -399,7 +421,55 @@
             }
         }
     })
-})  
+
+    //===ls images===
+    $('.plus-image').click(function(e) {
+        e.preventDefault();
+
+        var id = e.target.getAttribute('id').split('-')[2];
+
+        if ($('#nbimg-' + id).val().length <= 0) {
+            $('#error_image' + id).removeAttr('hidden');
+        } else if ($('#nbimg-' + id).val() > 5) {
+            $('#error_nb_image' + id).removeAttr('hidden');
+        } else {
+            $.post("<?=site_url('ajax/image')?>", {nbimg: $('#nbimg-' + id).val(), num_question: id},
+                function(data, textStatus, jqXHR) {
+                    var indice = data.split(',')[0] - 1;
+                    console.log(data.split(',')[1]);
+                    $("#image_space" + indice).removeAttr('hidden');
+                    $("#image_space" + indice).html(data.split(',')[1]);
+
+                    $('.btn-image').click(function(e) {
+                        e.preventDefault();
+                        console.log($('.btn-image'));
+                        var id = e.target.getAttribute('id').split('-')[1];
+
+                        $('#' + id).click();
+
+                        $('#'+id).change(function(e) {
+                            console.log('change moko ya grave');
+                            if ($('#'+id).val() != '') {
+                                $('#small-' + id).html($('#' + id).val());
+                            }
+                        })
+                    })
+
+                   
+                }
+            );
+        }
+    })    
+
+    // $('.btn-image').mouseover(function(e) {
+    //     e.preventDefault();
+    //     console.log($('.btn-image'));
+    //     var id = e.target.getAttribute('id').split('-')[1];
+
+    //     $('#' + id).click();
+    // })
+})
+
 </script>
 
-<script src=<?=base_url("assets/js/image.js")?>></script>
+<script src=<?=base_url("assets/js/imag.js")?>></script>
