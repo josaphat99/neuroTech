@@ -209,7 +209,43 @@
                         email.val("");
                         username.val("");
                         mdp.val("");
-                        lieu.val("");                       
+                        lieu.val("");                      
+                        
+                        $('.edit').click(function(e)
+                        {
+                            e.preventDefault();
+
+                            var id = e.target.getAttribute('id').split('-')[1];
+                        
+                            $('.td'+id).attr('hidden',true);
+                            $('.td-form'+id).removeAttr('hidden'); 
+                            $('#edit-'+id).attr('hidden',true);
+                            $('#check-'+id).removeAttr('hidden');
+                        })
+
+                        $('.check').click(function(e)
+                        {
+                            e.preventDefault();
+
+                            var id = e.target.getAttribute('id').split('-')[1];
+
+                            var nomcomplet = $('#nomcomplet-'+id).val();
+                            var type = $('#type-'+id).val();
+                            var username = $('#username-'+id).val();
+                            var email = $('#email-'+id).val();
+
+                            $.post('<?=site_url('ajax/edit_user')?>', { nomcomplet: nomcomplet, email: email, username:username,
+                                type:type,id:id},
+                                function(data,textStatus, jqXHR) 
+                                {
+                                    $("#user_space").html(data);
+                                    $('.td'+id).removeAttr('hidden');
+                                    $('.td-form'+id).attr('hidden',true); 
+                                    $('#edit-'+id).removeAttr('hidden');
+                                    $('#check-'+id).attr('hidden',true);
+                                }
+                            )
+                        })
                     }
                 );                
             }
@@ -247,12 +283,9 @@
                         $('.td'+id).removeAttr('hidden');
                         $('.td-form'+id).attr('hidden',true); 
                         $('#edit-'+id).removeAttr('hidden');
-                        $('#check-'+id).attr('hidden',true);
-                        console.log(data);
+                        $('#check-'+id).attr('hidden',true);                       
                     }
                 )
-        })
-       
-        
+        })        
     })
 </script>
