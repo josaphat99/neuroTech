@@ -434,21 +434,22 @@
             $('#error_nb_image' + id).removeAttr('hidden');
         } else {
             $.post("<?=site_url('ajax/image')?>", {nbimg: $('#nbimg-' + id).val(), num_question: id},
-                function(data, textStatus, jqXHR) {
+                function(data, textStatus, jqXHR) 
+                {
                     var indice = data.split(',')[0] - 1;
-                    console.log(data.split(',')[1]);
+                    
                     $("#image_space" + indice).removeAttr('hidden');
                     $("#image_space" + indice).html(data.split(',')[1]);
 
-                    $('.btn-image').click(function(e) {
+                    $('.btn-image').click(function(e) 
+                    {
                         e.preventDefault();
-                        console.log($('.btn-image'));
                         var id = e.target.getAttribute('id').split('-')[1];
 
                         $('#' + id).click();
 
-                        $('#'+id).change(function(e) {
-                            console.log('change moko ya grave');
+                        $('#'+id).change(function(e) 
+                        {
                             if ($('#'+id).val() != '') {
                                 $('#small-' + id).html($('#' + id).val());
                             }

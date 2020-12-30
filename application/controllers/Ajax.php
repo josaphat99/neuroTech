@@ -45,7 +45,7 @@ class Ajax extends CI_Controller
         $html = '<p><small>La premiere image doit etre l\'image principale</small></p>';
         //===affichage des champs par rapport au nombre saisi===
         /*
-        *Les name des imagess seront de la forme img12 pour dire: deuxieme image
+        *Les name des images seront de la forme img12 pour dire: deuxieme image
         *de la premiere question.border
         *Les id seront de la meme forme, et le labels : assert12_label 
         *Les checkbox seront de la form checkbox12 : idem image

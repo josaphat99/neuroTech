@@ -104,6 +104,7 @@ class Exercice extends CI_Controller {
 				
 			 	$nbassert = $this->input->post('nbassert'.$i);
 				$add = $i+1;
+
 			 	for($j = 1; $j <= $nbassert ; $j++)
 			 	{
 			 		$t = array(
@@ -113,28 +114,36 @@ class Exercice extends CI_Controller {
 
 			 		$this->Crud->add_data('assertion',$t);
 			 	}
-				 //===---Fin assertions---===
+				//===---Fin assertions---===
 
-				  //===Insertion des images===
-				  
-				  if($_FILES['image'.$i]['name'] != null)
-				  {
-					 $fichier = 'fichier'.md5(time())."_".$_FILES['image'.$i]['name'];
-					 move_uploaded_file($_FILES['image'.$i]['tmp_name'], './assets/files/questions/'.$fichier);
-					 $d = array(
-						 'image' => $fichier,
-						 'main' => true,
-						 'question_id'=> $id_question
-					 );
-					 
-					 $this->Crud->add_data('image',$d);
-				  }				 
-				  //===------------------------------===
+				//===Insertion des images===
+				$nbimg = $this->input->post('nbimg'.$i);
+				 $count = 0;
+				for($im = 1; $im <= $nbimg ; $im++)
+				{
+					$count++;
+					if($_FILES['img'.$add.$im]['name'] != null)
+					{
+						$fichier = 'fichier'.md5(time())."_".$_FILES['img'.$add.$im]['name'];
+						$d = array(
+							'image' => $fichier,
+							'main' => $im ==1?true:false,
+							'question_id'=> $id_question
+						);
+
+						move_uploaded_file($_FILES['img'.$add.$im]['tmp_name'], './assets/files/questions/'.$fichier);						
+						
+						$this->Crud->add_data('image',$d);
+					}
+				}
+								 
+				//===------------------------------===
 			}
 			//===---Fin questions---===
-
+			
 			//===--Fin transition--===
 			$this->db->trans_commit();
+			
 			//===destruction de la session===
 			$this->session->exercice = null;
 			$this->session->set_flashdata(array('exercice_add'=>true));
