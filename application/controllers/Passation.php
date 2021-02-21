@@ -393,25 +393,29 @@ class Passation extends CI_Controller {
         $this->js_footer();
    }
 
-   //ajax
+   //===correction de question exercice cogntif===
    public function correct_question_cognitive()
    {
-        $id = $this->input->post('question_id');
+        $question_id = $this->input->post('question_id');
         $response = $this->input->post('answer');     
         $cote = 0;
         $cote_cognitve = $this->session->cote_cognitive;
-
-        $cote = $this->question->checkAnswer($id,$response);
+        $cote = $this->question->checkAnswer($question_id,$response);
 
         if($cote > 0)
         {
             $cote_cognitve += $cote;
             $this->session->set_userdata(['cote_cognitive'=>$cote_cognitve]);
         }
+
+        //===enregistrement de la reponse===
+        $this->Crud->add_data('reponse',['reponse'=>$response,'question_id'=>$question_id]);
+        
         echo $this->session->cote_cognitive;
         die();
    }
 
+   //===Traitement du formulaire exercice cogntif===
    public function cognitive_exercice_process()
    {
        //===creer une nouvelle passation===
@@ -517,6 +521,7 @@ class Passation extends CI_Controller {
                              $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->niveau_id])[0]->nom;                
             }      
         }
+
         $nb_undone_exercice = count($this->exercice->exercice_not_done($niveau->id));
         if($nb_undone_exercice > 0)
         {
@@ -527,7 +532,6 @@ class Passation extends CI_Controller {
             $next_exercice = '';
         }
         
-             
         //data
         $d = array(
         'recommandation' => $recommandation,
@@ -561,51 +565,4 @@ class Passation extends CI_Controller {
            $this->cognitive_exercice();
        }       
    }
-    // public function select_question($exercice,$questions)
-    // {
-    //     $exercice_id = $exercice->id;
-    //     $d['titre'] = $exercice->titre;
-    //     $d['max'] = $exercice->maximum;
-    //     //creation de la session qui contiendra les questions repondues        
-    //     $data = array($exercice_id =>[]);
-    //     $this->session->set_userdata($data);
-    //     $session = $this->session->$exercice_id;
-    //     foreach($questions as $q)
-    //     {
-    //         for($i=0;$i < count($session); $i++)
-    //         {
-    //             if(strtolower(trim($session[$i])) == strtolower(trim($q->question)))
-    //             {
-    //                 continue;
-    //             }
-    //             else{
-    //                 $session[] = $q->question;
-    //                 $d['question'] = $q->question;
-    //                 return $d;                    
-    //             }
-    //         }
-    //     }
-    // }
-    //===recuperer le dernier niveau du patient===
-    // public function get_user_niveau()
-    // {
-    //     $id_user = $this->session->id;
-    //     $niveau = $this->crud->join_data('niveau','detailniveau', 
-    //     'niveau.id,detailniveau.niveau_id', ['utilisateur_id'=>$id_user],['detailniveau.id','DESC'])[0]->niveau;
-    //     return $niveau;
-    // } 
-
-    // public function create_exercice()
-    // {
-    //     $user_niveau = $this->get_user_niveau();
-    //     $exercice = $this->exercice->get_one($user_niveau);        
-    //     $questions = $this->question->get_by_exercice($exercice->id);             
-    //     $this->select_question($exercice,$questions);
-    // }
-    // public function tst()
-    // {
-    //     $niveau  = $this->get_user_niveau();
-    //     //verification du type de retour
-    //     echo $this->unit->run($niveau, 'is_string');
-    // }
 }

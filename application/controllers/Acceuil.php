@@ -28,6 +28,9 @@ class Acceuil extends CI_Controller {
 	{
 		$this->load->view('public/guide');
 		$this->load->view('layout/js');
-		$this->load->view('layout/footer');
+		if($this->session->connected)
+		{
+			$this->load->view('layout/footer');
+		}
 	}
 }
