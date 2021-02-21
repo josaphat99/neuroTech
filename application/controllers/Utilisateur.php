@@ -25,15 +25,6 @@ class Utilisateur extends CI_Controller {
 		}
 	}
 	
-	
-
-	//=============add a new user=======================
-
-	public function add()
-	{
-			
-	}
-
 	//================Partie accecible que par l'admin==================
 	
 	//list de users

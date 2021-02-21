@@ -79,4 +79,10 @@ class Recommandation extends CI_Model
 
         return $query->result();  
     }
+
+    //===creer une recommandation===
+    public function create_recommandation()
+    {
+        return 0;
+    }
 }

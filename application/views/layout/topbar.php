@@ -7,8 +7,8 @@
         </div>
     </div>
 
-    <div class="header__logo hidden-sm-down">
-        <h1><a href="#" style="font-family:JetBrains Mono;font-size:20px;font-weight:bold">neuroTech</a></h1>
+    <div class="header__logo hidden-sm-down">      
+        <h1><a href="#" style="font-family:JetBrains Mono;font-size:20px;font-weight:bold">  <img class="user__img" src=<?=base_url("assets/img/logo/brain-logo.png")?> alt="">neuroTech</a></h1>
     </div>
 
 

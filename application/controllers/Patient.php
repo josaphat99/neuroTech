@@ -13,6 +13,11 @@ class Patient extends CI_Controller {
         $this->load->view('layout/topbar');
         $this->load->view('layout/sidebar');
         $this->load->view('layout/preloader');
+
+        if(!$this->session->connected || $this->session->type != "patient")
+		{
+			redirect('signinup/connexion');
+		}
     }	
 
     //==========La charger le js et le footer====

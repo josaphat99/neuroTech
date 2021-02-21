@@ -31,11 +31,14 @@
         <?php
             }else{
         ?>
-              <li class="navigation__sub navigation__active">
-                    <a href="#"><i class="zmdi zmdi-collection-account"></i>Passer exercice</a>                   
+              <li>
+                    <a href=<?=site_url('passation')?> id="home"><i class="zmdi zmdi-home"></i>Acceuil</a>                   
                 </li>
-                <li class="navigation__sub">
-                    <a href="#"><i class="zmdi zmdi-collection-book"></i>Resultats</a>                   
+                <li>
+                    <a href=<?=site_url('exercice/view_recommandation')?>><i class="zmdi zmdi-receipt zmdi-hc-fw"></i>Recommandations</a>                   
+                </li>
+                <li>
+                    <a href=<?=site_url('acceuil/view_guide')?>><i class="zmdi zmdi-receipt zmdi-hc-fw"></i>Guide d'utilisation</a>                   
                 </li>
         <?php
             }
@@ -43,3 +46,16 @@
     </ul>
 </div>
 </aside>
+
+<script>
+    $(function(){
+        $('#home').click(function(e)
+        {
+            e.preventDefault();
+            $.post("<?=site_url('ajax/mmse_flash_check')?>",{flash:'mmse'},function(data){
+                console.log(data);
+            });
+            location.assign("<?= site_url("passation")?>")
+        });
+    })
+</script>

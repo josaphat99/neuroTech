@@ -167,6 +167,31 @@ class Ajax extends CI_Controller
         
     }
 
+    public function mmse_flash(){
+        $d = array('mmse'=>true);
+        $this->session->set_flashdata($d);
+        
+         //===creation de la session des fonction===
+         $this->session->set_userdata([
+            'orientation' => 0,
+            'apprentissage' => 0,
+            'attention' => 0,
+            'rappel' => 0,
+            'langage' => 0
+        ]);
+        echo 'session creee';
+    }
+    
+    public function mmse_flash_check()
+    {
+        if($this->session->mmse)
+        {
+            $this->session->mmse = null;
+            echo 'session detruite';
+        }else{
+            echo 'pas de session';
+        }        
+    }
    
 }
 ?>

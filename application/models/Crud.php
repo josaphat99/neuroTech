@@ -22,6 +22,12 @@ class Crud extends CI_Model
         return $this->db->get($table)->result();
 	}
 
+	public function get_data_desc_by_field($table,$clause=[],$field)
+	{
+		$this->db->order_by($field,'DESC');
+        $this->db->where($clause);
+        return $this->db->get($table)->result();
+	}
 
 	public function add_data($table, $data){
 		$this->db->insert($table, $data);

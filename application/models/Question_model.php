@@ -13,7 +13,7 @@ class Question_model extends CI_Model
         //verification de la reponse
         if(strtolower(trim($question[0]->vraireponse)) == strtolower(trim($response)))
         {
-            return $question->cote;
+            return $question[0]->cote;
         }
         else{
             return 0;

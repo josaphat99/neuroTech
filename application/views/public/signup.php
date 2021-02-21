@@ -13,6 +13,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href=<?=site_url("signinup/connexion")?>>Avez-vous déjà un compte?</a>                                
+                                <a class="dropdown-item" href=<?=site_url("acceuil/view_guide")?>>Guide d'utilisation</a>
                             </div>
                         </div>
                     </div>

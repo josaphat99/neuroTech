@@ -76,14 +76,14 @@ class SignInUp extends CI_Controller
                 //gestion des interfaces selon les differents utilisateurs
                 if(trim($res[0]->type) == trim("patient"))
                 {
-                    redirect('patient');                    
+                    redirect('passation');                    
                 }               
                 else if(trim($res[0]->type) == trim("admin"))
                 {
                     redirect('utilisateur/index'); 
                 }
                 else{
-                    redirect('patients'); 
+                    redirect('passation'); 
                 }
             }
             else{

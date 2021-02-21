@@ -205,4 +205,27 @@ class Exercice extends CI_Controller {
 		}		
 	}
 
+	public function view_recommandation()
+	{
+		if($this->session->type != 'patient')
+		{
+			redirect('signinup/connexion');
+		}
+
+		$recommandation = $this->Crud->get_data('recommandation',['utilisateur_id'=>$this->session->id]);  
+
+		foreach($recommandation as $r)
+		{
+			$r->titre = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->titre;
+			$r->type = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->type;
+			$r->maximum = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->maximum;
+			$r->niveau = $this->Crud->get_data('niveau',['id'=>
+						 $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->niveau_id])[0]->nom;                
+		} 
+
+		$d['mr'] = $recommandation;
+		$this->load->view('patient/recommandations',$d);
+		$this->load->view('layout/js');
+		$this->load->view('layout/footer');
+	}
 }

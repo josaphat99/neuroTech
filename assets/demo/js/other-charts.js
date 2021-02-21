@@ -1,12 +1,12 @@
 'use strict';
 
-$(document).ready(function () {
+$(document).ready(function() {
     /*---------------------------------------
         jQuery Sparklines
     ----------------------------------------*/
 
     // Quick stats bar chart
-    if($('.sparkline-bar-stats')[0]) {
+    if ($('.sparkline-bar-stats')[0]) {
         $('.sparkline-bar-stats').sparkline('html', {
             type: 'bar',
             height: 36,
@@ -81,6 +81,7 @@ $(document).ready(function () {
         });
     }
 
+
     //Sample Sparkline Pie Chart
     if ($('.sparkline-pie')[0]) {
         $('.sparkline-pie').sparkline('html', {
@@ -93,20 +94,20 @@ $(document).ready(function () {
     /*---------------------------------------
         Easy Pie Charts
     ----------------------------------------*/
-    if($('.easy-pie-chart')[0]) {
-        $('.easy-pie-chart').each(function () {
+    if ($('.easy-pie-chart')[0]) {
+        $('.easy-pie-chart').each(function() {
             var value = $(this).data('value');
             var size = $(this).data('size');
             var trackColor = $(this).data('track-color');
             var barColor = $(this).data('bar-color');
 
             $(this).find('.easy-pie-chart__value').css({
-                lineHeight: (size)+'px',
-                fontSize: (size/4)+'px',
+                lineHeight: (size) + 'px',
+                fontSize: (size / 4) + 'px',
                 color: barColor
             });
 
-            $(this).easyPieChart ({
+            $(this).easyPieChart({
                 easing: 'easeOutBounce',
                 barColor: barColor,
                 trackColor: trackColor,
