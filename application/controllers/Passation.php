@@ -17,7 +17,8 @@ class Passation extends CI_Controller {
         $this->load->model('Passation_model','passation');
         $this->load->model("Exercice_model",'exercice');
         $this->load->model("Niveau_model",'niveau');
-        $this->load->model("Question_model",'question');        
+        $this->load->model("Question_model",'question');
+        $this->load->model("Recommandation",'recommandation');         
         //$this->load->model("Exercice_model",'exercice');   
         if(!$this->session->connected)
 		{
@@ -430,59 +431,16 @@ class Passation extends CI_Controller {
         $max_exercice = $exercice->maximum;
         $exercice_niveau = $this->Crud->get_data('niveau',['id'=>$exercice->niveau_id])[0];
         $indice = $exercice_niveau->indice;
-        $recommandation = '';
-        $next_exercice = '';
-        
+        $recommandation = null;
+
         //===Creation d'une recommandation par rapport a la cote===
         $percent_got = $this->session->cote_cognitive * 100 / $max_exercice;
-
-        if($percent_got >= 70)
+        //===recuperation des recommandation===
+        $recommandation == $this->recommandation->create_recommandation($percent_got,$indice);
+        
+        if($recommandation != null)
         {
-            //selection d'un exercice du niveau superieur
-            if($indice == 3 || $indice == 2)
-            {
-                $niveau_sup = $this->Crud->get_data('niveau',['indice'=>$indice-1])[0];
-                $index = random_int(0,count($this->exercice->exercice_not_done($niveau_sup->id))-1);
-                $recommandation = $this->exercice->exercice_not_done($niveau_sup->id)[$index];
-            }
-            else if($indice == 1)
-            {
-                $niveau = $this->Crud->get_data('niveau',['indice'=>$indice])[0];
-                $nb_exercice = count($this->exercice->nb_exercice_done($niveau->id));
-
-                //===s'il y a au moins deux exercices fait a c niveau on passe au mme===
-                if($nb_exercice >= 2)
-                {
-                    $recommandation = $this->Crud->get_data('exercice',['type'=>'mmse'])[0];
-                }else{
-                    //selection d'un exercice du meme niveau
-                    $index = random_int(0,count($this->exercice->exercice_not_done($exercice_niveau->id))-1);
-                    $next_exercice = $this->exercice->exercice_not_done($exercice_niveau->id)[$index];
-                }
-                
-            }
-        }
-        else if($percent_got >= 50 && $percent_got <= 69){
-            //selection d'un exercice du meme niveau
-            $index = random_int(0,count($this->exercice->exercice_not_done($exercice_niveau->id))-1);
-            $next_exercice = $this->exercice->exercice_not_done($exercice_niveau->id)[$index];
-        }
-        else{
-            //selection d'un exercice du niveau inferieur
-            if($indice == 1 || $indice == 2)
-            {
-                $niveau_inf = $this->Crud->get_data('niveau',['indice'=>$indice+1])[0];
-                $index = random_int(0,count($this->exercice->exercice_not_done($niveau_inf->id))-1);
-                $recommandation = $this->exercice->exercice_not_done($niveau_inf->id)[$index];
-            }
-            //exercice du meme niveau 
-            else if($indice == 3){
-                $index = random_int(0,count($this->exercice->exercice_not_done($exercice_niveau->id))-1);
-                $next_exercice = $this->exercice->exercice_not_done($exercice_niveau->id)[$index];
-            }
-        }
-        if($recommandation != '')
-        {
+            //===creation d'une recommandation===
             $this->Crud->add_data('recommandation',array(
                 'utilisateur_id' => $this->session->id,
                 'exercice_id' => $recommandation->id
