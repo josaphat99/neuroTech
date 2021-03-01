@@ -104,7 +104,8 @@ class Recommandation extends CI_Model
 
         if($percent_got >= 70)
         {
-            $recommandation = $this->rc_70($indice,$niveau);
+            //on recommande un exercice du niveau superieur
+            $recommandation = $this->rc_70($indice,$niveau);            
         }
         else if($percent_got >= 50 && $percent_got <= 69){
             //selection d'un exercice du meme niveau
@@ -114,7 +115,6 @@ class Recommandation extends CI_Model
             //selection d'un exercice du niveau inferieur
            $recommandation = $this->rc_50_69($indice,$niveau);
         }
-
         return $recommandation;
     }
 //================================================================================>//
@@ -143,6 +143,7 @@ class Recommandation extends CI_Model
         else if($indice == 3){
             $recommandation = $this->rc_same_level($niveau);
         }
+        return $recommandation;
     }
 
 
@@ -159,7 +160,7 @@ class Recommandation extends CI_Model
             if(count($this->exercice->exercice_not_done($niveau_sup->id)) > 0)
             {
                 $index = random_int(0,count($this->exercice->exercice_not_done($niveau_sup->id))-1);
-                $recommandation = $this->exercice->exercice_not_done($niveau_sup->id)[$index];
+                $recommandation = $this->exercice->exercice_not_done($niveau_sup->id)[$index];                
             }             
             else{
                 //s'il n'ya pas
@@ -178,7 +179,6 @@ class Recommandation extends CI_Model
                 $recommandation = $this->rc_same_level($niveau);
             }                
         }
-
         return $recommandation;
     }
 
@@ -195,4 +195,9 @@ class Recommandation extends CI_Model
 
         return $recommandation;
     }
+     //supprmer un exercice recommandé
+   public function delete_recommanded_exercice($exercice_id)
+   {
+        $this->Crud->delete_data('recommandation',['exercice_id'=>$exercice_id,'utilisateur_id'=>$this->session->id]);
+   }
 }

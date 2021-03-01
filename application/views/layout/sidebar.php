@@ -35,10 +35,10 @@
                     <a href=<?=site_url('passation')?> id="home"><i class="zmdi zmdi-home"></i>Acceuil</a>                   
                 </li>
                 <li>
-                    <a href=<?=site_url('exercice/view_recommandation')?>><i class="zmdi zmdi-receipt zmdi-hc-fw"></i>Recommandations</a>                   
+                    <a href=<?=site_url('exercice/view_recommandation')?>><i class="zmdi zmdi-card-membership zmdi-hc-fw"></i> Recommandations</a>                   
                 </li>
                 <li>
-                    <a href=<?=site_url('acceuil/view_guide')?>><i class="zmdi zmdi-receipt zmdi-hc-fw"></i>Guide d'utilisation</a>                   
+                    <a href=<?=site_url('acceuil/view_guide')?>><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i>  Guide d'utilisation</a>                   
                 </li>
         <?php
             }

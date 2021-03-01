@@ -5,7 +5,7 @@
 </style>
 
 <?php
-    if (!$no_exercice) {
+  if (!$no_exercice) {
         $margin_reponse = "margin-top:-20px";
         $question_size = count($questions); 
 ?>
@@ -112,10 +112,10 @@
             } ?>
                             
                     </div>
-                                           
+                    <p class="text-red text-center animated fadeIn" id=<?="error_found".$i?> hidden>Veuillez repondre avant de passer à la question suivante SVP!</p>
                     <div class="row">
                         <div style="margin:auto">
-                            <input type="text" name="answer" id=<?="answer-".$i?> hidden>
+                            <input type="text" name="answer" id=<?="answer-".$i?> value="<?=$questions[$i]->cote == 0? 'no_response':''?>" hidden>
                             <input type="text" name="id" id=<?="id-".$i?> value="<?=$questions[$i]->id?>" hidden>
                             <button class="btn btn--icon login__block__btn Subtn" id=<?="submit-".$i?>><i id=<?="icon-".$i?> class="zmdi zmdi-arrow-right"></i></button>
                             <button class="btn  login__block__btn Terminer" id=<?="terminer-".$i?>>Terminer</button>
@@ -141,6 +141,7 @@
         </div>
     </div>
 </div>
+</section>
 <?php
     }
 ?>
@@ -165,12 +166,7 @@
             var id = e.target.getAttribute('id').split('-')[1];
             var idPlus = parseInt(id) + 1; 
             var error_found = false;
-             //===passage a la question suivante===
-             if(error_found == false)
-            {
-                $('#div'+id).attr('hidden',true);
-                $('#div'+idPlus).removeAttr('hidden');
-            }
+       
             //===correction par rapport au type de question===
             //-question traditionnelle ou qcm-
             if($('#reponse-'+id).val() != null)
@@ -181,21 +177,30 @@
             {
                 $('#answer-'+id).val($('#assertion-'+id).val());
             }
-            
-            //-envoi a ajax-
-            if($('#answer-'+id).val() != '')
+            //===passage a la question suivante===
+            if($('#answer-'+id).val() == '')
             {
-                $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
-                    console.log(data);
-                })
+                console.log('c pass pas');
+                $('#error_found'+id).removeAttr('hidden'); 
             }
-              //===Le bouton terminer===
-              //-affichage-
-            if(idPlus == <?=$question_size-1?>)
-            {
-                $('.Terminer').removeAttr('hidden');
-                $('.Subtn').attr('hidden',true);
-            }          
+            else{
+                $('#div'+id).attr('hidden',true);
+                $('#div'+idPlus).removeAttr('hidden');
+                 //-envoi a ajax-
+                if($('#answer-'+id).val() != 'no_response')
+                {
+                    $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
+                    console.log(data);
+                    })  
+                }
+                //===Le bouton terminer===
+                //-affichage-
+                if(idPlus == <?=$question_size-1?>)
+                {
+                    $('.Terminer').removeAttr('hidden');
+                    $('.Subtn').attr('hidden',true);
+                } 
+            }     
         });
 
         $('.Terminer').click(function(e)
@@ -215,17 +220,20 @@
                 $('#answer-'+id).val($('#assertion-'+id).val());
             }
 
-            //-envoi a ajax-
-            if($('#answer-'+id).val() != '')
+            if($('#answer-'+id).val() == '')
             {
-                $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
-                    console.log(data);
-                    location.assign("<?=site_url("passation/cognitive_exercice_process")?>");
-                })
+                console.log('c pass pas');
+                $('#error_found'+id).removeAttr('hidden'); 
+            }else{
+                if($('#answer-'+id).val() != 'no_response')
+                {
+                    //-envoi a ajax-
+                    $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
+                        console.log(data);
+                        location.assign("<?=site_url("passation/cognitive_exercice_process")?>");
+                    })
+                }
             }
-
-            
         })
-    
     })
 </script>

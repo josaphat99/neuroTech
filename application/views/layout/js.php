@@ -22,7 +22,6 @@
 <script src=<?= base_url('assets/demo/js/flot-charts/chart-tooltips.js')?>></script>
 <script src=<?= base_url('assets/demo/js/other-charts.js')?>></script>
 <script src=<?= base_url('assets/demo/js/jqvmap.js')?>></script>
-
 <!-- App functions and actions -->
 <script src=<?= base_url('assets/js/app.min.js')?>></script>
 

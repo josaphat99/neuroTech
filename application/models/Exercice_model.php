@@ -62,4 +62,21 @@ class Exercice_model extends CI_Model
         }
         return $exr_array;
     }
+
+    //verifie si le patient a deja passe le mmse
+    public function check_mmse()
+    {
+        $this->load->model('Crud');
+
+        $user_id = $this->session->id;
+        $e = $this->Crud->get_data('exercice',['type'=>'mmse'])[0];
+        $passation = $this->Crud->get_data('passation',['utilisateur_id'=>$user_id,'exercice_id'=>$e->id]);
+        
+        if(count($passation) > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

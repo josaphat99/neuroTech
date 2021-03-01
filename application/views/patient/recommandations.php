@@ -21,8 +21,7 @@
                             <th>Type</th>
                             <th>Maximum</th>
                             <th>Niveau</th>                            
-                            <!-- <th>Nombre de questions</th> -->
-                            <th>Actions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>                    
                     <tbody id="t-body">
@@ -42,7 +41,7 @@
                                             <input type="text" name="exercice_id" value=<?=$r->exercice_id?> hidden>
                                             <button class="btn btn-success btn--raised" title="Commencer"><i class="zmdi zmdi-square-right zmdi-hc-fw"></i></button>
                                         </form>                                                                                                                        
-                                    </td>
+                                    </td>                                  
                                 </tr>
                         <?php
                             }

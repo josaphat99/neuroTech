@@ -24,8 +24,8 @@
                 </button>
             </a>
             &nbsp;&nbsp;
-            <a href=<?=site_url('passation/cognitive_exercice')?>>
-                <button class="btn btn-secondary">
+            <a href="#">
+                <button id="exe-cognitif" class="btn btn-secondary">
                     Commencer un exercice
                 </button>
             </a>
@@ -41,7 +41,17 @@
 
                 <div class="stats__info">
                     <div>
-                        <h5>5|30</h5>
+                    <?php
+                        if($last_mmse != null){
+                    ?>
+                        <h5><?=$last_mmse->resultat?></h5>
+                    <?php
+                        }else{
+                    ?>
+                        <h6>Aucun test d'evaluation passé</h6>
+                    <?php
+                        }
+                    ?>
                         <small>Résultat du test d'évaluation</small>
                     </div>
                 </div>
@@ -56,7 +66,7 @@
 
                 <div class="stats__info">
                     <div>
-                        <h6>Déficit cognitif léger</h6>
+                        <h6><?=$niveau?></h6>
                         <small>Niveau Mental</small>
                     </div>
                 </div>
@@ -71,7 +81,7 @@
 
                 <div class="stats__info">
                     <div>
-                        <h5>50</h5>
+                        <h5><?=count($e_done)?></h5>
                         <small>Exercices passés</small>
                     </div>
                 </div>
@@ -86,7 +96,7 @@
 
                 <div class="stats__info">
                     <div>
-                        <h2>3</h2>
+                        <h2><?=count($mr)?></h2>
                         <small>Exercices recommandés</small>
                     </div>
                 </div>
@@ -100,6 +110,9 @@
         <header class="content__title">
             <h1><b>EXERCICES PASSES</b></h1>
         </header>
+            <?php
+                if (count($exercices) > 0) {
+                    ?>
             <div class="table-responsive">
                 <table id="data-table" class="table table-bordered">
                     <thead class="thead-default">
@@ -116,8 +129,8 @@
                     <tbody id="t-body">
                         <?php
                             $num = 0;
-                            foreach($exercices as $e)
-                            { $num++?> 
+                    foreach ($exercices as $e) {
+                        $num++?> 
                                 <tr>
                                     <td style="text-align: center;"><?=$num?></td>
                                     <td ><?=$e->titre?></td>
@@ -127,8 +140,7 @@
                                     <td style="text-align: center;"><?=$e->datepassation?></td>
                                     <td class="text-center">
                                         <?php
-                                            $action = $e->type == 'mmse'? 'voir_resultat_mmse' : 'voir_resultat_cognitif';
-                                        ?>
+                                            $action = $e->type == 'mmse'? 'voir_resultat_mmse' : 'voir_resultat_cognitif'; ?>
                                         <form action=<?=site_url('passation/'.$action)?> method="post">
                                             <input type="text" name="exercice_id" value=<?=$e->id?> hidden>
                                             <input type="text" name="date" value="<?=$e->datepassation?>" hidden>
@@ -137,11 +149,19 @@
                                     </td>
                                 </tr>
                         <?php
-                            }
+                    }
+                
                         ?>                                                          
                     </tbody>
                 </table>
             </div>
+            <?php
+            }else{
+            ?>
+                <p class="text-center">Aucun exercice passé</p>
+            <?php
+            }
+            ?>
         </div>
     </div>
     <hr>
@@ -182,9 +202,9 @@
                                     <td style="text-align: center;"><?=$r->niveau?></td>                                    
                                     <!-- <td style="text-align: center;"><$r->nbquestion?></td> -->
                                     <td class="text-center">
-                                        <form action=<?=site_url('passation/recommanded_exercice')?> method="post">
+                                        <form class="form-rec" id=<?="form-".$r->id?> action=<?=site_url('passation/recommanded_exercice')?> method="post">
                                             <input type="text" name="exercice_id" value=<?=$r->exercice_id?> hidden>
-                                            <button class="btn btn-success btn--raised" title="Commencer"><i class="zmdi zmdi-square-right zmdi-hc-fw"></i></button>
+                                            <button id=<?=$r->type."-".$r->id?> class="btn btn-success btn--raised submit-rec" title="Commencer"><i class="zmdi zmdi-square-right zmdi-hc-fw"></i></button>
                                         </form>                                                                                                                        
                                     </td>
                                 </tr>
@@ -229,5 +249,43 @@
             speechSynthesis.speak(speech);
         });
        
+        //en cliqant sur commencer exercice
+        $('#exe-cognitif').click(function(e)
+        {
+            e.preventDefault();
+            $.post("<?=site_url('ajax/check_mmse')?>",{},function(data){
+                if(data == 0){
+                    Swal.fire({
+                        title: 'Vous n\'avez pas encore passé le test d\'evaluation!!',
+                        showCancelButton: true,
+                        cancelButtonText: 'Annuler',
+                        confirmButtonText: `Lancer le test`,
+                        }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            $('#lancer_mmse').click();
+                        }
+                    })
+                }else{
+                    location.assign("<?=site_url("passation/cognitive_exercice")?>");
+                }
+            })
+        });
+
+        //en cliquant sur le btn de recommandation
+        $('.submit-rec').click(function(e)
+        {
+            e.preventDefault();
+
+            var id = e.target.getAttribute('id').split('-')[1];
+            var type = e.target.getAttribute('id').split('-')[0];
+
+            if(type == 'mmse'){
+                $('#lancer_mmse').click();
+            }else{
+                $('#form-'+id).submit();
+            }
+
+        })
     })
 </script>

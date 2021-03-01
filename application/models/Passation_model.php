@@ -42,7 +42,7 @@ class Passation_model extends CI_Model
                  ->from('passation')
                  ->join('exercice','exercice.id = passation.exercice_id')
                  ->join('niveau','exercice.niveau_id = niveau.id')
-                 ->where(['utilisateur_id'=>$user_id])
+                 ->where(['passation.utilisateur_id'=>$user_id])
                  ->order_by('passation.id','DESC')
                  ->limit(5)
                  ->get()

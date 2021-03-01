@@ -7,7 +7,12 @@
 <link rel="stylesheet" href=<?= base_url()."assets/plugins/fontawesome-free/css/all.min.css"?>>
 <!-- App styles -->
 <link rel="stylesheet" href=<?= base_url('assets/css/app.min.css')?>>
+<!--==============================sweetAlert===============================================-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src=<?= base_url('assets/demo/js/sweetalert2/sweetalert2.all.min.js')?>></script>
+<script src=<?= base_url('assets/demo/js/sweetalert2/sweetalert2.min.js')?>></script>
+<link rel="stylesheet" href=<?= base_url('assets/demo/js/sweetalert2/sweetalert2.min.css')?>>
+<!--==========================sweetAlert===================================================-->
 <script src=<?= base_url('assets/vendors/jquery/jquery.min.js')?>></script>
 </head>
 <body data-ma-theme="green">

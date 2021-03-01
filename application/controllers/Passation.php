@@ -35,7 +35,14 @@ class Passation extends CI_Controller {
     public function index()
     {
         $e = $this->passation->all_exercice_done();
-        $recommandation = $this->Crud->get_data('recommandation',['utilisateur_id'=>$this->session->id]);  
+        $e_done = $this->Crud->get_data('passation',['utilisateur_id'=>$this->session->id]);
+        $last_mmse = null;
+        if(count($this->passation->get_last_mmse()) > 0)
+        {
+            $last_mmse = $this->passation->get_last_mmse()[0];
+        }
+        $recommandation = $this->Crud->get_data_desc('recommandation',['utilisateur_id'=>$this->session->id]);  
+
 
         foreach($recommandation as $r)
         {
@@ -45,11 +52,19 @@ class Passation extends CI_Controller {
             $r->niveau = $this->Crud->get_data('niveau',['id'=>
                             $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->niveau_id])[0]->nom;                
         }
-
+        $niveau = null;
+        if($this->last_niveau() != null)
+        {
+            $niveau = $this->last_niveau()->nom;
+        }else{
+            $niveau = 'Aucun niveau défini';
+        }
         $d['mr'] = $recommandation;
         $d['exercices'] = $e;
+        $d['e_done'] = $e_done;
+        $d['niveau'] = $niveau;
         $d['mmse'] = $this->mmse();
-
+        $d['last_mmse'] = $last_mmse;
         $this->load->view('patient/index',$d);
         $this->js_footer();
     }
@@ -257,6 +272,7 @@ class Passation extends CI_Controller {
         $this->Crud->add_data('reponse',array('reponse'=>$response,'question_id'=>$id));
 
         //renvoi des donnees
+        
         echo $this->session->cote_mmse;
         die();
     }
@@ -305,8 +321,8 @@ class Passation extends CI_Controller {
         $this->session->cote_mmse = null;
         $this->session->exercice_id = null; 
 
-        //creation de la session de la cote
-        $this->session->set_userdata($d);
+        // //creation de la session de la cote
+        // $this->session->set_userdata($d);
         //===redirection a la page voir_resultat===        
         redirect('passation/voir_resultat_mmse');
     }
@@ -315,10 +331,15 @@ class Passation extends CI_Controller {
     public function last_niveau()
     {
         $user_id = $this->session->id;
-
-        $niveau = $this->Crud->get_data('niveau',['id'=>
-                  $this->Crud->get_data_desc('detailniveau',
-                  ['utilisateur_id'=>$user_id])[0]->niveau_id])[0];
+        if(count($this->Crud->get_data('detailniveau',['utilisateur_id'=>$user_id])) > 0)
+        {
+            $niveau = $this->Crud->get_data('niveau',['id'=>
+            $this->Crud->get_data_desc('detailniveau',
+            ['utilisateur_id'=>$user_id])[0]->niveau_id])[0];
+        }else{
+            $niveau = null;
+        }
+       
         return $niveau;
     }
     
@@ -327,8 +348,13 @@ class Passation extends CI_Controller {
         //===recuperation de la dernière cote et du niveau===
         if($this->input->post('exercice_id') != null)
         {
+            $this->session->orientation = null;
             $date = $this->input->post('date');
-            $passation = $this->Crud->get_data('passation',['datepassation'=>$date,'exercice_id'=>$this->input->post('exercice_id')])[0];
+            $passation = $this->Crud->get_data('passation',[
+                'datepassation' => $date,
+                'exercice_id' => $this->input->post('exercice_id'),
+                'utilisateur_id' => $this->session->id
+                ])[0];
         }else{
             $passation = $this->passation->get_last_mmse()[0];
         }
@@ -349,7 +375,7 @@ class Passation extends CI_Controller {
    //===Exercices cognitifs===
    public function cognitive_exercice()
    {
-        $no_exercice = false;
+       $no_exercice = false; //variable qui permet de verifier s'il y a un exercice a un niveau donné
        if ($this->input->post('exercice_id') != null) {
            $exercice = $this->Crud->get_data('exercice', ['id'=>$this->input->post('exercice_id')])[0];
            $niveau = $this->Crud->get_data('niveau',['id'=>$exercice->niveau_id])[0];
@@ -394,7 +420,7 @@ class Passation extends CI_Controller {
         $this->js_footer();
    }
 
-   //===correction de question exercice cogntif===
+   //===correction de question exercice cogntif (utilisé en Ajax)===
    public function correct_question_cognitive()
    {
         $question_id = $this->input->post('question_id');
@@ -435,16 +461,33 @@ class Passation extends CI_Controller {
 
         //===Creation d'une recommandation par rapport a la cote===
         $percent_got = $this->session->cote_cognitive * 100 / $max_exercice;
-        //===recuperation des recommandation===
-        $recommandation == $this->recommandation->create_recommandation($percent_got,$indice);
-        
-        if($recommandation != null)
+
+        //===recuperation des recommandation===        
+        $recommandation = $this->recommandation->create_recommandation($percent_got,$indice);  
+        //permet de verifier si cet exercce n'est pas deja dans la liste d'exercices.      
+        $check_rec = $this->Crud->get_data('recommandation',['exercice_id'=>$recommandation->id,
+        'utilisateur_id' => $this->session->id]);
+
+        if($recommandation != null && count($check_rec) == 0) 
         {
             //===creation d'une recommandation===
             $this->Crud->add_data('recommandation',array(
                 'utilisateur_id' => $this->session->id,
-                'exercice_id' => $recommandation->id
+                'exercice_id' => $recommandation->id,
+                'on_exe_id' => $this->session->exercice_id
             ));
+        }
+
+        /**
+         * suppression de l'exercice dans la table recommandation
+         * s'il a deja été recommandé au user
+         */
+        $exe_recommanded = $this->Crud->get_data('recommandation',
+        ['exercice_id'=>$this->session->exercice_id,'utilisateur_id'=>$this->session->id]);
+
+        if(count($exe_recommanded) > 0)
+        {
+            $this->recommandation->delete_recommanded_exercice($this->session->exercice_id);
         }
 
         $this->session->cote_cognitive = null;
@@ -458,19 +501,24 @@ class Passation extends CI_Controller {
        //===recuperation de la dernière cote et du niveau===
        if($this->input->post('exercice_id') != null)
        {
-        $passation = $this->Crud->get_data('passation',['exercice_id'=>$this->input->post('exercice_id')])[0];
+        $date = $this->input->post('date');
+        $passation = $this->Crud->get_data('passation',[
+            'utilisateur_id'=>$this->session->id,
+            'exercice_id'=>$this->input->post('exercice_id'),
+            'datepassation' => $date
+            ])[0];
        }else{
         $passation = $this->passation->get_last_cognitif()[0];
        }
         
         $exercice = $this->Crud->get_data('exercice',['id'=>$passation->exercice_id])[0];
-        $recommandation = '';
+        $recommandation = null;
         $next_exercice = '';
         $niveau = $this->last_niveau();
         
-        if(count($this->Crud->get_data('recommandation',['utilisateur_id'=>$this->session->id])) >= 1)
+        if(count($this->Crud->get_data('recommandation',['utilisateur_id'=>$this->session->id,'on_exe_id'=>$exercice->id])) >= 1)
         {
-            $recommandation = $this->Crud->get_data('recommandation',['utilisateur_id'=>$this->session->id]);  
+            $recommandation = $this->Crud->get_data_desc('recommandation',['utilisateur_id'=>$this->session->id,'on_exe_id'=>$exercice->id]);  
             foreach($recommandation as $r)
             {
                 $r->titre = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->titre;
@@ -523,4 +571,5 @@ class Passation extends CI_Controller {
            $this->cognitive_exercice();
        }       
    }
+  
 }

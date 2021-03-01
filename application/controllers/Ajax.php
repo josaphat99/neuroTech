@@ -193,5 +193,15 @@ class Ajax extends CI_Controller
         }        
     }
    
+    public function check_mmse()
+    {
+        $this->load->model('Exercice_model','exercice');
+        if($this->exercice->check_mmse() == false){
+           echo 0;
+        }
+        else{
+            echo 1;
+        }
+    }
 }
 ?>
