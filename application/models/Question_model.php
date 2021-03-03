@@ -19,13 +19,4 @@ class Question_model extends CI_Model
             return 0;
         }
     }
-
-    // public function test()
-    // {
-    //     $test = $this->checkAnswer(1,'response');
-    //     $expected_result = 1;
-    //     echo $this->unit->run($test, $expected_result);
-
-       
-    // }
 }

@@ -74,15 +74,20 @@ class Passation extends CI_Controller {
     public function get_position()
     {
         $ip = $_SERVER['REMOTE_ADDR'];
+        
         $query = @unserialize(file_get_contents('http://ip-api.com/php/'));
-        $city = 'lubumbashi';
-        $region = 'haut-katanga';
+        $city = '';
+        $region = '';
 
         if($query && $query['status'] == 'success') 
         {
             $city = $query['city'];
-            $region = $query['region'];
+            $region = $query['regionName'];
         }
+
+        $city = strtolower($city);
+        $region = strtolower($region);
+        
         return [$city,$region];
     }    
 

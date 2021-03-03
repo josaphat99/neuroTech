@@ -256,13 +256,14 @@
             $.post("<?=site_url('ajax/check_mmse')?>",{},function(data){
                 if(data == 0){
                     Swal.fire({
-                        title: 'Vous n\'avez pas encore passé le test d\'evaluation!!',
+                        title: 'Vous n\'avez pas encore passé le test d\'evaluation de la mémoire!!',
                         showCancelButton: true,
                         cancelButtonText: 'Annuler',
                         confirmButtonText: `Lancer le test`,
                         }).then((result) => {
                         /* Read more about isConfirmed, isDenied below */
                         if (result.isConfirmed) {
+                            console.log('hey!');
                             $('#lancer_mmse').click();
                         }
                     })

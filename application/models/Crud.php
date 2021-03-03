@@ -56,11 +56,4 @@ class Crud extends CI_Model
 
         return $this->db->get()->result();
 	}
-
-	// public function tst()
-    // {
-    //     $data  = $this->get_data('exercices');
-    //     //verification du type de retour
-    //     echo $this->unit->run(count($data), 'is_int');
-    // }
 }

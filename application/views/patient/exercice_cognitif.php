@@ -48,8 +48,8 @@
                                         $margin_reponse = "margin:auto";
                                         if (count($questions[$i]->image) ==1) {
                                             ?>
-                                            <div class="col-md-7" style="margin-left:50px">
-                                                <img src="<?=base_url("assets/files/questions/".$questions[$i]->image[0]->image)?>" alt="Objet" height="400px" with="400px">
+                                            <div class="col-md-7 offset-md-3">
+                                                <img src="<?=base_url("assets/files/questions/".$questions[$i]->image[0]->image)?>" alt="Objet">
                                             </div>
                                         <?php
                                         } elseif (count($questions[$i]->image) ==2) {
