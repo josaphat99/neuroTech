@@ -92,18 +92,34 @@
                                             {                                        
                                         ?>
                                             <div class="col-md-5" style="margin-top:-35px" id=<?="reponse-".$i?>>
-                                                <div class="form-group form-group--float">                        
-                                                    <input type="text" class="form-control" id="annee" autocomplete="off">
-                                                    <label>Année</label>
-                                                    <i class="form-group__bar"></i>
+                                                <div class="form-group form-group--float">
+                                                    <label style="margin-top:-11px"></label>
+                                                    <div class="select">
+                                                        <select class="form-control" id="annee" autocomplete="off">
+                                                            <option id="saison_option">Year</option>
+                                                            <?php
+                                                                $index_tab = [];
+                                                                for($y=7;$y>=0;$y--){
+                                                                    $index = random_int(0,$y);
+                                                                    if (!in_array($index, $index_tab)) {
+                                                                        ?>
+                                                                <option value="<?=date('Y', time()) - $index?>"><?=date('Y', time()) - $index?></option>
+                                                            <?php
+                                                                $index_tab[]=$index;
+                                                                    }
+                                                                }
+                                                            ?>
+                                                        </select>
+                                                        <i class="form-group__bar"></i>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group form-group--float">
                                                     <label style="margin-top:-11px"></label>
                                                     <div class="select">
                                                         <select class="form-control" id="saison" autocomplete="off">
                                                             <option id="saison_option">Saison</option>
-                                                            <option value="pluie">Pluie</option>
-                                                            <option value="seche">Sèche</option>
+                                                            <option value="pluie">Rain</option>
+                                                            <option value="seche">Dry</option>
                                                         </select>
                                                         <i class="form-group__bar"></i>
                                                     </div>
@@ -112,40 +128,52 @@
                                                 <label style="margin-top:-11px"></label>
                                                     <div class="select">
                                                         <select class="form-control" id="mois" autocomplete="off">
-                                                            <option id="mois_option">Mois</option>
-                                                            <option value=1>Janvier</option>
-                                                            <option value=2>Février</option>
-                                                            <option value=3>Mars</option>
-                                                            <option value=4>Avril</option>
-                                                            <option value=5>Mai</option>
-                                                            <option value=6>Juin</option>
-                                                            <option value=7>Juillet</option>
-                                                            <option value=8>Aout</option>
-                                                            <option value=9>Septembre</option>
-                                                            <option value=10>Octobre</option>
-                                                            <option value=11>Novembre</option>
-                                                            <option value=12>Décembre</option>
+                                                            <option id="mois_option">Month</option>
+                                                            <option value=1>January</option>
+                                                            <option value=2>February</option>
+                                                            <option value=3>March</option>
+                                                            <option value=4>April</option>
+                                                            <option value=5>May</option>
+                                                            <option value=6>June</option>
+                                                            <option value=7>Jully</option>
+                                                            <option value=8>August</option>
+                                                            <option value=9>September</option>
+                                                            <option value=10>October</option>
+                                                            <option value=11>November</option>
+                                                            <option value=12>December</option>
                                                         </select>
                                                         <i class="form-group__bar"></i>
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group--float">                        
-                                                    <input type="text" class="form-control" id="jours_mois" autocomplete="off">
-                                                    <label>Jours du mois</label>
-                                                    <i class="form-group__bar"></i>
+                                                    <label style="margin-top:-11px"></label>
+                                                    <div class="select">
+                                                        <select class="form-control" id="jours_mois" autocomplete="off">
+                                                            <option id="mois_option">Day of month</option>
+                                                            <?php
+                                                                for($l=1;$l<=31;$l++)
+                                                                {
+                                                            ?>
+                                                                <option value=<?=$l?>><?=$l?></option>
+                                                            <?php
+                                                                }
+                                                            ?>                                                            
+                                                        </select>
+                                                        <i class="form-group__bar"></i>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group form-group--float">                        
                                                     <div class="select">
                                                         <label style="margin-top:-11px"></label>
                                                         <select class="form-control" id="jours_semaine" autocomplete="off">
-                                                            <option id="jsemaine_option">Jours de la semaine</option>
-                                                            <option value=1>Lundi</option>
-                                                            <option value=2>Mardi</option>
-                                                            <option value=3>Mercredi</option>
-                                                            <option value=4>Jeudi</option>
-                                                            <option value=5>Vrendredi</option>
-                                                            <option value=6>Samedi</option>
-                                                            <option value=0>Dimanche</option>                                                            
+                                                            <option id="jsemaine_option">Week day</option>
+                                                            <option value=1>Monday</option>
+                                                            <option value=2>Tuesday</option>
+                                                            <option value=3>Wednesday</option>
+                                                            <option value=4>Thursday</option>
+                                                            <option value=5>Friday</option>
+                                                            <option value=6>Saturday</option>
+                                                            <option value=0>Sunday</option>                                                            
                                                         </select>
                                                         <i class="form-group__bar"></i>
                                                     </div>
@@ -233,30 +261,36 @@
     </div>
 </section>
 
+
+<!--Les scripts-->
 <script>
+
     $(function(e)
     {
         //===Placement de questions===
         for(var i =0 ;i < <?=count($question)?>; i++)
         {
+            //orientation
             if(i==0)
             {
-                $('#phrase-'+i).html('Je vais vous poser quelques questions pour apprécier comment fonctionne votre mémoire. Les unes sont très simples, les autres un peu moins. Vous devez répondre du mieux que vous pouvez.');
+                $('#phrase-'+i).html('I will ask you some questions to appreciate how your memory works, some of theme are easier, others a bit less, you must answer as well as you can!');
                 $('#fonction').html('Orientation');
                 $('#submit-0').attr('disabled','disabled');
                 setTimeout(function(){$('#submit-0').removeAttr('disabled');},20000);
                 // $('#div'+i).removeClass('div-question');
             }          
+
             if(i==1)
             {
                 $('#phrase-'+i).html('Je vais vous poser maintenant quelques questions sur l\'endroit où nous sommes.');
                 $('#submit'+i).attr('hidden',true);
-
             }                
+
             if(i==2)
             {
                 $('#phrase-'+i).html('Je vais vous poser maintenant quelques questions sur l\'endroit où nous sommes.');
             }
+
             //===Apprentissage===
             if(i==3)
             {
@@ -307,6 +341,7 @@
         $('#div0').removeAttr('hidden');
 
         $('.Terminer').attr('hidden',true);
+
         //===passage a une autre question===
         $('.Subtn').click(function(e)
         {

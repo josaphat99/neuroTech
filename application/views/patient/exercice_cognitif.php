@@ -94,7 +94,7 @@
                                                 <div class="select">
                                                     <label></label>
                                                     <select class="form-control assertion" id=<?="assertion-".$i?> autocomplete="off">
-                                                        <option id=<?="assert-".$i?>>Assertions</option>
+                                                        <option id=<?="assert-".$i?> value="">Assertions</option>
                                                         <?php
                                                             for ($as=0;$as<count($questions[$i]->assertion);$as++) {
                                                                 ?>

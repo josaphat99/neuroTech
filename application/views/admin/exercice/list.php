@@ -119,7 +119,7 @@
                                     <td><?=$e->nom?></td>                                    
                                     <td style="text-align: center;"><?=$e->nbquestion?></td>
                                     <td>
-                                        <button class="btn btn-success btn--raised"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
+                                        <!-- <button class="btn btn-success btn--raised"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button> -->
                                         <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("exercice/delete")?>" method="post" style="float:right;">                                
                                             <input type="hidden" value="<?=$e->id?>" name="id">
                                             <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
@@ -156,9 +156,7 @@
                             <th>Titre</th>
                             <th>Type</th>
                             <th>Maximum</th>
-                            <th>Niveau</th>                            
-                            <!-- <th>Nombre de questions</th> -->
-                            <th>Actions</th>
+                            <th>Niveau</th>                    
                         </tr>
                     </thead>                    
                     <tbody id="t-body">
@@ -173,15 +171,6 @@
                                     <td><?=$r->maximum?></td>
                                     <td style="text-align: center;"><?=$r->nom?></td>                                    
                                     <!-- <td style="text-align: center;"><$r->nbquestion?></td> -->
-                                    <td>
-                                        <button class="btn btn-success btn--raised"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
-                                        <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("exercice/delete_recommandation")?>" method="post" style="float:right;">                                
-                                            <input type="hidden" value="<?=$r->id?>" name="id">
-                                            <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
-                                                <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
-                                            </button>
-                                        </form>                                                                                 
-                                    </td>
                                 </tr>
                         <?php
                             }
