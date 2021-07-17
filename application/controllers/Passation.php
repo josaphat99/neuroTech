@@ -34,12 +34,13 @@ class Passation extends CI_Controller {
     //===fonction index===
     public function index()
     {
-        $e = $this->passation->all_exercice_done();
-        $e_done = $this->Crud->get_data('passation',['utilisateur_id'=>$this->session->id]);
+        $user_id = $this->session->id;
+        $e = $this->passation->all_exercice_done($user_id);
+        $e_done = $this->Crud->get_data('passation',['utilisateur_id'=>$user_id]);
         $last_mmse = null;
-        if(count($this->passation->get_last_mmse()) > 0)
+        if(count($this->passation->get_last_mmse($user_id)) > 0)
         {
-            $last_mmse = $this->passation->get_last_mmse()[0];
+            $last_mmse = $this->passation->get_last_mmse($user_id)[0];
         }
         $recommandation = $this->Crud->get_data_desc('recommandation',['utilisateur_id'=>$this->session->id]);  
 
@@ -361,7 +362,7 @@ class Passation extends CI_Controller {
                 'utilisateur_id' => $this->session->id
                 ])[0];
         }else{
-            $passation = $this->passation->get_last_mmse()[0];
+            $passation = $this->passation->get_last_mmse($this->session->id)[0];
         }
 
         $niveau = $this->last_niveau();

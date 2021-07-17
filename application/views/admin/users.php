@@ -69,12 +69,21 @@
                                     <td>
                                         <button class="btn btn-success btn--raised edit" id=<?='edit-'.$p->id?>><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
                                         <button class="btn btn-success btn--raised animated bounceIn check" id=<?='check-'.$p->id?> hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
+                                       
                                         <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("utilisateur/delete")?>" method="post" style="float:right;">                                
                                             <input type="hidden" value="<?=$p->id?>" name="id">
-                                            <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
+                                            <button id="delete" class="btn btn-danger btn--raised" title="Delete">
                                                 <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
                                             </button>
-                                        </form>                                                                                 
+                                        </form>  
+
+                                        <form action="<?= site_url("exercice/user_detail")?>" method="post" style="float:right; margin-right:60px">                                
+                                            <input type="hidden" value="<?=$p->id?>" name="id_patient">
+                                            <input type="hidden" value="<?=$p->nomcomplet?>" name="name_patient">
+                                            <button id="see" class="btn btn-secondary btn--raised" title="See">
+                                                <i class="zmdi zmdi-eye zmdi-hc-fw"></i>
+                                            </button>
+                                        </form>                                                                                                                   
                                     </td>
                                 </tr>
                         <?php

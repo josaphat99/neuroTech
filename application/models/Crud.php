@@ -56,4 +56,15 @@ class Crud extends CI_Model
 
         return $this->db->get()->result();
 	}
+
+	public function join_on_view_result($e_id,$p_id,$date,$pass_id)
+	{
+		$this->db->select("*, question.id as id_question");
+		$this->db->from('exercice');
+		$this->db->join('passation', 'passation.exercice_id = exercice.id');
+		$this->db->join('question', 'exercice.id = question.exercice_id');
+		$this->db->where(['passation.id'=>$pass_id]);
+
+        return $this->db->get()->result();
+	}
 }

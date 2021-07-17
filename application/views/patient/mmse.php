@@ -38,7 +38,7 @@
 <section class="content" id="section_mmse" hidden>
     <div class="content__inner">
         <header class="content__title">
-            <h1><b>test d'evaluation de la memoire</b></h1>              
+            <h1><b>memory evaluation test</b></h1>              
         </header>
         <div class="card animated zoomIn">       
             <div class="stats__item bg-green"> 
@@ -75,8 +75,9 @@
                                             {
                                                 $img = true;
                                         ?>
-                                                <div class="col-md-3">
-                                                    <img src="<?=base_url("assets/files/questions/".$question[$i]->image)?>" alt="Objet" height="150px" with="150px">
+                                                <div class="col-md-4 col-xl-4 col-sm-4">
+                                                <!-- height="150px" with="150px" -->
+                                                    <img src="<?=base_url("assets/files/questions/".$question[$i]->image)?>" alt="Objet" class="img-responsive img-fluid">
                                                 </div>
                                                <br><br>
                                         <?php
@@ -96,7 +97,7 @@
                                                     <label style="margin-top:-11px"></label>
                                                     <div class="select">
                                                         <select class="form-control" id="annee" autocomplete="off">
-                                                            <option id="saison_option">Year</option>
+                                                            <option value="" id="year_option">Year</option>
                                                             <?php
                                                                 $index_tab = [];
                                                                 for($y=7;$y>=0;$y--){
@@ -117,7 +118,7 @@
                                                     <label style="margin-top:-11px"></label>
                                                     <div class="select">
                                                         <select class="form-control" id="saison" autocomplete="off">
-                                                            <option id="saison_option">Saison</option>
+                                                            <option id="saison_option" value="">Saison</option>
                                                             <option value="pluie">Rain</option>
                                                             <option value="seche">Dry</option>
                                                         </select>
@@ -125,10 +126,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group--float">                        
-                                                <label style="margin-top:-11px"></label>
+                                                    <label style="margin-top:-11px"></label>
                                                     <div class="select">
                                                         <select class="form-control" id="mois" autocomplete="off">
-                                                            <option id="mois_option">Month</option>
+                                                            <option id="mois_option" value="">Month</option>
                                                             <option value=1>January</option>
                                                             <option value=2>February</option>
                                                             <option value=3>March</option>
@@ -149,7 +150,7 @@
                                                     <label style="margin-top:-11px"></label>
                                                     <div class="select">
                                                         <select class="form-control" id="jours_mois" autocomplete="off">
-                                                            <option id="mois_option">Day of month</option>
+                                                            <option id="jmois_option" value="">Day of month</option>
                                                             <?php
                                                                 for($l=1;$l<=31;$l++)
                                                                 {
@@ -166,7 +167,7 @@
                                                     <div class="select">
                                                         <label style="margin-top:-11px"></label>
                                                         <select class="form-control" id="jours_semaine" autocomplete="off">
-                                                            <option id="jsemaine_option">Week day</option>
+                                                            <option id="jsemaine_option" value="">Week day</option>
                                                             <option value=1>Monday</option>
                                                             <option value=2>Tuesday</option>
                                                             <option value=3>Wednesday</option>
@@ -183,19 +184,85 @@
                                         }else{
                                             if ($question[$i]->num_question != 4 && 
                                                 $question[$i]->num_question != 5 && 
-                                                $question[$i]->num_question != 10
+                                                $question[$i]->num_question != 7 &&
+                                                $question[$i]->num_question != 10 &&
+                                                $question[$i]->num_question != 8  &&
+                                                $question[$i]->num_question != 9 
                                             ) 
                                             {
                                                 ?>      
                                             <div class="col-md-5" style="margin-top:-35px" id="<?="div-reponse".$i?>">
                                                 <div class="form-group form-group--float">                        
                                                     <input type="text" class="form-control" id=<?="reponse-".$i?> autocomplete="off">
-                                                    <label id=<?="label-".$i?>>Reponse</label>
+                                                    <label id=<?="label-".$i?>>Answer</label>
                                                     <i class="form-group__bar"></i>
                                                 </div>
                                             </div>
                                     <?php
                                             }
+                                            if($question[$i]->num_question == 7)
+                                            {
+                                    ?>
+                                            <div class="form-group form-group--float">                        
+                                                <div class="select">
+                                                    <label style="margin-top:-11px">Answer</label>
+                                                    <select class="form-control" id="dtc" autocomplete="off">
+                                                        <option value=""></option>
+                                                        <option value="door,shirt,pencil">Door, Shirt, Pencil</option>
+                                                        <option value="table,chair,shirt">Table, Chair, Shirt</option>
+                                                        <option value="door,table,shirt">Door,Table, Shirt</option>
+                                                        <option value="door,table,chair">Door, Table, Chair</option>
+                                                        <option value="door,table,pencil">Door, Table, Pencil</option>
+                                                        <option value="door,shirt,chair">Door, Shirt, Chair</option>
+                                                        <option value="shirt,table,door">Shirt, Table, Door</option>                                                            
+                                                    </select>
+                                                    <i class="form-group__bar"></i>
+                                                </div>
+                                            </div>
+                                    <?php
+                                            }
+                                            if($question[$i]->num_question == 8)
+                                            {
+                                    ?>
+                                            <div class="col-md-5">                                                
+                                                <div class="form-group form-group--float">                        
+                                                    <div class="select">
+                                                        <label style="margin-top:-11px">Answer</label>
+                                                        <select class="form-control" id="watch" autocomplete="off">
+                                                            <option value=""></option>
+                                                            <option value="car">Car</option>
+                                                            <option value="laptop">Laptop</option>  
+                                                            <option value="watch">Watch</option>   
+                                                            <option value="pencil">Pencil</option> 
+                                                            <option value="table">Table</option>                                                           
+                                                        </select>
+                                                        <i class="form-group__bar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    <?php
+                                            }
+                                            if($question[$i]->num_question == 9)
+                                            {
+                                    ?>
+                                            <div class="col-md-5">                                                
+                                                <div class="form-group form-group--float">                        
+                                                    <div class="select">
+                                                        <label style="margin-top:-11px">Answer</label>
+                                                        <select class="form-control" id="pencil" autocomplete="off">
+                                                            <option value=""></option>
+                                                            <option value="car">Car</option>
+                                                            <option value="laptop">Laptop</option>  
+                                                            <option value="watch">Watch</option>   
+                                                            <option value="pencil">Pencil</option> 
+                                                            <option value="table">Table</option>                                                     
+                                                        </select>
+                                                        <i class="form-group__bar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    <?php
+                                            }                                            
                                             if($question[$i]->num_question == 5)
                                             {
                                             ?>
@@ -204,7 +271,7 @@
                                                 for($p=1;$p<=15;$p++)
                                                 {
                                             ?>
-                                                <div class="col-md-2">
+                                                <div class="col-md-2 col-xl-3 col-sm-3">
                                                     <div class="form-group form-group--float">                        
                                                         <input type="text" class="form-control" id=<?="nb-".$p?> autocomplete="off">
                                                         <label><?=$p==1? '100':''?></label>
@@ -216,14 +283,14 @@
                                             ?>
                                             </div>                                                
                                     <?php
-                                            }
+                                            }                                            
                                             if($question[$i]->num_question == 10)
                                             {
                                     ?>
                                     <div class="col-md-5" style="margin-top:-35px">
                                         <div class="form-group form-group--float" id="div-reponse10">                        
                                             <div class="select">
-                                                <label style="margin-top:-7px">Reponse</label>
+                                                <label style="margin-top:-7px">Answer</label>
                                                 <select class="form-control" id="reponse10" autocomplete="off">
                                                     <option></option>
                                                     <option value='met,si,est'>Met,Si,Est</option>
@@ -248,7 +315,7 @@
                                     <input type="text" name="answer" id=<?="answer-".$i?> hidden>
                                     <input type="text" name="id" id=<?="id-".$i?> value="<?=$question[$i]->id?>" hidden>
                                 <button class="btn btn--icon login__block__btn Subtn" id=<?="submit-".$i?>><i id=<?="icon-".$i?> class="zmdi zmdi-arrow-right"></i></button>
-                                <button class="btn  login__block__btn Terminer" id=<?="terminer-".$i?>>Terminer</button>
+                                <button class="btn  login__block__btn Terminer" id=<?="terminer-".$i?>>Finish</button>
                             </div>
                         </div>                                             
                     </div>               
@@ -273,7 +340,7 @@
             //orientation
             if(i==0)
             {
-                $('#phrase-'+i).html('I will ask you some questions to appreciate how your memory works, some of theme are easier, others a bit less, you must answer as well as you can!');
+                $('#phrase-'+i).html('I will ask you a few questions, to appreciate how your memory works, some are very simple, others a little less. you need to answer as best as you can.!');
                 $('#fonction').html('Orientation');
                 $('#submit-0').attr('disabled','disabled');
                 setTimeout(function(){$('#submit-0').removeAttr('disabled');},20000);
@@ -282,19 +349,19 @@
 
             if(i==1)
             {
-                $('#phrase-'+i).html('Je vais vous poser maintenant quelques questions sur l\'endroit où nous sommes.');
+                $('#phrase-'+i).html('I\'m going to ask you now some questions about where we are.');
                 $('#submit'+i).attr('hidden',true);
             }                
 
             if(i==2)
             {
-                $('#phrase-'+i).html('Je vais vous poser maintenant quelques questions sur l\'endroit où nous sommes.');
+                $('#phrase-'+i).html('I\'m going to ask you now some questions about where we are.');
             }
 
             //===Apprentissage===
             if(i==3)
             {
-                $('#phrase-'+i).html('Je vais vous dire trois mots; je voudrais que vous me les répétiez et que vous essayiez de les retenir car je vous les redemanderai tout à l\'heure.');
+                $('#phrase-'+i).html('I will say three words; I would like you to repeat them to me and to try to retain them because I will ask you again later.');
                 $('#question-'+i).removeClass('col-md-7');
                 $('#question-'+i).addClass('col-md-12');
             }
@@ -302,7 +369,7 @@
             if(i==6)
             {
                 // $('#fonction-'+i).html('Attention et calcul');
-                $('#label-'+i).html('Exemple: Mot1,Mot2,Mot3');
+                $('#label-'+i).html('Example: word1,word2,word3'); 
                 // $('#div'+i).addClass('div-question-down');
             }
 
@@ -320,14 +387,12 @@
 
             if(i==7)
             {
-                $('#question-'+i).removeClass('col-md-7');
-                $('#question-'+i).addClass('col-md-4');
+                $('#question-'+i).attr('hidden',true);
             }
 
             if(i==8)
             {
-                $('#question-'+i).removeClass('col-md-7');
-                $('#question-'+i).addClass('col-md-4');
+                $('#question-'+i).attr('hidden',true);
             }
 
             if(i == 9)
@@ -351,15 +416,15 @@
             var idPlus = parseInt(id) + 1; 
             var error_found = false;
             //===Ajax===
-            if(id != 0 && id != 3 && id != 4)
+            if(id != 0 && id != 3 && id != 4 && id != 6 && id != 7 && id != 8)
             {
                 //-validation du formulaire-
                 if($('#reponse-'+id).val().length <= 0)
                 {
                     error_found = true;
                 }
-                $('#answer-'+id).val($('#reponse-'+id).val());
-            }else{
+                $('#answer-'+id).val($('#reponse-'+id).val()); 
+            }else{              
                 if(id == 0)
                 {
                     //-validation du formulaire-
@@ -394,9 +459,36 @@
 
                         $('#answer-'+id).val($('#answer-'+id).val()+','+$('#nb-'+h).val());
                     }
+                }else if(id==6)
+                {
+                    if($('#dtc').val().length <= 0)
+                    {
+                        error_found = true;
+                    }
+
+                    $('#answer-'+id).val($('#dtc').val()); 
                 }
+                else if(id==7)
+                {
+                    if($('#watch').val().length <= 0)
+                    {
+                        error_found = true;
+                    }
+
+                    $('#answer-'+id).val($('#watch').val()); 
+                }
+                else if(id==8)
+                {
+                    if($('#pencil').val().length <= 0)
+                    {
+                        error_found = true;
+                    }
+
+                    $('#answer-'+id).val($('#pencil').val()); 
+                }                
             }
 
+            //Envoi de la reponse par ajax excepte la question numero 4 (id+1, fonction rappel)
             if(id != 3 && error_found == false)
             {
                 $.post("<?=site_url('passation/correct_question_mmse')?>",{indice:id,id: $('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
@@ -415,8 +507,8 @@
                     $('#submit-'+idPlus).removeAttr('disabled');}, 5000);
 
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Je vais vous poser maintenant, quelques questions sur l\'endroit où nous sommes. Quel est, le nom de la ville où nous sommes.';
+                speech.lang = "en-En";
+                speech.text = 'I\'m going to ask you now some questions about where we are. What is the name of the city where we are';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -428,8 +520,8 @@
                 $('#div'+idPlus).removeClass('animated');
                 $('#question-'+idPlus).addClass('animated fadeInLeft');
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Dans quelle province ou région sommes-nous.';
+                speech.lang = "en-En";
+                speech.text = 'What province or region are we in?.';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -447,18 +539,18 @@
 
                 var question = $('#question-'+idPlus).html();
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Je vais vous dire trois mots; je voudrais que vous me les répétiez et que vous essayiez de les retenir car je vous les redemanderai tout à l\'heure. Cigare, Fleur, Porte';
+                speech.lang = "en-En";
+                speech.text = 'I will say three words; I would like you to repeat them to me and to try to retain them because I will ask you again later. door, table, chair.';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
 
                 var mot = new SpeechSynthesisUtterance();
-                mot.lang = "fr-Fr";
+                mot.lang = "en-En";
                 mot.volume = 1;
                 mot.rate = 0.7;
                 mot.pitch = 1;
-                mot.text = 'cigare, fleur, porte';
+                mot.text = 'door, table, chair.';
 
                 speechSynthesis.speak(speech);
                 speechSynthesis.speak(mot);
@@ -468,8 +560,8 @@
             {
                 $('#fonction').html('Attention et calcul');
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Voulez-vous compter à partir de 100 en retirant 7 à chaque fois.';
+                speech.lang = "en-En";
+                speech.text = 'Do you want to count from 100 by removing 7 each time.';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -479,8 +571,8 @@
             {
                 $('#question-'+idPlus).attr('hidden',true);
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Voulez-vous, épeler, le mot MONDE, à l\'envers?';
+                speech.lang = "en-En";
+                speech.text = 'Do you want to spell the word WORLD upside down?';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -497,8 +589,8 @@
             {
                 $('#fonction').html('Rappel');
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Pouvez-vous me dire quels étaient les 3 mots que je vous ai demandés de répéter et de réténir tout à l\'heure?';
+                speech.lang = "en-En";
+                speech.text = 'Can you tell me what were the 3 words that I asked you to repeat and repeat earlier?';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -508,8 +600,8 @@
             {
                 $('#fonction').html('Langage');
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Quel est le nom de cet objet.';
+                speech.lang = "en-En";
+                speech.text = 'What is the name of this object?';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -518,8 +610,8 @@
             if(id == 7 && error_found == false)
             {
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Quel est le nom de cet objet.';
+                speech.lang = "en-En";
+                speech.text = 'What is the name of this object?';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -528,7 +620,7 @@
 
             if(id == 8 && error_found == false)
             {
-                $('#question-'+idPlus).html('Ecoutez bien et repetez apres mois:');
+                $('#question-'+idPlus).html('Ecoutez bien et repetez apres moi:');
                 $('#div-reponse10').attr('hidden',true);
                 $('#submit-'+idPlus).attr('hidden',true);
                 $('#terminer-'+idPlus).removeAttr('hidden');
@@ -536,7 +628,7 @@
 
                 var speech = new SpeechSynthesisUtterance();
                 speech.lang = "fr-Fr";
-                speech.text = 'Ecoutez bien et repetez apres mois. PAS DES MAIS, DE SI, NI DE ET.';
+                speech.text = 'Ecoutez bien et repetez apres moi. PAS DES MAIS, DE SI, NI DE ET.';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -561,8 +653,8 @@
             if(error_found == true)
             {                
                 var speech = new SpeechSynthesisUtterance();
-                speech.lang = "fr-Fr";
-                speech.text = 'Rassurez-vous d\'avoir bien repondu avant de passer à la question suivante!!';
+                speech.lang = "en-En";
+                speech.text = 'Rest assured that you have answered well before moving on to the next question!!';
                 speech.volume = 1;
                 speech.rate = 0.7;
                 speech.pitch = 1;
@@ -619,12 +711,21 @@
 
         //     console.log(speechSynthesis.getVoices());
         // });
+        $('#annee').focus(function(e){
+            $('#year_option').attr('disabled','disabled');
+        });
+
         $('#saison').focus(function(e){
             $('#saison_option').attr('disabled','disabled');
-        })
+        });
+
         $('#mois').focus(function(e){
             $('#mois_option').attr('disabled','disabled');
-        })
+        });
+        $('#jours_mois').focus(function(e){
+            $('#jmois_option').attr('disabled','disabled');
+        });
+
         $('#jours_semaine').focus(function(e){
             $('#jsemaine_option').attr('disabled','disabled');
         })

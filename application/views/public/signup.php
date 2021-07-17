@@ -6,14 +6,14 @@
             <div class="login__block active" id="l-register">
                 <div class="login__block__header palette-Blue bg">
                     <i class="zmdi zmdi-account-circle"></i>
-                    Creer un nouveau compte
-                    <div class="actions actions--inverse login__block__actions">
+                    Create a new account
+                    <div class="actions actions--inverse text-right">
                         <div class="dropdown">
                             <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
 
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href=<?=site_url("signinup/connexion")?>>Avez-vous déjà un compte?</a>                                
-                                <a class="dropdown-item" href=<?=site_url("acceuil/view_guide")?>>Guide d'utilisation</a>
+                                <a class="dropdown-item" href=<?=site_url("signinup/connexion")?>>Do you have a created account?</a>                                
+                                <a class="dropdown-item" href=<?=site_url("acceuil/view_guide")?>>How to use the app?</a>
                             </div>
                         </div>
                     </div>
@@ -23,7 +23,7 @@
                     <form action=<?=site_url('signinup/signup')?> method="post" id="form">
                         <div class="form-group form-group--float form-group--centered">
                             <input type="text" class="form-control" name="nomcomplet" id="nom">
-                            <label>Nom complet</label>
+                            <label>Full name</label>
                             <i class="form-group__bar"></i>
                         </div>                        
                         <p><span id="namespan"></span></p>
@@ -37,14 +37,14 @@
 
                         <div class="form-group form-group--float form-group--centered">
                             <input type="text" class="form-control" name="lieudeconsultation" id="place">
-                            <label>Lieu de consultation</label>
+                            <label>Consultation place</label>
                             <i class="form-group__bar"></i>
                         </div>
                         <p><span id="placespan"></span></p>
 
                         <div class="form-group form-group--float form-group--centered">
                             <input type="text" class="form-control" name="username" id="username">
-                            <label>Nom d'utilisateur</label>
+                            <label>User name</label>
                             <i class="form-group__bar"></i>
                         </div>
                         <p><span id="userspan"></span></p>

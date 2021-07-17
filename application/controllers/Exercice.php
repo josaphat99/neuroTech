@@ -17,6 +17,7 @@ class Exercice extends CI_Controller {
 		$this->load->model("Recommandation","recommandation");
 		$this->load->model("Crud");
 		$this->load->model("Exercice_model","exercice");
+		$this->load->model("Passation_model","passation");
 		//verification du login
 		if(!$this->session->connected)
 		{
@@ -225,6 +226,80 @@ class Exercice extends CI_Controller {
 
 		$d['mr'] = $recommandation;
 		$this->load->view('patient/recommandations',$d);
+		$this->load->view('layout/js');
+		$this->load->view('layout/footer');
+	}
+
+	public function user_detail()
+    {
+		$id = $this->input->post('id_patient');
+		$name = $this->input->post('name_patient');
+
+        $e = $this->passation->all_exercice_done_admin($id);
+        // $e_done = $this->Crud->get_data('passation',['utilisateur_id'=>$id]);
+        $last_mmse = null;
+        if(count($this->passation->get_last_mmse($id)) > 0)
+        {
+            $last_mmse = $this->passation->get_last_mmse($id)[0];
+        }
+        $recommandation = $this->Crud->get_data_desc('recommandation',['utilisateur_id'=>$id]);  
+
+
+        foreach($recommandation as $r)
+        {
+            $r->titre = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->titre;
+            $r->type = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->type;
+            $r->maximum = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->maximum;
+            $r->niveau = $this->Crud->get_data('niveau',['id'=>
+                            $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->niveau_id])[0]->nom;                
+        }
+        $niveau = null;
+        if($this->last_niveau($id) != null)
+        {
+            $niveau = $this->last_niveau($id)->nom;
+        }else{
+            $niveau = 'Aucun niveau défini';
+        }
+        $d['mr'] = $recommandation;
+        $d['exercices'] = $e;
+        $d['niveau'] = $niveau;
+        $d['last_mmse'] = $last_mmse;
+		$d['name_patient'] = $name;
+		$d['id_patient'] = $id;
+        $this->load->view('admin/user_detail',$d);
+		$this->load->view('layout/js');
+		$this->load->view('layout/footer');
+    }
+
+	//recuperer ledernier niveau
+	public function last_niveau($id)
+    {
+        $user_id = $id;
+
+        if(count($this->Crud->get_data('detailniveau',['utilisateur_id'=>$user_id])) > 0)
+        {
+            $niveau = $this->Crud->get_data('niveau',['id'=>
+            $this->Crud->get_data_desc('detailniveau',
+            ['utilisateur_id'=>$user_id])[0]->niveau_id])[0];
+        }else{
+            $niveau = null;
+        }
+       
+        return $niveau;
+    }
+
+	//voir resultat cote admin
+	public function voir_resultat()
+	{
+		$id_patient = $this->input->post('id_patient');
+		$exercice_id = $this->input->post('exercice_id');
+		$date = $this->input->post('date');
+		$passation_id = $this->input->post('passation');
+
+		$d['data'] = $this->Crud->join_on_view_result($exercice_id,$id_patient,$date,$passation_id);
+		$d['patient'] = $this->Crud->get_data('utilisateur',['id'=>$id_patient])[0]; 
+		
+		$this->load->view('admin/voir_resultat',$d);
 		$this->load->view('layout/js');
 		$this->load->view('layout/footer');
 	}

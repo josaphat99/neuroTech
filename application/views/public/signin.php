@@ -20,12 +20,12 @@
             <div class="login__block active" id="l-register">
                 <div class="login__block__header">
                     <i class="zmdi zmdi-account-circle"></i>
-                    Veuillez vous connecter       
-                    <div class="actions actions--inverse login__block__actions">
+                    Login please       
+                    <div class="actions actions--inverse text-right">
                         <div class="dropdown">
                             <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href=<?=site_url("signinup/signup")?>>Creer un nouveau compte</a>                               
+                                <a class="dropdown-item" href=<?=site_url("signinup/signup")?>>Create a new account</a>                               
                             </div>
                         </div>
                     </div>             
@@ -36,7 +36,7 @@
 
                         <div class="form-group form-group--float form-group--centered">
                             <input type="text" class="form-control" name="username" id="username1">
-                            <label>Nom d'utilisateur</label>
+                            <label>User name</label>
                             <i class="form-group__bar"></i>                            
                         </div>
 
@@ -44,7 +44,7 @@
 
                         <div class="form-group form-group--float form-group--centered">
                             <input type="password" class="form-control" name="mdp" id="mdp1">
-                            <label>Mot de passe</label>
+                            <label>Password</label>
                             <i class="form-group__bar"></i>                            
                         </div>      
 
