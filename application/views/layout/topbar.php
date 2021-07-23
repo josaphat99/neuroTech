@@ -25,15 +25,28 @@
                     <a href=<?=site_url("signinup/profile")?> class="listview__item">
                         <div class="listview__content">
                             <div class="listview__heading">
-                            <i class="zmdi zmdi-account" style="font-size: 20px;"></i>&nbsp;&nbsp; Mon profile
+                            <i class="zmdi zmdi-account" style="font-size: 20px;"></i>&nbsp;&nbsp; Profile
                             </div>                            
                         </div>
                     </a>
-
+                    <?php
+                        if($this->session->type == 'admin')
+                        {
+                    ?>                            
+                        <a href=<?=site_url("utilisateur/add_user")?> class="listview__item">
+                            <div class="listview__content">
+                                <div class="listview__heading">
+                                <i class="zmdi zmdi-account" style="font-size: 20px;"></i>&nbsp;&nbsp; Add a doctor
+                                </div>                            
+                            </div>
+                        </a>
+                    <?php
+                        }
+                    ?>
                     <a href=<?=site_url("signinup/deconnexion")?> class="listview__item">
                         <div class="listview__content">
                             <div class="listview__heading">
-                            <i class="zmdi zmdi-arrow-left" style="font-size: 20px;"></i>&nbsp;&nbsp;Deconnexion                                
+                            <i class="zmdi zmdi-arrow-left" style="font-size: 20px;"></i>&nbsp;&nbsp;Logout                                
                             </div>                            
                         </div>
                     </a>                

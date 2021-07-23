@@ -13,20 +13,20 @@
 
     <div class="content__inner">
         <header class="content__title">
-            <h1><b>Exercice cognitif</b></h1><br>
-            <p><b>Niveau : <?=$niveau?></b></p>              
+            <h1><b>Consultation test</b></h1><br>          
         </header>
         <div class="card animated zoomIn">    
             <div class="stats__item bg-green"> 
                 <header class="content__title">
-                    <h1 class="text-center" style="color:white;font-size:22px"><b><?=$exercice->titre?></b></h1>              
+                    <h1 class="text-center" style="color:white;font-size:22px"><b><?=$test->titre?></b></h1>              
                 </header>
             </div>
             <div class="card-body">   
-                <?php
-                    $num = 0;
-        for ($i=0;$i<count($questions);$i++) {
-            $num +=1; ?>    
+            <?php
+            $num = 0;
+            for ($i=0;$i<count($questions);$i++) 
+            {
+                $num +=1; ?>    
                 <div id="<?="div".$i?>" class="animated zoomIn" hidden>
                     <div class="row">
                         <div class="listview listview--bordered q-a">
@@ -43,82 +43,35 @@
                                 </div>
                             </div>
                         </div>
-                                <?php
-                                    if (isset($questions[$i]->image)) {
-                                        $margin_reponse = "margin:auto";
-                                        if (count($questions[$i]->image) ==1) {
-                                            ?>
-                                            <div class="col-md-7 offset-md-3">
-                                                <img src="<?=base_url("assets/files/questions/".$questions[$i]->image[0]->image)?>" alt="Objet">
-                                            </div>
+                        <div class="col-md-5" style="margin:auto">
+                            <div class="form-group form-group--float" id="div-reponse10">                        
+                                <div class="select">
+                                    <label></label>
+                                    <select class="form-control assertion" id=<?="assertion-".$i?> autocomplete="off">
+                                        <option id=<?="assert-".$i?> value="">Assertions</option>
                                         <?php
-                                        } elseif (count($questions[$i]->image) ==2) {
-                                            ?>
-                                             <div class="col-md-3" style="margin-left:50px">
-                                                <img src="<?=base_url("assets/files/questions/".$questions[$i]->image[0]->image)?>" alt="Objet" height="150px" with="150px">
-                                            </div>
-                                            <div class="col-md-3" style="margin-left:50px">
-                                                <img src="<?=base_url("assets/files/questions/".$questions[$i]->image[1]->image)?>" alt="Objet" height="150px" with="150px">
-                                            </div>
-                                        <?php
-                                        } else {
-                                            $span = 0;
-                                            for ($im=0;$im<count($questions[$i]->image);$im++) {
-                                                $span +=1; ?>
-                                                
-                                                    <div class="col-md-4" style="margin-top:3px">
-                                                        <span><b><?=$span?></b></span>
-                                                        <img src="<?=base_url("assets/files/questions/".$questions[$i]->image[$im]->image)?>" alt="Objet" height="150px" with="150px">
-                                                    </div>                                
-                                <?php
-                                            }
-                                        }
-                                    } else {
-                                        $margin_reponse = "margin-top:-20px";
-                                    }
-            if ($questions[$i]->cote > 0 && $questions[$i]->type=='traditionnelle') {
-                ?>      
-                                <div class="col-md-3" style=<?=$margin_reponse?> id="<?="div-reponse".$i?>">
-                                    <div class="form-group form-group--float">                        
-                                        <input type="text" class="form-control" id=<?="reponse-".$i?> autocomplete="off">
-                                        <label id=<?="label-".$i?>>Reponse</label>
-                                        <i class="form-group__bar"></i>
-                                    </div>
+                                            for ($as=0;$as<count($questions[$i]->assertion);$as++) {
+                                                ?>
+                                                <option value='<?=$questions[$i]->assertion[$as]->assertion?>'>
+                                                <?=$questions[$i]->assertion[$as]->assertion?>
+                                                </option>
+                                            <?php
+                                            } ?>                                                                                                                     
+                                    </select>
+                                    <i class="form-group__bar"></i>
                                 </div>
-                                <?php
-            }
-            if ($questions[$i]->type=='choixmultiple') {
-                ?>
-                                        <div class="col-md-5" style="margin:auto">
-                                            <div class="form-group form-group--float" id="div-reponse10">                        
-                                                <div class="select">
-                                                    <label></label>
-                                                    <select class="form-control assertion" id=<?="assertion-".$i?> autocomplete="off">
-                                                        <option id=<?="assert-".$i?> value="">Assertions</option>
-                                                        <?php
-                                                            for ($as=0;$as<count($questions[$i]->assertion);$as++) {
-                                                                ?>
-                                                                <option value='<?=$questions[$i]->assertion[$as]->assertion?>'>
-                                                                <?=$questions[$i]->assertion[$as]->assertion?>
-                                                                </option>
-                                                            <?php
-                                                            } ?>                                                                                                                     
-                                                    </select>
-                                                    <i class="form-group__bar"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                <?php
-            } ?>
-                            
+                            </div>
+                        </div>                        
                     </div>
-                    <p class="text-red text-center animated fadeIn" id=<?="error_found".$i?> hidden>Veuillez repondre avant de passer à la question suivante SVP!</p>
+                    <p class="text-red text-center animated fadeIn" id=<?="error_found".$i?> hidden>
+                        Please answer before going to the next question!
+                    </p>
                     <div class="row">
                         <div style="margin:auto">
-                            <input type="text" name="answer" id=<?="answer-".$i?> value="<?=$questions[$i]->cote == 0? 'no_response':''?>" hidden>
+                            <input type="text" name="answer" id=<?="answer-".$i?> value="" hidden>
                             <input type="text" name="id" id=<?="id-".$i?> value="<?=$questions[$i]->id?>" hidden>
                             <button class="btn btn--icon login__block__btn Subtn" id=<?="submit-".$i?>><i id=<?="icon-".$i?> class="zmdi zmdi-arrow-right"></i></button>
-                            <button class="btn  login__block__btn Terminer" id=<?="terminer-".$i?>>Terminer</button>
+                            <button class="btn  login__block__btn Terminer" id=<?="terminer-".$i?>>Finish</button>
                         </div>
                     </div>
                 </div>   
@@ -135,9 +88,9 @@
 <div class="content__inner">  
     <div class="card animated zoomIn" style="margin-top:10%">            
         <div class="card-body text-center"> 
-            <p class="text-center">Vous avez déjà epuisé tous les exercices de ce niveau.</p>
+            <p class="text-center">There is no consultation available for you</p>
             <br>
-            <a href="<?=site_url('exercice/view_recommandation')?>"><button class="btn btn-success">Voir récommandation</button></a>
+            <a href="<?=site_url('passation/index')?>"><button class="btn btn-success">Go back</button></a>
         </div>
     </div>
 </div>
@@ -151,15 +104,6 @@
         $('#div0').removeAttr('hidden');
         $('.Terminer').attr('hidden',true);
         
-        //===pour les questions a choix multiple===
-        $('.assertion').focus(function(e)
-        {
-            e.preventDefault();
-
-            id = e.target.getAttribute('id').split('-')[1];
-            $('#assert-'+id).attr('disabled',true);
-        })
-
         $('.Subtn').click(function(e){
             e.preventDefault();
 
@@ -167,27 +111,18 @@
             var idPlus = parseInt(id) + 1; 
             var error_found = false;
        
-            //===correction par rapport au type de question===
-            //-question traditionnelle ou qcm-
-            if($('#reponse-'+id).val() != null)
+            //===checking de la reponse===
+            if($('#assertion-'+id).val() == '')
             {
-                $('#answer-'+id).val($('#reponse-'+id).val());
-            }
-            if($('#assertion-'+id).val() != null)
-            {
-                $('#answer-'+id).val($('#assertion-'+id).val());
-            }
-            //===passage a la question suivante===
-            if($('#answer-'+id).val() == '')
-            {
-                console.log('c pass pas');
-                $('#error_found'+id).removeAttr('hidden'); 
+                $('#error_found'+id).removeAttr('hidden');                 
             }
             else{
+                $('#answer-'+id).val($('#assertion-'+id).val());
+                //===passage a la question suivante===
                 $('#div'+id).attr('hidden',true);
                 $('#div'+idPlus).removeAttr('hidden');
                  //-envoi a ajax-
-                if($('#answer-'+id).val() != 'no_response')
+                if($('#answer-'+id).val() != '')
                 {
                     $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
                     console.log(data);
@@ -209,23 +144,15 @@
             id = e.target.getAttribute('id').split('-')[1];
             var error_found = false;
 
-            //===correction par rapport au type de question===
-            //-question traditionnelle ou qcm-
-            if($('#reponse-'+id).val() != null)
+            //===checking de la reponse===
+            if($('#assertion-'+id).val() == '')
             {
-                $('#answer-'+id).val($('#reponse-'+id).val());
-            }
-            if($('#assertion-'+id).val() != null)
+                $('#error_found'+id).removeAttr('hidden');                
+            }else
             {
                 $('#answer-'+id).val($('#assertion-'+id).val());
-            }
 
-            if($('#answer-'+id).val() == '')
-            {
-                console.log('c pass pas');
-                $('#error_found'+id).removeAttr('hidden'); 
-            }else{
-                if($('#answer-'+id).val() != 'no_response')
+                if($('#answer-'+id).val() != '')
                 {
                     //-envoi a ajax-
                     $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){

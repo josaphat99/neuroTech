@@ -19,7 +19,7 @@ class SignInUp extends CI_Controller
 
     public function index()
     {
-        $this->signUp();
+        $this->connexion();
     }
     
     //===Creer un compte===

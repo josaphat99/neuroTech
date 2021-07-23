@@ -25,13 +25,7 @@ class Ajax extends CI_Controller
                             <label id="assert'.$num_question.$j.'_label">Assertion '.$j.'</label>
                             <i class="form-group__bar"></i>
                         </div>      
-                    </div>
-                    <div class="col-md-2 col-sm-2 text-center" style="margin-top:20px">
-                        <div class="radio">
-                            <input type="radio" name="checkbox'.$num_question.'" id="checkbox'.$num_question.$j.'" class="r_dio">
-                            <label class="radio__label" for="checkbox'.$num_question.$j.'">Vrai</label>
-                        </div>
-                    </div>            
+                    </div>         
                     ';
         }        
         echo $num_question.','.$html;
@@ -79,6 +73,7 @@ class Ajax extends CI_Controller
         $d['username'] = $this->input->post('username');
         $d['mdp'] = $this->input->post('mdp');
         $d['lieudeconsultation'] = $this->input->post('lieudeconsultation');
+        $d['phone'] = $this->input->post('phone');
         //===Insertion===
         $this->Crud->add_data('utilisateur',$d);
         
@@ -93,9 +88,7 @@ class Ajax extends CI_Controller
            $html .= '<tr>
                 <td style="text-align: center;">'.$num.'</td>                                    
                 <td class="td'.$p->id.'">'.$p->nomcomplet.'</td>
-                <td class="td-form'.$p->id.'" hidden><input id="nomcomplet-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>
-                <td class="td'.$p->id.'">'.$p->type.'</td>
-                <td class="td-form'.$p->id.'" hidden><input id="type-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->type.'"></td>
+                <td class="td-form'.$p->id.'" hidden><input id="nomcomplet-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>               
                 <td class="td'.$p->id.'">'.$p->username.'</td>
                 <td class="td-form'.$p->id.'" hidden><input id="username-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
                 <td class="td'.$p->id.'">'.$p->email.'</td>
@@ -109,7 +102,7 @@ class Ajax extends CI_Controller
                             <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
                         </button>
                     </form>       
-                    <form action="'.site_url("exercice/user_detail").'" method="post" style="float:right; margin-right:60px">                                
+                    <form action="'.site_url("utilisateur/user_detail").'" method="post" style="float:right; margin-right:60px">                                
                     <input type="hidden" value='.$p->id.' name="id_patient">
                     <input type="hidden" value='.$p->nomcomplet.' name="name_patient">
                     <button id="see" class="btn btn-secondary btn--raised" title="See">
@@ -131,7 +124,6 @@ class Ajax extends CI_Controller
         
         //===recuperations des donnees ajax===
         $d['nomcomplet'] = $this->input->post('nomcomplet');
-        $d['type'] = $this->input->post('type');
         $d['username'] = $this->input->post('username');
         $d['email'] = $this->input->post('email');
         $id = $this->input->post('id');
@@ -151,8 +143,6 @@ class Ajax extends CI_Controller
                 <td style="text-align: center;">'.$num.'</td>                                    
                 <td class="td'.$p->id.'">'.$p->nomcomplet.'</td>
                 <td class="td-form'.$p->id.'" hidden><input id="nomcomplet-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>
-                <td class="td'.$p->id.'">'.$p->type.'</td>
-                <td class="td-form'.$p->id.'" hidden><input id="type-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->type.'"></td>
                 <td class="td'.$p->id.'">'.$p->username.'</td>
                 <td class="td-form'.$p->id.'" hidden><input id="username-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
                 <td class="td'.$p->id.'">'.$p->email.'</td>
@@ -167,7 +157,7 @@ class Ajax extends CI_Controller
                         </button>
                     </form>    
 
-                    <form action="'.site_url("exercice/user_detail").'" method="post" style="float:right; margin-right:60px">                                
+                    <form action="'.site_url("utilisateur/user_detail").'" method="post" style="float:right; margin-right:60px">                                
                     <input type="hidden" value='.$p->id.' name="id_patient">
                     <input type="hidden" value='.$p->nomcomplet.' name="name_patient">
                     <button id="see" class="btn btn-secondary btn--raised" title="See">
@@ -217,6 +207,71 @@ class Ajax extends CI_Controller
         else{
             echo 1;
         }
+    }
+
+    public function add_appointment()
+    {
+        //===Chargement du model===
+        $this->load->model('Crud');
+        //===-------------------===
+        $d['doctor_id'] = $this->input->post('doctor');
+        $d['patient_id'] = $this->input->post('patient');
+        $d['date'] = $this->input->post('date');
+        $d['heure'] = $this->input->post('heure');
+        //===Insertion===
+        $this->Crud->add_data('rendezvous',$d);
+        
+       //===recuperation des donnees dans la BD===
+       $appoint = $this->Crud->get_data_desc('rendezvous',['etat'=>0]);
+       $html = '';
+       $num = 0;
+
+       foreach($appoint as $a)
+       {
+           $num++;
+           $doctor = $this->Crud->get_data('utilisateur',['id'=>$a->doctor_id])[0]->nomcomplet;
+           $patient = $this->Crud->get_data('utilisateur',['id'=>$a->patient_id])[0]->nomcomplet;
+           $html .='
+           <tr>
+               <td style="text-align: center;">'.$num.'</td>
+               <td >'.$doctor.'</td>
+               <td>'.$patient.'</td>
+               <td>'.$a->date.'</td>
+               <td>'.$a->heure.'</td>
+           </tr>
+           ';           
+       }
+
+       echo $html;
+    }
+
+    public function ordonnance()
+    {
+        $nb_product= $this->input->post('nb_product');
+
+        $html = '';
+
+        for($i = 1 ; $i<=$nb_product;$i++)
+        {
+            $name = 'ordonnance-'.$i;
+
+            $html .='  <div class="col-md-6 col-sm-6 col-xs-2 offset-sm-3">
+                        <div class="form-group form-group--float">                        
+                            <input type="text" class="form-control" name='.$name.'>
+                            <label>Product '.$i.'</label>
+                            <i class="form-group__bar"></i>
+                        </div>   
+                    </div>';
+        }
+
+        $html .=' <div class="col-md-9 col-sm-9 offset-sm-1 text-center">
+                    <p id="error_message-ordonnance" class="text-red animated fadeInUp" hidden>Please give all the informations needed</p>
+                    <button type="submit" id="submit-ordonnance" class="btn btn--icon login__block__btn">
+                        <i class="zmdi zmdi-check"></i>
+                    </button>
+                </div>';
+        
+        echo $html;    
     }
 }
 ?>

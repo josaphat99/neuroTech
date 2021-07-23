@@ -27,21 +27,19 @@ class Exercice extends CI_Controller {
 	
 	//================Partie accecible que par l'admin==================
 
-	//=============add a new exercice=======================
+	//================add a new consultation=======================
 
 	public function add()
 	{
 		if(count($_POST) <= 0)
 		{
-			$data['niveau'] = $this->niveau->get();
-
 			// verification de l'existence d'une session
 			if($this->session->exercice != null)
 			{
 				$this->session->exercice = null;						
 			}
 
-			$this->load->view('admin/exercice/add',$data);
+			$this->load->view('admin/exercice/add');
 			$this->load->view('layout/js');
 			$this->load->view('layout/footer');
 		}
@@ -50,18 +48,14 @@ class Exercice extends CI_Controller {
 			//creation de la session
 			$data = array(
 				'titre' => $this->input->post('titre'),
-				'maximum' => $this->input->post('maximum'),
 				'nbquestion' => $this->input->post('nbquestion'),
-				'niveau' => $this->input->post('niveau'),
 			);
+
 			$session = array('exercice' => $data);
 			$this->session->set_userdata($session);
 
-			//recuperation du niveau selectionné:
-			$d['niveau'] = $this->niveau->get(['id'=>(int)$data['niveau']])[0]->nom;
-
 			//chargement de la vue de questions
-			$this->load->view('admin/exercice/add_question.php',$d);
+			$this->load->view('admin/exercice/add_question.php');
 			$this->load->view('layout/js');
 			$this->load->view('layout/footer');
 
@@ -76,9 +70,6 @@ class Exercice extends CI_Controller {
 			 $data = array(
 			 	'id' => $id_exercice,
 			 	'titre' => $this->session->exercice['titre'],
-			 	'type' => 'cognitif',
-			 	'maximum' => $this->session->exercice['maximum'],				
-			 	'niveau_id' => $this->session->exercice['niveau']
 			 );
 
 			 //===----insertion de l'exercice----===
@@ -90,10 +81,7 @@ class Exercice extends CI_Controller {
 			 for($i = 0; $i < $nbquestion; $i++)
 			 {
 			 	$d = array(
-			 		'type' => $this->input->post('type'.$i),
 			 		'question' => $this->input->post('question'.$i),
-			 		'cote' => $this->input->post('cote'.$i),
-			 		'vraireponse' => $this->input->post('vraiereponse'.$i),
 			 		'exercice_id' => $id_exercice
 			 	);
 
@@ -117,26 +105,26 @@ class Exercice extends CI_Controller {
 			 	}
 				//===---Fin assertions---===
 
-				//===Insertion des images===
-				$nbimg = $this->input->post('nbimg'.$i);
-				 $count = 0;
-				for($im = 1; $im <= $nbimg ; $im++)
-				{
-					$count++;
-					if($_FILES['img'.$add.$im]['name'] != null)
-					{
-						$fichier = 'fichier'.md5(time())."_".$_FILES['img'.$add.$im]['name'];
-						$d = array(
-							'image' => $fichier,
-							'main' => $im ==1?true:false,
-							'question_id'=> $id_question
-						);
+				// //===Insertion des images===
+				// $nbimg = $this->input->post('nbimg'.$i);
+				//  $count = 0;
+				// for($im = 1; $im <= $nbimg ; $im++)
+				// {
+				// 	$count++;
+				// 	if($_FILES['img'.$add.$im]['name'] != null)
+				// 	{
+				// 		$fichier = 'fichier'.md5(time())."_".$_FILES['img'.$add.$im]['name'];
+				// 		$d = array(
+				// 			'image' => $fichier,
+				// 			'main' => $im ==1?true:false,
+				// 			'question_id'=> $id_question
+				// 		);
 
-						move_uploaded_file($_FILES['img'.$add.$im]['tmp_name'], './assets/files/questions/'.$fichier);						
+				// 		move_uploaded_file($_FILES['img'.$add.$im]['tmp_name'], './assets/files/questions/'.$fichier);						
 						
-						$this->Crud->add_data('image',$d);
-					}
-				}
+				// 		$this->Crud->add_data('image',$d);
+				// 	}
+				// }
 								 
 				//===------------------------------===
 			}
@@ -150,8 +138,7 @@ class Exercice extends CI_Controller {
 			$this->session->set_flashdata(array('exercice_add'=>true));
 			
 			redirect('exercice/index');
-		}
-		
+		}		
 	}
 	
 	//delete exercice
@@ -172,14 +159,9 @@ class Exercice extends CI_Controller {
 	//list de exercices
 	public function index()
 	{
-		if(trim($this->session->type) == trim('admin'))
+		if(trim($this->session->type) == trim('admin') || trim($this->session->type) == trim('doctor'))
 		{
-			$exercice = $this->exercice->get();
-			$most_recommanded = $this->recommandation->get_most();
-			$r = count($this->recommandation->get_distinct());
-			$dl = count($this->Crud->get_data('exercice',['niveau_id'=>1]));
-			$dm = count($this->Crud->get_data('exercice',['niveau_id'=>2]));
-			$ds = count($this->Crud->get_data('exercice',['niveau_id'=>3]));
+			$exercice = $this->Crud->get_data_desc('exercice');
 
 			foreach($exercice as $e)
 			{
@@ -190,11 +172,6 @@ class Exercice extends CI_Controller {
 			}
 
 			$d['exercices'] = $exercice;
-			$d['r'] = $r;
-			$d['dl'] = $dl;
-			$d['dm'] = $dm;
-			$d['ds'] = $ds;
-			$d['mr'] = $most_recommanded;
 
 			$this->load->view('admin/exercice/list',$d);
 			$this->load->view('layout/js');
@@ -230,77 +207,25 @@ class Exercice extends CI_Controller {
 		$this->load->view('layout/footer');
 	}
 
-	public function user_detail()
-    {
-		$id = $this->input->post('id_patient');
-		$name = $this->input->post('name_patient');
-
-        $e = $this->passation->all_exercice_done_admin($id);
-        // $e_done = $this->Crud->get_data('passation',['utilisateur_id'=>$id]);
-        $last_mmse = null;
-        if(count($this->passation->get_last_mmse($id)) > 0)
-        {
-            $last_mmse = $this->passation->get_last_mmse($id)[0];
-        }
-        $recommandation = $this->Crud->get_data_desc('recommandation',['utilisateur_id'=>$id]);  
-
-
-        foreach($recommandation as $r)
-        {
-            $r->titre = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->titre;
-            $r->type = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->type;
-            $r->maximum = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->maximum;
-            $r->niveau = $this->Crud->get_data('niveau',['id'=>
-                            $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->niveau_id])[0]->nom;                
-        }
-        $niveau = null;
-        if($this->last_niveau($id) != null)
-        {
-            $niveau = $this->last_niveau($id)->nom;
-        }else{
-            $niveau = 'Aucun niveau défini';
-        }
-        $d['mr'] = $recommandation;
-        $d['exercices'] = $e;
-        $d['niveau'] = $niveau;
-        $d['last_mmse'] = $last_mmse;
-		$d['name_patient'] = $name;
-		$d['id_patient'] = $id;
-        $this->load->view('admin/user_detail',$d);
-		$this->load->view('layout/js');
-		$this->load->view('layout/footer');
-    }
-
-	//recuperer ledernier niveau
-	public function last_niveau($id)
-    {
-        $user_id = $id;
-
-        if(count($this->Crud->get_data('detailniveau',['utilisateur_id'=>$user_id])) > 0)
-        {
-            $niveau = $this->Crud->get_data('niveau',['id'=>
-            $this->Crud->get_data_desc('detailniveau',
-            ['utilisateur_id'=>$user_id])[0]->niveau_id])[0];
-        }else{
-            $niveau = null;
-        }
-       
-        return $niveau;
-    }
-
-	//voir resultat cote admin
-	public function voir_resultat()
+	//voir toutes les consultations cote patient
+	public function view_consultations()
 	{
-		$id_patient = $this->input->post('id_patient');
-		$exercice_id = $this->input->post('exercice_id');
-		$date = $this->input->post('date');
-		$passation_id = $this->input->post('passation');
+		if($this->session->type != 'patient')
+		{
+			redirect('signinup/connexion');
+		}
 
-		$d['data'] = $this->Crud->join_on_view_result($exercice_id,$id_patient,$date,$passation_id);
-		$d['patient'] = $this->Crud->get_data('utilisateur',['id'=>$id_patient])[0]; 
-		
-		$this->load->view('admin/voir_resultat',$d);
-		$this->load->view('layout/js');
+		$e = $this->passation->all_exercice_done($this->session->id);
+
+		foreach($e as $ex)
+		{
+			$ex->doctor = $this->Crud->get_data('utilisateur',['id'=>$ex->doctor_id])[0]->nomcomplet;
+		}
+
+		$d['exercices'] = $e;      
+
+        $this->load->view('patient/all_consultation',$d);
+        $this->load->view('layout/js');
 		$this->load->view('layout/footer');
 	}
 }

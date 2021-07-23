@@ -1,7 +1,7 @@
 <section class="content">
     <div class="content__inner">
         <header class="content__title">
-        <h1><b>Nouvel exercice</b></h1>            
+        <h1><b>New test</b></h1>            
         </header>
 
         <form action=<?=site_url("exercice/add")?> method="post" id="form" enctype="multipart/form-data">
@@ -18,83 +18,35 @@
                         <b><?=$this->session->exercice['titre']?></b>
                     </h1>
                 </div> 
-                <p>Niveau: <?=$niveau?></p>
-                <p>Nombre de questions: <?=$this->session->exercice['nbquestion']?></p>
-                <p>Maximum: <?=$this->session->exercice['maximum']?></p><br>
-                <h6 class="card-subtitle">Veuillez completer les questions en specifiant le type:</h6>
+                <br>
+                <p>Number of questions: <?=$this->session->exercice['nbquestion']?></p>                 
+                <br>               
+                <h6 class="card-subtitle">Please complete the questions:</h6>
                 <button type="button" class="btn btn-success">Question <?=$i+1?></button>
+
                <div class="row">
                     <div class="col-md-6">
                         <h3 class="card-body__title"></h3>
                         <div class="form-group form-group--float">
-                            <input type="text" class="form-control" name=<?="question".$i?> id=<?="question".$i?> autocomplete="off">
+                            <input type="text" class="form-control question" name=<?="question".$i?> id=<?="question".$i?> autocomplete="off">
                             <label>Question</label>
                             <i class="form-group__bar"></i>
-                        </div>
-                        <div class="form-group form-group--float">
-                            <input type="text" class="form-control" name=<?="cote".$i?> id=<?="cote".$i?> autocomplete="off">
-                            <label>Cote</label>
-                            <i class="form-group__bar"></i>
-                        </div>
-                        <!-- <input type="file" class="form-control image" name=<"image".$i?> id=<"image".$i?> autocomplete="off">                         -->
-                        <button class="btn btn-light add-image" id=<?="addimage-".$i?>>Ajouter des images</button>
-                        <!-- <small id=<"image-name".$i?>>Aucun fichier choisi</small> -->
-                        <div class="row" id=<?="img-div".$i?> hidden style="margin-top: 30px;">
-                            <div class="col-md-8 col-xs-3 col-sm-3" style="margin-top:-33px">
-                                <div class="form-group form-group--float animated fadeInLeft">
-                                    <input type="text" class="form-control nbimg" name=<?="nbimg".$i?> id=<?="nbimg-".$i?> autocomplete="off">
-                                    <label id=<?="nbimg_label".$i?>>Nombre d'images</label>
-                                    <i class="form-group__bar"></i>
-                                </div>
-                                <p class="text-red animated fadeIn" id=<?="error_image".$i?> hidden>Veuillez saisir le nombre d'images</p>
-                                <p class="text-red animated fadeIn" id=<?="error_nb_image".$i?> hidden>Vous ne pouvez avoir qu'au plus 5 images</p>
-                            </div>
-                            <!--icon plus pour les images-->
-                            <div class="col-md-2 col-sm-2 text-center">
-                                <button class="btn btn--icon login__block__btn  animated bounceIn plus-image" id=<?="plus-image-".$i?> title="Selectionner les images" hidden>
-                                    <i class="zmdi zmdi-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="row animated bounceInUp" id=<?="image_space".$i?> hidden>      
-                         <!--Partie images-->         
-                       </div>
-                       
+                        </div>                       
                     </div>
 
-                    <div class="col-md-6">      
-
-                        <div class="form-group form-group--float">                
-                            <label style="margin-top:-20px">Type de question</label>
-                            <div class="select">
-                                <select class="form-control type" name=<?="type".$i?> style="margin-top:5px" id=<?="type".$i?>>
-                                    <option value="void"></option>
-                                    <option value="traditionnelle">Trationnelle</option>
-                                    <option value="choixmultiple">Choix multiple</option>
-                                </select>
-                                <i class="form-group__bar"></i>
-                            </div>                
-                        </div>       
-
-                        <div class="form-group form-group--float">
-                            <input type="text" class="form-control" name=<?="vraiereponse".$i?> id=<?="v_reponse".$i?> autocomplete="off" hidden>
-                            <label id=<?="v_reponse_label".$i?> hidden>Vraie reponse</label>
-                            <i class="form-group__bar"></i>
-                        </div> 
-                        
+                    <div class="col-md-6">                        
                         <div class="row">
-                            <div class="col-md-8 col-xs-3 col-sm-3" style="margin-top:-33px">
+                            <div class="col-md-8 col-xs-3 col-sm-3">
                                 <div class="form-group form-group--float">
-                                    <input type="text" class="form-control nbassert" name=<?="nbassert".$i?> id=<?="nbassert".$i?> autocomplete="off" hidden>                                
-                                    <label id=<?="nbassert_label".$i?> hidden>Nombre d'assertions</label>
+                                    <input type="text" class="form-control nbassert" name=<?="nbassert".$i?> id=<?="nbassert".$i?> autocomplete="off">                                
+                                    <label id=<?="nbassert_label".$i?>>Number of assertions</label>
                                     <i class="form-group__bar"></i>
                                 </div> 
-                                <p class="text-red animated fadeIn" id=<?="error_assert".$i?> hidden>Veuillez saisir le nombre d'assertions</p>
-                                <p class="text-red animated fadeIn" id=<?="error_nb_assert".$i?> hidden>Vous ne pouvez avoir qu'au plus 5 assertions</p>
+                                <p class="text-red animated fadeIn" id=<?="error_assert".$i?> hidden>Please enter the number of assertions</p>
+                                <p class="text-red animated fadeIn" id=<?="error_nb_assert".$i?> hidden>You can only have at least 20 assertions</p>
                             </div>
                             <!--icon plus pour les assertions-->
-                            <div class="col-md-2 col-sm-2 text-center">
+                            <div class="col-md-2 col-sm-2 text-center" style="margin-top: 33px;">
                                 <button class="btn btn--icon login__block__btn  animated bounceIn plus" id=<?="plus".$i?> title="completer les assertions" hidden>
                                     <i class="zmdi zmdi-plus"></i>
                                 </button>
@@ -111,7 +63,7 @@
                <div class="row">
                     <div class="col-md-6 offset-md-4">
                         <div style="margin:auto">
-                            <p id=<?="error_message".$i?> style="color:red" hidden>Veuillez remplir tous les champs SVP!!!</p>
+                            <p id=<?="error_message".$i?> style="color:red" hidden>Please fill in all the requirements please!!!</p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +72,7 @@
                     <div style="margin:auto">                                                
                         <button class="btn btn--icon login__block__btn back"><i class="zmdi zmdi-arrow-left"></i></button>&nbsp;&nbsp;
                         <button class="btn btn--icon login__block__btn Subtn"><i class="zmdi zmdi-arrow-right"></i></button>
-                        <button class="btn login__block__btn ajouter" hidden>Ajouter</button>
+                        <button class="btn login__block__btn ajouter" hidden>Add</button>
                     </div> 
                 </div>               
             </div>
@@ -147,7 +99,7 @@
         $('.Subtn').click(function(e)
         {      
             e.preventDefault();        
-            $('.back').removeAttr('disabled');
+            
 
             for(var i =0; i < <?=$nbquestion?>; i++)
             { 
@@ -158,7 +110,7 @@
                     *Partie assertion
                     *Si le champ nbassert est rempli, on verifie les champs assert. 
                     */
-                    if($('#v_reponse'+i).val().length <= 0 && $('#nbassert'+i).val().length <= 0)
+                    if($('#nbassert'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -182,19 +134,13 @@
                                 found = true;
                                 break;
                             }
-                            //===verification du bouton radio===
-                            if($('#checkbox'+add+''+a+':checked').val())
-                            {
-                                $('#v_reponse'+i).val($('#assert'+add+''+a).val());                                
-                            }
                         }
                         //===si un champ est vide on coupe la premiere boucle===
                         if(found){break;}
                     }
 
                     //===Partie question,cote,type===
-                    if($('#question'+i).val().length <= 0 || $('#cote'+i).val().length <= 0 ||
-                    $('.type')[i].value.length <= 0)
+                    if($('#question'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -222,6 +168,7 @@
                             $('.back').attr('hidden',true);                  
                         }    
 
+                        $('.back').removeAttr('disabled');
                         $('#'+i).removeClass('affiche');  
                         $('#'+i).attr('hidden',true);
                         $('#'+j).removeAttr('hidden');
@@ -250,7 +197,7 @@
                 if($('#'+i).hasClass('affiche'))
                 {   
                     //===Validation du formulaire===
-                    if($('#v_reponse'+i).val().length <= 0 && $('#nbassert'+i).val().length <= 0)
+                    if($('#nbassert'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -273,19 +220,13 @@
                                 found = true;
                                 break;
                             }
-                            //===verification du bouton radio===
-                            if($('#checkbox'+add+''+a+':checked').val())
-                            {
-                                $('#v_reponse'+i).val($('#assert'+add+''+a).val());                                
-                            }
                         }
                         //===si un champ est vide on coupe la premiere boucle===
                         if(found){break;}
 
                     }
                     //===partie question,cote,type===
-                    if($('#question'+i).val().length <= 0 || $('#cote'+i).val().length <= 0 ||
-                    $('.type')[i].value.length <= 0)
+                    if($('#question'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -327,57 +268,14 @@
     //===Fin bouton back===
     //===Fin gestion questions===
 
-    //===Gestion du type de question===    
-
-    $('.type').change(function(e)
-    {          
-        for(var q = 0; q < <?=$nbquestion?>; q++)
-        {
-            if($('.type')[q].value != "" && $('#'+q).hasClass('affiche'))
-            {
-                if($('.type')[q].value == 'traditionnelle')
-                {
-                    $("#v_reponse"+q).removeAttr('hidden');
-                    $("#v_reponse_label"+q).removeAttr('hidden');
-                    $('#nbassert'+q).attr('hidden',true);                    
-                    $('#nbassert_label'+q).attr('hidden',true);  
-                    $('#nbassert'+q).val("");
-                    $('#plus'+q).attr('hidden',true);
-                    $("#assert_space"+q).attr('hidden',true);
-                     $('#error_assert'+q).attr('hidden',true);   
-                    $('#error_nb_assert'+q).attr('hidden',true);
-                }
-                else if($('.type')[q].value == 'choixmultiple')
-                {
-                    $('#nbassert'+q).removeAttr('hidden');
-                    $('#nbassert_label'+q).removeAttr('hidden');
-                    $('#nbassert'+q).removeClass('shake');
-                    $('#nbassert_label'+q).removeClass('shake');
-                    $("#v_reponse"+q).attr('hidden',true);
-                    $("#v_reponse_label"+q).attr('hidden',true);
-                    $("#v_reponse"+q).val("");
-                    $('#plus'+q).attr('hidden',true);
-                }
-                else
-                {
-                    $("#nbassert"+q).attr('hidden',true);
-                    $("#nbassert_label"+q).attr('hidden',true);
-                    $("#v_reponse"+q).attr('hidden',true);
-                    $("#v_reponse_label"+q).attr('hidden',true);
-                    $('#plus'+q).attr('hidden',true);
-                }                
-            }
-        }
-    })  
-    //===Fin gestion du type de question===  
-
     //===Gestion des assertions===  
     $('.nbassert').click(function(e)
     {
         for(var q = 0; q < <?=$nbquestion?>; q++)
         {
             if($('#'+q).hasClass('affiche'))
-            {      
+            {   
+                $('#error_message'+q).attr('hidden',true);
                 $('#plus'+q).removeAttr('hidden');               
                 $('#error_assert'+q).attr('hidden',true);   
                 $('#error_nb_assert'+q).attr('hidden',true);             
@@ -386,7 +284,12 @@
         }        
     })
     //===Fin assertions===
-
+    //===en cliquant sur le champ question===
+    $('.question').click(function(e){
+        var id = e.target.getAttribute('id').split('n')[1];
+        console.log(id);
+        $('#error_message'+id).attr('hidden',true);
+    })
     //===Bouton plus===
     $('.plus').click(function(e)
     {
@@ -395,12 +298,12 @@
         {
             if($('#'+k).hasClass('affiche'))
             {   
-                if($('#nbassert'+k).val() > 5){
+                if($('#nbassert'+k).val() > 20){
                     $('#error_nb_assert'+k).removeAttr('hidden');
                     $('#nbassert'+k).addClass('animated shake');
                     $('#nbassert_label'+k).addClass('animated shake');                    
                 }
-                else if($('#nbassert'+k).val() > 0 && $('#nbassert'+k).val() <=5 )
+                else if($('#nbassert'+k).val() > 0 && $('#nbassert'+k).val() <=20)
                 {                                        
                     $.post('<?=site_url('ajax/assertion_ajax')?>', { nbassert: $('#nbassert'+k).val(), num_question: k+1},
                         function(data,textStatus, jqXHR) 
@@ -420,57 +323,7 @@
                 }                          
             }
         }
-    })
-
-    //===ls images===
-    $('.plus-image').click(function(e) {
-        e.preventDefault();
-
-        var id = e.target.getAttribute('id').split('-')[2];
-
-        if ($('#nbimg-' + id).val().length <= 0) {
-            $('#error_image' + id).removeAttr('hidden');
-        } else if ($('#nbimg-' + id).val() > 5) {
-            $('#error_nb_image' + id).removeAttr('hidden');
-        } else {
-            $.post("<?=site_url('ajax/image')?>", {nbimg: $('#nbimg-' + id).val(), num_question: id},
-                function(data, textStatus, jqXHR) 
-                {
-                    var indice = data.split(',')[0] - 1;
-                    
-                    $("#image_space" + indice).removeAttr('hidden');
-                    $("#image_space" + indice).html(data.split(',')[1]);
-
-                    $('.btn-image').click(function(e) 
-                    {
-                        e.preventDefault();
-                        var id = e.target.getAttribute('id').split('-')[1];
-
-                        $('#' + id).click();
-
-                        $('#'+id).change(function(e) 
-                        {
-                            if ($('#'+id).val() != '') {
-                                $('#small-' + id).html($('#' + id).val());
-                            }
-                        })
-                    })
-
-                   
-                }
-            );
-        }
-    })    
-
-    // $('.btn-image').mouseover(function(e) {
-    //     e.preventDefault();
-    //     console.log($('.btn-image'));
-    //     var id = e.target.getAttribute('id').split('-')[1];
-
-    //     $('#' + id).click();
-    // })
+    }) 
 })
-
 </script>
 
-<script src=<?=base_url("assets/js/imag.js")?>></script>

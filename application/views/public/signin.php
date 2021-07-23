@@ -25,7 +25,7 @@
                         <div class="dropdown">
                             <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href=<?=site_url("signinup/signup")?>>Create a new account</a>                               
+                                <a class="dropdown-item" href=<?=site_url("acceuil/view_guide")?>>How to use the app?</a>                               
                             </div>
                         </div>
                     </div>             

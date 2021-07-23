@@ -35,302 +35,27 @@ class Passation extends CI_Controller {
     public function index()
     {
         $user_id = $this->session->id;
-        $e = $this->passation->all_exercice_done($user_id);
-        $e_done = $this->Crud->get_data('passation',['utilisateur_id'=>$user_id]);
-        $last_mmse = null;
-        if(count($this->passation->get_last_mmse($user_id)) > 0)
-        {
-            $last_mmse = $this->passation->get_last_mmse($user_id)[0];
-        }
-        $recommandation = $this->Crud->get_data_desc('recommandation',['utilisateur_id'=>$this->session->id]);  
+        $e = $this->passation->five_exercice_done($user_id);
+        $appointment = $this->Crud->get_data('rendezvous',['patient_id'=>$user_id,'etat'=>0]);
+        //consultation started but not done
+        $consultation = $this->Crud->get_data('passation',['utilisateur_id'=>$user_id,'started'=>1,'done'=>0]);
+        
+        foreach($e as $ex)
+		{
+			$ex->doctor = $this->Crud->get_data('utilisateur',['id'=>$ex->doctor_id])[0]->nomcomplet;
+		}
+        
+        foreach($appointment as $a)
+		{
+			$a->doctor = $this->Crud->get_data('utilisateur',['id'=>$a->doctor_id])[0]->nomcomplet;
+		}
 
-
-        foreach($recommandation as $r)
-        {
-            $r->titre = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->titre;
-            $r->type = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->type;
-            $r->maximum = $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->maximum;
-            $r->niveau = $this->Crud->get_data('niveau',['id'=>
-                            $this->Crud->get_data('exercice',['id'=>$r->exercice_id])[0]->niveau_id])[0]->nom;                
-        }
-        $niveau = null;
-        if($this->last_niveau() != null)
-        {
-            $niveau = $this->last_niveau()->nom;
-        }else{
-            $niveau = 'Aucun niveau défini';
-        }
-        $d['mr'] = $recommandation;
-        $d['exercices'] = $e;
-        $d['e_done'] = $e_done;
-        $d['niveau'] = $niveau;
-        $d['mmse'] = $this->mmse();
-        $d['last_mmse'] = $last_mmse;
+        $d['ordonnance'] = $this->Crud->get_data('ordonnance',['patient_id'=>$user_id]);
+        $d['appointment'] = $appointment;
+        $d['consultation'] = $consultation;
+        $d['exercices'] = $e;      
         $this->load->view('patient/index',$d);
         $this->js_footer();
-    }
-    //===Test MMSE==
-
-    //-recupertion de la position-
-    public function get_position()
-    {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        
-        $query = @unserialize(file_get_contents('http://ip-api.com/php/'));
-        $city = '';
-        $region = '';
-
-        if($query && $query['status'] == 'success') 
-        {
-            $city = $query['city'];
-            $region = $query['regionName'];
-        }
-
-        $city = strtolower($city);
-        $region = strtolower($region);
-        
-        return [$city,$region];
-    }    
-
-    public function mmse_base($mmse)
-    {
-        $questions = $this->Crud->get_data('question',['exercice_id' => $mmse->id]);              
-        $num_question = 1;
-        
-        foreach($questions as $q)
-        {
-            if($num_question == 4)
-            {
-                $question = explode(',',$q->question);
-                $q->question = 'a. '.$question[0].' &nbsp&nbsp&nbsp&nbsp&nbsp&nbspb. '.$question[1].' &nbsp&nbsp&nbspc. '.$question[2];
-            }
-            
-            if($num_question == 8 || $num_question == 9)
-            {
-                $q->image = $this->Crud->get_data('image',['question_id'=>$q->id])[0]->image;
-            }
-
-            $q->num_question = $num_question;
-            $num_question++;
-        }
-
-        $d['question'] = $questions;      
-        $d['mmse_id'] = $mmse->id;  
-        // $d['city'] = $city;
-        
-        //===Creation des sessions pour les cotes, l'id de l'exercice===
-        $this->session->set_userdata(['cote_mmse'=>0]);
-        $this->session->set_userdata(['exercice_id'=>$mmse->id]);
-
-        return $d;
-    }
-    //===le test mmse===
-    public function mmse()
-    {  
-        $mmse = $this->Crud->get_data('exercice',['type'=>'mmse'])[0];
-        $d = $this->mmse_base($mmse);
-        $mmse = $this->load->view('patient/mmse',$d,true);
-        return $mmse;
-    }
-
-    //===correction de questions de type mmse===
-    public function correct_question_mmse()
-    {
-        $id = $this->input->post('id');
-        $response = $this->input->post('answer');  
-        $indice = $this->input->post('indice');        
-        $cote = 0;
-       
-        //===Verification par rapport aux differentes questions===
-        if($indice == 0)
-        {
-            //annee
-            $annee = date('Y',time());
-            //mois sans zero au debut
-            $mois = date('n',time());
-            //numero du jours du mois sans zero  au  debut
-            $jours_mois = date('j',time());
-            //numero du jours de la semaine
-            $jours_semaine = date('w',time()); 
-            //saison
-            $saison = '';
-            //===trouver la saison===
-            $pluie = [1,2,3,4,5,6];
-            // $seche = ['7,8,9,10,11,12'];
-
-            if(in_array($mois,$pluie))
-            {
-                $saison = 'pluie';
-            }else{
-                $saison = 'seche';
-            }
-            //correction
-            $r = explode(',',$response);
-
-            if(trim($r[0])==$annee)
-            {
-                $cote +=1;
-            }if(trim($r[1])==$saison)
-            {
-                $cote +=1;
-            }if(trim($r[2])==$mois)
-            {
-                $cote +=1;
-            }if(trim($r[3])==$jours_mois)
-            {
-                $cote +=1;
-            }if(trim($r[4])==$jours_semaine)
-            {
-                $cote +=1;
-            }
-
-            $orientation = $this->session->orientation;
-            $orientation += $cote;
-            $this->session->set_userdata(['orientation'=>$orientation]);
-
-        }else if($indice == 1){
-            if($response == $this->get_position()[0])
-            {
-                $cote += 2;
-            }
-
-            $orientation = $this->session->orientation;
-            $orientation += $cote;
-            $this->session->set_userdata(['orientation'=>$orientation]);
-
-        }else if($indice == 2){
-            if($response == $this->get_position()[1])
-            {
-                $cote += 3;
-            }
-
-            $orientation = $this->session->orientation;
-            $orientation += $cote;
-            $this->session->set_userdata(['orientation'=>$orientation]);
-
-        }else if($indice == 4){
-            //correction
-            $r = explode(',',$response);
-            if(trim($r[0])==100){
-                $cote +=1;
-            }if(trim($r[1])==93){
-                $cote +=1;
-            }if(trim($r[2])==86){
-                $cote +=1;
-            }if(trim($r[3])==79){
-                $cote +=1;
-            }if(trim($r[4])==72){
-                $cote +=1;
-            }if(trim($r[5])==65){
-                $cote +=1;
-            }if(trim($r[6])==58){
-                $cote +=1;
-            }if(trim($r[7])==51){
-                $cote +=1;
-            }if(trim($r[8])==44){
-                $cote +=1;
-            }if(trim($r[9])==37){
-                $cote +=1;
-            }if(trim($r[10])==30){
-                $cote +=1;
-            }if(trim($r[11])==23){
-                $cote +=1;
-            }if(trim($r[12])==16){
-                $cote +=1;
-            }if(trim($r[13])==9){
-                $cote +=1;
-            }if(trim($r[14])==2){
-                $cote +=1;
-                $cote = $cote/3;
-            } 
-
-            $attention = $this->session->attention;
-            $attention += $cote;
-            $this->session->set_userdata(['attention'=>$attention]);
-        }
-        else{
-            $cote = $this->question->checkAnswer($id,$response);
-
-            if($cote != 0)
-            {
-                if($indice == 5){
-                    $attention = $this->session->attention;
-                    $attention += $cote;
-                    $this->session->set_userdata(['attention'=>$attention]);
-                }if($indice == 6){
-                    $rappel = $this->session->rappel;
-                    $rappel += $cote;
-                    $this->session->set_userdata(['rappel'=>$rappel]);
-                }if($indice == 7 || $indice == 8 || $indice == 9)
-                {
-                    $langage = $this->session->langage;
-                    $langage += $cote;
-                    $this->session->set_userdata(['langage'=>$langage]);                    
-                }
-            }
-        }    
-
-        $cote_mmse = $this->session->cote_mmse;
-        $cote_mmse += $cote;
-        $this->session->set_userdata(['cote_mmse'=>$cote_mmse]); 
-
-        //===enregistrement de la reponse===
-        $this->Crud->add_data('reponse',array('reponse'=>$response,'question_id'=>$id));
-
-        //renvoi des donnees
-        
-        echo $this->session->cote_mmse;
-        die();
-    }
-
-    //===creation passation, niveau, redirection===
-    public function mmse_process()
-    {
-        //===creer une nouvelle passation===
-        $this->Crud->add_data('passation',array(
-            'datepassation' => date('d-m-Y, H:i'),
-            'resultat' => $this->session->cote_mmse,
-            'utilisateur_id' => $this->session->id,
-            'exercice_id' => $this->session->exercice_id
-        ));
-
-        //===creer un niveau par rapport au resultat du mmse===
-        $cote = $this->session->cote_mmse;
-        $niveau_indice = '';
-        //-verification de la cote et determinatoin du niveau-
-        if($cote <= 9)
-        {
-            $niveau_indice = 3;
-        }else if($cote >= 10 && $cote <= 19)
-        {
-            $niveau_indice = 2;
-        }else if($cote >= 20 && $cote <= 25)
-        {
-            $niveau_indice = 1;
-        }else{
-            $niveau_indice = 4;
-        }
-        
-        //-recuperation du niveau-
-        $niveau = $this->Crud->get_data('niveau',['indice'=>$niveau_indice])[0];        
-        
-        //-creation du detail niveau-
-        $this->Crud->add_data('detailniveau',array(
-            'date' => date('d-m-Y, H:i'),
-            'niveau_id' => $niveau->id,
-            'utilisateur_id' => $this->session->id
-        ));
-
-        $d = array('cote' => $cote,'niveau'=> $niveau->nom);
-
-        //-destruction des session-
-        $this->session->cote_mmse = null;
-        $this->session->exercice_id = null; 
-
-        // //creation de la session de la cote
-        // $this->session->set_userdata($d);
-        //===redirection a la page voir_resultat===        
-        redirect('passation/voir_resultat_mmse');
     }
 
     //===Recuperer le dernier niveau d'un patient===
@@ -348,77 +73,38 @@ class Passation extends CI_Controller {
        
         return $niveau;
     }
-    
-    public function voir_resultat_mmse()
-    {
-        //===recuperation de la dernière cote et du niveau===
-        if($this->input->post('exercice_id') != null)
-        {
-            $this->session->orientation = null;
-            $date = $this->input->post('date');
-            $passation = $this->Crud->get_data('passation',[
-                'datepassation' => $date,
-                'exercice_id' => $this->input->post('exercice_id'),
-                'utilisateur_id' => $this->session->id
-                ])[0];
-        }else{
-            $passation = $this->passation->get_last_mmse($this->session->id)[0];
-        }
 
-        $niveau = $this->last_niveau();
-
-        $d['cote'] = $passation->resultat;
-        $d['date'] = $passation->datepassation;
-        $d['niveau'] = $niveau->nom;
-
-        //calcul du pourcentage
-        $d['percent'] = $d['cote']*100/30;
-
-        $this->load->view('patient/resultat_mmse',$d);
-        $this->js_footer();
-    }
-
-   //===Exercices cognitifs===
+   //===Consultation, patient side===
    public function cognitive_exercice()
    {
-       $no_exercice = false; //variable qui permet de verifier s'il y a un exercice a un niveau donné
-       if ($this->input->post('exercice_id') != null) {
-           $exercice = $this->Crud->get_data('exercice', ['id'=>$this->input->post('exercice_id')])[0];
-           $niveau = $this->Crud->get_data('niveau',['id'=>$exercice->niveau_id])[0];
-       }else{
-            $niveau = $this->last_niveau();            
-            if (count($this->exercice->exercice_not_done($niveau->id)) <= 0) {
-                $no_exercice = true;
-            } else {
-                $index = random_int(0, count($this->exercice->exercice_not_done($niveau->id))-1);
-                $exercice = $this->exercice->exercice_not_done($niveau->id)[$index];                
-            }
+        $user_id = $this->session->id;
+        $no_exercice = false; //variable qui permet de verifier s'il y a une consultation lancée
+        $consultation = $this->Crud->get_data('passation',['utilisateur_id'=>$user_id,'started'=>1,'done'=>0]);
+        
+        if(count($consultation) <= 0)
+        {
+            $no_exercice = true;
+        }else{
+            $test = $this->Crud->get_data('exercice',['id'=>$consultation[0]->exercice_id])[0];
         }
+  
         if(!$no_exercice)
         {
-            $questions = $this->Crud->get_data('question', ['exercice_id' => $exercice->id]);
+            $questions = $this->Crud->get_data('question', ['exercice_id' => $test->id]);
 
                 //===parcour de questions===
                 foreach ($questions as $q) {
-                    if (count($this->Crud->get_data('image', ['question_id'=>$q->id])) > 0) {
-                        foreach ($this->Crud->get_data('image', ['question_id'=>$q->id]) as $im) {
-                            $q->image[] = $im;
-                        }
-                    }
-                    if (count($this->Crud->get_data('assertion', ['question_id'=>$q->id])) > 0) {
-                        foreach ($this->Crud->get_data('assertion', ['question_id'=>$q->id]) as $as) {
-                            $q->assertion[] = $as;
-                        }
+                    foreach ($this->Crud->get_data('assertion', ['question_id'=>$q->id]) as $as) {
+                        $q->assertion[] = $as;
                     }
                 }
 
-                $d['exercice'] = $exercice;
+                $d['test'] = $test;
                 $d['questions'] = $questions;
-                $d['niveau'] = $niveau->nom;
 
                 //===session de la cote===
-                $this->session->set_userdata(['cote_cognitive'=>0]);
-                $this->session->set_userdata(['exercice_id'=>$exercice->id]);
+                $this->session->set_userdata(['answer'=>[]]);
+                $this->session->set_userdata(['consultation_id'=>$consultation[0]->id]);
         }
 
         $d['no_exercice'] = $no_exercice;
@@ -431,77 +117,46 @@ class Passation extends CI_Controller {
    {
         $question_id = $this->input->post('question_id');
         $response = $this->input->post('answer');     
-        $cote = 0;
-        $cote_cognitve = $this->session->cote_cognitive;
-        $cote = $this->question->checkAnswer($question_id,$response);
 
-        if($cote > 0)
-        {
-            $cote_cognitve += $cote;
-            $this->session->set_userdata(['cote_cognitive'=>$cote_cognitve]);
-        }
+        $sess_reponse = $this->session->answer;
+        $sess_reponse[$question_id] = $response;
 
-        //===enregistrement de la reponse===
-        $this->Crud->add_data('reponse',['reponse'=>$response,'question_id'=>$question_id]);
+        $this->session->set_userdata(['answer'=>$sess_reponse]);
         
-        echo $this->session->cote_cognitive;
+        echo $this->session->answer[$question_id];
         die();
    }
 
    //===Traitement du formulaire exercice cogntif===
    public function cognitive_exercice_process()
-   {
-       //===creer une nouvelle passation===
-       $this->Crud->add_data('passation',array(
-        'datepassation' => date('d-m-Y, H:i'),
-        'resultat' => $this->session->cote_cognitive,
-        'utilisateur_id' => $this->session->id,
-        'exercice_id' => $this->session->exercice_id
-        ));
+    {
+       //===recuperation de donnees de la session===
+       $consultation_id = $this->session->consultation_id;
+       $answer = $this->session->answer;
 
-        $exercice = $this->Crud->get_data('exercice',['id'=>$this->session->exercice_id])[0];
-        $max_exercice = $exercice->maximum;
-        $exercice_niveau = $this->Crud->get_data('niveau',['id'=>$exercice->niveau_id])[0];
-        $indice = $exercice_niveau->indice;
-        $recommandation = null;
+       //===cloture de la consultation===
+       $this->Crud->update_data('passation',['id'=>$consultation_id],
+       ['datepassation' => date('d-m-Y, H:i',time()),'done' => 1]);
 
-        //===Creation d'une recommandation par rapport a la cote===
-        $percent_got = $this->session->cote_cognitive * 100 / $max_exercice;
-
-        //===recuperation des recommandation===        
-        $recommandation = $this->recommandation->create_recommandation($percent_got,$indice);  
-        //permet de verifier si cet exercce n'est pas deja dans la liste d'exercices.      
-        $check_rec = $this->Crud->get_data('recommandation',['exercice_id'=>$recommandation->id,
-        'utilisateur_id' => $this->session->id]);
-
-        if($recommandation != null && count($check_rec) == 0) 
+       //===enregistrement de reponses===
+        foreach($answer as $question_id=>$reponse)
         {
-            //===creation d'une recommandation===
-            $this->Crud->add_data('recommandation',array(
-                'utilisateur_id' => $this->session->id,
-                'exercice_id' => $recommandation->id,
-                'on_exe_id' => $this->session->exercice_id
-            ));
+            $this->Crud->add_data('reponse',[
+                'reponse' => $reponse,
+                'question_id' => $question_id,
+                'passation_id' => $consultation_id
+            ]);
         }
 
-        /**
-         * suppression de l'exercice dans la table recommandation
-         * s'il a deja été recommandé au user
-         */
-        $exe_recommanded = $this->Crud->get_data('recommandation',
-        ['exercice_id'=>$this->session->exercice_id,'utilisateur_id'=>$this->session->id]);
+        //===destruction de la session===
+        $this->session->consultation_id = null;
+        $this->session->answer = null;
 
-        if(count($exe_recommanded) > 0)
-        {
-            $this->recommandation->delete_recommanded_exercice($this->session->exercice_id);
-        }
+        $this->session->set_flashdata(['consultation_done'=>true]);
 
-        $this->session->cote_cognitive = null;
-        $this->session->exercice_id = null; 
+        redirect('passation/index');       
+    }
 
-        redirect('passation/voir_resultat_cognitif');
-       
-   }
    public function voir_resultat_cognitif()
    {
        //===recuperation de la dernière cote et du niveau===
@@ -560,7 +215,7 @@ class Passation extends CI_Controller {
        $this->js_footer();
    }
 
-   //===exxercice recommandé===
+   //===exercice recommandé===
    public function recommanded_exercice()
    {
        $exercice_id = $this->input->post('exercice_id');
@@ -578,4 +233,73 @@ class Passation extends CI_Controller {
        }       
    }
   
+   //===new consultation from admin===
+   public function new_consultation()
+   {
+       $patient_id = $this->input->post('patient_id');
+       $name = $this->Crud->get_data('utilisateur',['id'=>$patient_id])[0]->nomcomplet;
+       $rdv_id = $this->input->post('appointment');
+
+       $this->session->set_userdata(['user_patient_id'=> $patient_id]);
+       $this->session->set_userdata(['user_patient_name'=> $name]);
+
+       $this->Crud->add_data('passation',[
+           'utilisateur_id' => $patient_id,
+           'exercice_id' => $this->input->post('exercice'),
+           'rendezvous_id' => $rdv_id
+       ]);
+
+       $this->Crud->update_data('rendezvous',['id'=>$rdv_id],['etat'=>1]);
+
+       $this->session->set_flashdata(['consultation_added'=>true]);
+
+       redirect('utilisateur/user_detail');
+   }
+
+   //===start consultation admin side===
+   public function start_consultation()
+   {
+       $passation = $this->Crud->get_data('passation',['id'=>$this->input->post('passation_id')])[0];
+       $utilisateur = $this->Crud->get_data('utilisateur',['id'=>$passation->utilisateur_id])[0];
+
+       $this->session->set_userdata(['user_patient_id'=> $utilisateur->id]);
+       $this->session->set_userdata(['user_patient_name'=> $utilisateur->nomcomplet]);
+
+       $this->Crud->update_data('passation',['id'=>$passation->id],
+       ['started'=>1,'datestarted'=>date('d-m-Y',time())]);
+
+       $this->session->set_flashdata(['consultation_started'=>true]);
+
+       redirect('utilisateur/user_detail');
+   }
+
+   //===new ordonnance admin side===
+   public function new_ordonnance()
+   {
+       $nb_produit = $this->input->post('nb_produit');
+       $patient_id = $this->input->post('id_patient');
+       $passation_id = $this->input->post('id_passation');
+       $description = '';
+
+       $this->session->set_userdata(['ordonnance_patient_id'=> $patient_id]);
+       $this->session->set_userdata(['ordonnance_passation'=> $passation_id]);
+
+       for($i=1;$i<=$nb_produit;$i++)
+       {
+            $description .= $this->input->post('ordonnance-'.$i);
+            if($i<$nb_produit){$description .= ',';}
+       }
+
+       $this->Crud->add_data('ordonnance',[
+           'numero' => $this->input->post('numero_ordonnance'),
+           'description' => $description,
+           'patient_id' => $patient_id,
+           'passation_id' => $passation_id
+       ]);
+
+       $this->session->set_flashdata(['ordonnance_added'=>true]);
+
+       redirect('utilisateur/voir_resultat');
+   }
 }
+//+27 41 390 1239

@@ -13,32 +13,32 @@
 
     <ul class="navigation">
         <?php 
-            if(trim($this->session->type) == trim('admin')){                
+            if(trim($this->session->type) == trim('admin') || trim($this->session->type) == trim('doctor')){                
         ?>        
                 <li class="navigation__sub">
-                    <a href="#"><i class="zmdi zmdi-account"></i> Utilisateurs</a>
+                    <a href="#"><i class="zmdi zmdi-account"></i> Users</a>
                     <ul>
-                        <li><a href=<?=site_url('utilisateur/index')?>>Liste d'utilisateurs</a></li>               
+                        <li><a href=<?=site_url('utilisateur/index')?>>List of users</a></li>               
                     </ul>
                 </li>
                 <li class="navigation__sub">
-                    <a href="#"><i class="zmdi zmdi-assignment zmdi-hc-fw"></i>Exercices</a>
+                    <a href="#"><i class="zmdi zmdi-assignment zmdi-hc-fw"></i>Tests</a>
                     <ul>
-                        <li><a href=<?=site_url('exercice/index')?>>Liste d'exercices</a></li>
-                        <li><a href=<?=site_url("exercice/add")?>>Nouvel exercice</a></li>                
+                        <li><a href=<?=site_url('exercice/index')?>>List of tests</a></li>
+                        <li><a href=<?=site_url("exercice/add")?>>New test</a></li>                
                     </ul>
                 </li>
         <?php
             }else{
         ?>
               <li>
-                    <a href=<?=site_url('passation')?> id="home"><i class="zmdi zmdi-home"></i>Acceuil</a>                   
+                    <a href=<?=site_url('passation')?> id="home"><i class="zmdi zmdi-home"></i>Home</a>                   
                 </li>
                 <li>
-                    <a href=<?=site_url('exercice/view_recommandation')?>><i class="zmdi zmdi-card-membership zmdi-hc-fw"></i> Recommandations</a>                   
+                    <a href=<?=site_url('exercice/view_consultations')?>><i class="zmdi zmdi-card-membership zmdi-hc-fw"></i> All past consultations</a>                   
                 </li>
                 <li>
-                    <a href=<?=site_url('acceuil/view_guide')?>><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i>  Guide d'utilisation</a>                   
+                    <a href=<?=site_url('acceuil/view_guide')?>><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i>  User manual</a>                   
                 </li>
         <?php
             }

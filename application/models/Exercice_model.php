@@ -7,7 +7,6 @@ class Exercice_model extends CI_Model
     {
         $this->db->select("*,exercice.id as id")
                  ->from('exercice')                 
-                 ->join('niveau','exercice.niveau_id = niveau.id')
                  ->order_by('exercice.id','DESC');
         
         return $this->db->get()->result();
