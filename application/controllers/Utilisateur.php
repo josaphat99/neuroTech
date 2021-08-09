@@ -31,12 +31,16 @@ class Utilisateur extends CI_Controller {
 	//list de users
 	public function index()
 	{
-		if(trim($this->session->type) == trim('admin'))
+		if(trim($this->session->type) == trim('admin') || trim($this->session->type) == trim('doctor') 
+		|| trim($this->session->type) == trim('reception'))
 		{
 			$doc = $this->Crud->get_data('utilisateur',['type'=>'doctor']);
 			$patients = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
 			$d['admins'] = $this->Crud->get_data('utilisateur',['type'=>'admin']);			
-			$d['appointment'] = $this->Crud->get_data('rendezvous',['etat'=>0]);
+			$d['appointment'] = $this->session->type == 'doctor'?$this->Crud->get_data('rendezvous',['etat'=>0,'doctor_id'=>$this->session->id]):[];
+			$consultation_ask = $this->Crud->get_data('recommandation');
+			
+			$d['consultation_ask'] = $consultation_ask;
 			$d['doctors'] = $doc;
 			$d['patients'] = $patients;
 
@@ -46,15 +50,23 @@ class Utilisateur extends CI_Controller {
 				$a->patient = $this->Crud->get_data('utilisateur',['id'=>$a->patient_id])[0]->nomcomplet;
 			}
 
-			$d['add'] = $this->load->view('admin/add_patient',[],true);
-			$d['new_appointment'] = $this->load->view('admin/new_appointment',['doctor'=>$doc,'patient'=>$patients],true);
+			foreach($consultation_ask as $a)
+			{
+				$a->doctor = $a->doctor_id != null? $this->Crud->get_data('utilisateur',['id'=>$a->doctor_id])[0]->nomcomplet:'Any doctor';
+				$a->patient = $this->Crud->get_data('utilisateur',['id'=>$a->utilisateur_id])[0]->nomcomplet;
+			}
 
+			$d['add'] = $this->load->view('admin/add_patient',[],true);
+			
+			$d['add_doctor'] = $this->load->view('admin/add_doctor',[],true);
+			$d['new_appointment'] = $this->load->view('admin/new_appointment',['doctor'=>$doc,'patient'=>$patients],true);
+			
 			$this->load->view('admin/users',$d);
 			$this->load->view('layout/js');
 			$this->load->view('layout/footer');
 		}
 		else{
-			redirect('login');
+			redirect('signinup/connexion');
 		}		
 	}
 	
@@ -92,7 +104,7 @@ class Utilisateur extends CI_Controller {
 			$ex->doctor = $this->Crud->get_data('utilisateur',['id'=>$ex->doctor_id])[0]->nomcomplet;
 		}
 		
-		$appointment = $this->Crud->get_data('rendezvous',['patient_id'=>$id,'etat'=>0]);
+		$appointment = $this->Crud->get_data('rendezvous',['patient_id'=>$id,'doctor_id'=>$this->session->id,'etat'=>0]);
 
 		foreach($appointment as $a)
 		{
@@ -112,8 +124,7 @@ class Utilisateur extends CI_Controller {
 		$d['name_patient'] = $name;
 		$d['id_patient'] = $id;
 		$d['appointment'] = $appointment;
-		$d['ordonnance'] = $this->Crud->get_data('ordonnance',['patient_id'=>$id]);
-
+		$d['ordonnance'] = $this->Crud->get_data('ordonnance',['patient_id'=>$id]);		
         $this->load->view('admin/user_detail',$d);
 		$this->load->view('layout/js');
 		$this->load->view('layout/footer');
@@ -136,7 +147,7 @@ class Utilisateur extends CI_Controller {
         return $niveau;
     }
 
-	//voir resultat cote admin
+	//voir resultat de la consultation cote admin
 	public function voir_resultat()
 	{
 		if($this->input->post('id_patient') != null)
@@ -178,5 +189,16 @@ class Utilisateur extends CI_Controller {
 		$this->load->view('layout/footer');
 	}
 
+	//add a doctor
+	public function add_doctor()
+	{
+		$_POST['type'] = 'doctor';
+		
+		$this->Crud->add_data('utilisateur',$_POST);
+
+		$this->session->set_flashdata(['doctor_added'=>true]);
+
+		redirect('utilisateur/index');
+	}
 	
 }

@@ -82,6 +82,7 @@ class Exercice extends CI_Controller {
 			 {
 			 	$d = array(
 			 		'question' => $this->input->post('question'.$i),
+					 'type' => $this->input->post('type'.$i),
 			 		'exercice_id' => $id_exercice
 			 	);
 
@@ -220,6 +221,7 @@ class Exercice extends CI_Controller {
 		foreach($e as $ex)
 		{
 			$ex->doctor = $this->Crud->get_data('utilisateur',['id'=>$ex->doctor_id])[0]->nomcomplet;
+			$ex->ordonnance = $this->Crud->get_data('ordonnance',['passation_id'=>$ex->passation_id]);
 		}
 
 		$d['exercices'] = $e;      

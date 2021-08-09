@@ -32,11 +32,13 @@
                                     <td class="text-center">
                                         <?php
                                             // $action = $e->type == 'mmse'? 'voir_resultat_mmse' : 'voir_resultat_cognitif'; ?>
-                                        <form action=<?=site_url('passation/voir_resultat_patient')?> method="post">
-                                            <input type="text" name="exercice_id" value=<?=$e->id?> hidden>
-                                            <input type="text" name="date" value="<?=$e->datepassation?>" hidden>
-                                            <button class="btn btn-success btn--raised" title="Voir"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
-                                        </form>                                                                      
+                                        <form action=<?=site_url('passation/voir_ordonnance_patient')?> method="post">
+                                            <input type="text" name="exercice_titre" value="<?=$e->titre?>" hidden>
+                                            <input type="text" name="doctor" value="<?=$e->doctor?>" hidden> 
+                                            <input type="text" name="date_passation" value="<?=date('d-m-Y',strtotime($e->datepassation))?>" hidden>                                           
+                                            <input type="text" name="passation_id" value="<?=$e->passation_id?>" hidden>
+                                            <button class="btn btn-success btn--raised" title="Voir"><i class="zmdi zmdi-eye zmdi-hc-fw"></i>&nbsp;<span class="badge-pill"><?=count($e->ordonnance)?></span></button>
+                                        </form>                                                                    
                                     </td>
                                 </tr>
                         <?php

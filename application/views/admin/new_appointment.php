@@ -1,4 +1,4 @@
-<div class="card animated zoomIn" id="new_appointment" hidden>
+<div class="card animated fadeIn" id="new_appointment" hidden>
     <div class="card-body">
         <header class="content__title">
             <h1><b>Create an appointment</b></h1>
@@ -6,25 +6,7 @@
         <form class="row">
             <div class="col-md-6 offset-md-3">
                 <div class="form-group form-group--float">
-                    <label style="margin-top:-9px">Doctor</label>
-                    <div class="select">
-                        <select class="form-control" name="doctor" id="doctor-from-new-appointment">
-                            <option></option>
-                            <?php
-                                foreach($doctor as $d){
-                            ?>
-                                    <option value=<?=$d->id?>><?=$d->nomcomplet?></option>
-                            <?php
-                                }
-                            ?>                    
-                        </select>
-                        <i class="form-group__bar"></i>
-                    </div>            
-                    <i class="form-group__bar"></i>
-                </div>                   
-
-                <div class="form-group form-group--float">
-                    <label style="margin-top:-9px">Patient</label>
+                    <label style="margin-top:-9px">Select a patient</label>
                     <div class="select">
                         <select class="form-control" name="patient" id="patient-from-new-appointment">
                             <option></option>
@@ -41,9 +23,10 @@
                     <i class="form-group__bar"></i>
                 </div> 
 
-                <div class="form-group form-group--float">                        
+                <div class="form-group form-group--float">
+                    <span>Date</span>                        
                     <input type="date" class="form-control" id="date">
-                    <label>Date</label>
+                    <label></label>
                     <i class="form-group__bar"></i>
                 </div>
 

@@ -82,6 +82,14 @@ class SignInUp extends CI_Controller
                 {
                     redirect('utilisateur/index'); 
                 }
+                else if(trim($res[0]->type) == trim("doctor"))
+                {
+                    redirect('utilisateur/index'); 
+                }
+                else if(trim($res[0]->type) == trim("reception"))
+                {
+                    redirect('utilisateur/index'); 
+                }
                 else{
                     redirect('passation'); 
                 }
@@ -127,7 +135,7 @@ class SignInUp extends CI_Controller
         {
             $this->Crud->update_data('utilisateur',['id'=>$id],$_POST);
 
-            if($this->session->type == 'admin')
+            if($this->session->type == 'admin' || $this->session->type == 'reception' || $this->session->type == 'doctor')
             {
                 redirect('utilisateur/index');
             }

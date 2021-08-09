@@ -13,14 +13,17 @@
 
     <ul class="navigation">
         <?php 
-            if(trim($this->session->type) == trim('admin') || trim($this->session->type) == trim('doctor')){                
+            if(trim($this->session->type) == trim('admin') || trim($this->session->type) == trim('doctor') || trim($this->session->type) == trim('reception')){                
         ?>        
                 <li class="navigation__sub">
                     <a href="#"><i class="zmdi zmdi-account"></i> Users</a>
                     <ul>
                         <li><a href=<?=site_url('utilisateur/index')?>>List of users</a></li>               
                     </ul>
-                </li>
+                </li>               
+        <?php
+            }if(trim($this->session->type) == trim('doctor')){
+        ?>
                 <li class="navigation__sub">
                     <a href="#"><i class="zmdi zmdi-assignment zmdi-hc-fw"></i>Tests</a>
                     <ul>
@@ -29,7 +32,8 @@
                     </ul>
                 </li>
         <?php
-            }else{
+            }
+            if(trim($this->session->type) == trim('patient')){
         ?>
               <li>
                     <a href=<?=site_url('passation')?> id="home"><i class="zmdi zmdi-home"></i>Home</a>                   

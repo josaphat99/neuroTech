@@ -1,7 +1,7 @@
 <section class="content">
     <div class="content__inner">
         <header class="content__title">
-        <h1><b>New test</b></h1>            
+            <h1><b>New test</b></h1>            
         </header>
 
         <form action=<?=site_url("exercice/add")?> method="post" id="form" enctype="multipart/form-data">
@@ -34,16 +34,30 @@
                         </div>                       
                     </div>
 
-                    <div class="col-md-6">                        
+                    <div class="col-md-6">      
+
+                        <div class="form-group form-group--float">                
+                            <label style="margin-top:-20px">Type of question</label>
+                            <div class="select">
+                                <select class="form-control type" name=<?="type".$i?> style="margin-top:5px" id=<?="type-".$i?>>
+                                    <option value=""></option>
+                                    <option value="traditionnelle">One answer</option>
+                                    <option value="choixmultiple">Choices</option>                                    
+                                    <option value="description">Description</option>
+                                </select>
+                                <i class="form-group__bar"></i>
+                            </div>                
+                        </div>                 
+
                         <div class="row">
                             <div class="col-md-8 col-xs-3 col-sm-3">
                                 <div class="form-group form-group--float">
-                                    <input type="text" class="form-control nbassert" name=<?="nbassert".$i?> id=<?="nbassert".$i?> autocomplete="off">                                
-                                    <label id=<?="nbassert_label".$i?>>Number of assertions</label>
+                                    <input type="text" class="form-control nbassert" name=<?="nbassert".$i?> id=<?="nbassert".$i?> autocomplete="off" hidden>                                
+                                    <label id=<?="nbassert_label".$i?> hidden>Number of assertions</label>
                                     <i class="form-group__bar"></i>
                                 </div> 
                                 <p class="text-red animated fadeIn" id=<?="error_assert".$i?> hidden>Please enter the number of assertions</p>
-                                <p class="text-red animated fadeIn" id=<?="error_nb_assert".$i?> hidden>You can only have at least 20 assertions</p>
+                                <p class="text-red animated fadeIn" id=<?="error_nb_assert".$i?> hidden>Please, choose a number of assertions from 2 to 20</p>
                             </div>
                             <!--icon plus pour les assertions-->
                             <div class="col-md-2 col-sm-2 text-center" style="margin-top: 33px;">
@@ -70,7 +84,7 @@
 
                 <div class="row">
                     <div style="margin:auto">                                                
-                        <button class="btn btn--icon login__block__btn back"><i class="zmdi zmdi-arrow-left"></i></button>&nbsp;&nbsp;
+                        <button id="<?='back-'.$i?>"class="btn btn--icon login__block__btn back"><i class="zmdi zmdi-arrow-left"></i></button>&nbsp;&nbsp;
                         <button class="btn btn--icon login__block__btn Subtn"><i class="zmdi zmdi-arrow-right"></i></button>
                         <button class="btn login__block__btn ajouter" hidden>Add</button>
                     </div> 
@@ -110,7 +124,7 @@
                     *Partie assertion
                     *Si le champ nbassert est rempli, on verifie les champs assert. 
                     */
-                    if($('#nbassert'+i).val().length <= 0)
+                    if($('#type-'+i).val() == 'choixmultiple' && $('#nbassert'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -140,7 +154,7 @@
                     }
 
                     //===Partie question,cote,type===
-                    if($('#question'+i).val().length <= 0)
+                    if($('#question'+i).val().length <= 0 || $('#type-'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -165,10 +179,9 @@
                         {
                             $('.ajouter').removeAttr('hidden');
                             $('.Subtn').attr('hidden',true);     
-                            $('.back').attr('hidden',true);                  
-                        }    
-
-                        $('.back').removeAttr('disabled');
+                            // $('.back').attr('hidden',true);                  
+                        }                        
+                        
                         $('#'+i).removeClass('affiche');  
                         $('#'+i).attr('hidden',true);
                         $('#'+j).removeAttr('hidden');
@@ -197,7 +210,7 @@
                 if($('#'+i).hasClass('affiche'))
                 {   
                     //===Validation du formulaire===
-                    if($('#nbassert'+i).val().length <= 0)
+                    if($('#type-'+i).val() == 'choixmultiple' && $('#nbassert'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -226,7 +239,7 @@
 
                     }
                     //===partie question,cote,type===
-                    if($('#question'+i).val().length <= 0)
+                    if($('#question'+i).val().length <= 0 || $('#type-'+i).val().length <= 0)
                     {
                         $('#'+i).removeClass('zoomIn');
                         $('#'+i).addClass('shake');
@@ -242,31 +255,62 @@
         })
     /*bouton back*/
     //===A la premiere question===
-        if($('#'+0).hasClass('affiche'))
-        {            
-            $('.back').attr('disabled',true);
-        }
+    $('#back-0').attr('disabled',true);
     //===Au clic===
         $('.back').click(function(e)
         {
             e.preventDefault();
+
             for(var i =0; i < <?=$nbquestion?>; i++)
             {
                 if($('#'+i).hasClass('affiche'))
                 {
                     var j = i - 1;
+                    var p = i + 1;
 
                     $('#'+i).removeClass('affiche');  
                     $('#'+i).attr('hidden',true);
                     $('#'+j).removeAttr('hidden');
-                    $('#'+j).addClass('affiche');                                          
+                    $('#'+j).addClass('affiche');  
+                    
+                    if(p == <?=$nbquestion?>)
+                    {
+                        $('.ajouter').attr('hidden',true);
+                        $('.Subtn').removeAttr('hidden'); 
+                    }
                         
                     i++;break; 
-                }
+                }                
             }
         })
     //===Fin bouton back===
     //===Fin gestion questions===
+
+    //===Gestion du type de question
+    $('.type').change(function(e)
+    {
+        e.preventDefault();
+
+        var id = e.target.getAttribute('id').split('-')[1];        
+
+        if($('#type-'+id).val() == 'choixmultiple')
+        {
+            $('#nbassert'+id).removeAttr('hidden');
+            $('#nbassert_label'+id).removeAttr('hidden');
+            $('#nbassert'+id).removeClass('shake');
+            $('#nbassert_label'+id).removeClass('shake');
+            $('#plus'+id).attr('hidden',true);
+        }else
+        {
+            $('#nbassert'+id).attr('hidden',true);
+            $('#nbassert'+id).val('');
+            $('#nbassert_label'+id).attr('hidden',true);
+            $('#nbassert'+id).removeClass('shake');
+            $('#nbassert_label'+id).removeClass('shake');
+            $('#plus'+id).attr('hidden',true);
+            $('#assert_space'+id).attr('hidden',true);
+        }
+    })
 
     //===Gestion des assertions===  
     $('.nbassert').click(function(e)
@@ -298,12 +342,13 @@
         {
             if($('#'+k).hasClass('affiche'))
             {   
-                if($('#nbassert'+k).val() > 20){
+                if($('#nbassert'+k).val() < 2 ||$('#nbassert'+k).val() > 20)
+                {
                     $('#error_nb_assert'+k).removeAttr('hidden');
                     $('#nbassert'+k).addClass('animated shake');
                     $('#nbassert_label'+k).addClass('animated shake');                    
                 }
-                else if($('#nbassert'+k).val() > 0 && $('#nbassert'+k).val() <=20)
+                else if($('#nbassert'+k).val() > 1 && $('#nbassert'+k).val() <=20)
                 {                                        
                     $.post('<?=site_url('ajax/assertion_ajax')?>', { nbassert: $('#nbassert'+k).val(), num_question: k+1},
                         function(data,textStatus, jqXHR) 

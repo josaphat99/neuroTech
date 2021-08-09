@@ -43,25 +43,51 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5" style="margin:auto">
-                            <div class="form-group form-group--float" id="div-reponse10">                        
-                                <div class="select">
-                                    <label></label>
-                                    <select class="form-control assertion" id=<?="assertion-".$i?> autocomplete="off">
-                                        <option id=<?="assert-".$i?> value="">Assertions</option>
-                                        <?php
-                                            for ($as=0;$as<count($questions[$i]->assertion);$as++) {
-                                                ?>
-                                                <option value='<?=$questions[$i]->assertion[$as]->assertion?>'>
-                                                <?=$questions[$i]->assertion[$as]->assertion?>
-                                                </option>
-                                            <?php
-                                            } ?>                                                                                                                     
-                                    </select>
-                                    <i class="form-group__bar"></i>
+                        <?php
+                            if($questions[$i]->type=='traditionnelle')
+                            {
+                        ?>
+                                <div class="col-md-3" style=<?=$margin_reponse?> id="<?="div-reponse".$i?>">
+                                    <div class="form-group form-group--float">                        
+                                        <input type="text" class="form-control" id=<?="reponse-".$i?> autocomplete="off">
+                                        <label id=<?="label-".$i?>>Answer</label>
+                                        <i class="form-group__bar"></i>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>                        
+                        <?php
+                            }else if($questions[$i]->type=='choixmultiple'){                            
+                        ?>
+                            <div class="col-md-5" style="margin:auto">
+                                <div class="form-group form-group--float" id="div-reponse10">                        
+                                    <div class="select">
+                                        <label></label>
+                                        <select class="form-control assertion" id=<?="assertion-".$i?> autocomplete="off">
+                                            <option id=<?="assert-".$i?> value="">Assertions</option>
+                                            <?php
+                                                for ($as=0;$as<count($questions[$i]->assertion);$as++) {
+                                                    ?>
+                                                    <option value='<?=$questions[$i]->assertion[$as]->assertion?>'>
+                                                    <?=$questions[$i]->assertion[$as]->assertion?>
+                                                    </option>
+                                                <?php
+                                                } ?>                                                                                                                     
+                                        </select>
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                            </div>   
+                        <?php
+                            }else{
+                        ?>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <textarea class="form-control textarea-autosize" placeholder="Start typing..." id="<?='reponse-text'.$i?>"></textarea>
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                        <?php
+                            }
+                        ?>                     
                     </div>
                     <p class="text-red text-center animated fadeIn" id=<?="error_found".$i?> hidden>
                         Please answer before going to the next question!
@@ -112,22 +138,34 @@
             var error_found = false;
        
             //===checking de la reponse===
-            if($('#assertion-'+id).val() == '')
+            if($('#reponse-'+id).val() != null)
             {
-                $('#error_found'+id).removeAttr('hidden');                 
+                $('#answer-'+id).val($('#reponse-'+id).val());
+            }
+
+            if($('#assertion-'+id).val() != null)
+            {
+                $('#answer-'+id).val($('#assertion-'+id).val());
+            }
+
+            if($('#reponse-text'+id).val() != null)
+            {
+                $('#answer-'+id).val($('#reponse-text'+id).val());
+            }
+
+            //===passage a la question suivante===
+            if($('#answer-'+id).val() == '')
+            {
+                $('#error_found'+id).removeAttr('hidden'); 
             }
             else{
-                $('#answer-'+id).val($('#assertion-'+id).val());
                 //===passage a la question suivante===
                 $('#div'+id).attr('hidden',true);
                 $('#div'+idPlus).removeAttr('hidden');
                  //-envoi a ajax-
-                if($('#answer-'+id).val() != '')
-                {
-                    $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
+                $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
                     console.log(data);
-                    })  
-                }
+                })  
                 //===Le bouton terminer===
                 //-affichage-
                 if(idPlus == <?=$question_size-1?>)
@@ -145,21 +183,30 @@
             var error_found = false;
 
             //===checking de la reponse===
-            if($('#assertion-'+id).val() == '')
+            if($('#reponse-'+id).val() != null)
             {
-                $('#error_found'+id).removeAttr('hidden');                
-            }else
+                $('#answer-'+id).val($('#reponse-'+id).val());
+            }
+
+            if($('#assertion-'+id).val() != null)
             {
                 $('#answer-'+id).val($('#assertion-'+id).val());
+            }
 
-                if($('#answer-'+id).val() != '')
-                {
-                    //-envoi a ajax-
-                    $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
-                        console.log(data);
-                        location.assign("<?=site_url("passation/cognitive_exercice_process")?>");
-                    })
-                }
+            if($('#reponse-text'+id).val() != null)
+            {
+                $('#answer-'+id).val($('#reponse-text'+id).val());
+            }
+            //===passage a la question suivante===
+            if($('#answer-'+id).val() == '')
+            {
+                $('#error_found'+id).removeAttr('hidden'); 
+            }else{
+                //-envoi a ajax-
+                $.post("<?=site_url('passation/correct_question_cognitive')?>",{question_id:$('#id-'+id).val(),answer:$('#answer-'+id).val()},function(data){
+                    console.log(data);
+                    location.assign("<?=site_url("passation/cognitive_exercice_process")?>");
+                })                
             }
         })
     })

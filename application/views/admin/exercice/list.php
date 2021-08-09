@@ -81,8 +81,8 @@
     function confirmation(anchor)
     {
         Swal.fire({
-        title: 'Voulez-vous vraiment supprimer cet exercice?',
-        text: "Vous ne serez plus capable de le récupérer!",
+        title: 'Do you realy want to delete this test?',
+        text: "You won't be able to undo this!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -92,8 +92,8 @@
         }).then((result) => {
             if (result.value) {
                 Swal.fire(
-                'Supprimé!',
-                'Exercice supprimé.',
+                'Deleted!',
+                'Test deleted.',
                 'success'
                 )
                 anchor.submit();

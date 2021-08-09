@@ -51,6 +51,10 @@
                     <button type="submit" id="submit-consultation" class="btn btn--icon login__block__btn">
                         <i class="zmdi zmdi-check"></i>
                     </button>
+                    <br><br>
+                    <button type="submit" id="cancel-new_consultation" class="btn btn-secondary">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </form>

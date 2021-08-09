@@ -72,49 +72,20 @@ class Ajax extends CI_Controller
         $d['type'] = 'patient';
         $d['username'] = $this->input->post('username');
         $d['mdp'] = $this->input->post('mdp');
-        $d['lieudeconsultation'] = $this->input->post('lieudeconsultation');
+        $d['birth_date'] = $this->input->post('bthdate');
         $d['phone'] = $this->input->post('phone');
+        $d['town'] = $this->input->post('town');
+        $d['street'] = $this->input->post('street');
+        $d['house_number'] = $this->input->post('house_number');
+        $d['sex'] = $this->input->post('sex');
         //===Insertion===
         $this->Crud->add_data('utilisateur',$d);
-        
-       //===recuperation des donnees dans la BD===
-       $patients = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
-       $html = '';
-       $num = 0;
 
-       foreach($patients as $p)
-       { 
-           $num++;
-           $html .= '<tr>
-                <td style="text-align: center;">'.$num.'</td>                                    
-                <td class="td'.$p->id.'">'.$p->nomcomplet.'</td>
-                <td class="td-form'.$p->id.'" hidden><input id="nomcomplet-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->nomcomplet.'"></td>               
-                <td class="td'.$p->id.'">'.$p->username.'</td>
-                <td class="td-form'.$p->id.'" hidden><input id="username-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->username.'"></td>
-                <td class="td'.$p->id.'">'.$p->email.'</td>
-                <td class="td-form'.$p->id.'" hidden><input id="email-'.$p->id.'" class="form-control animated bounceIn" type="text" value="'.$p->email.'"></td>
-                <td>
-                    <button class="btn btn-success btn--raised edit" id="edit-'.$p->id.'"><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
-                    <button class="btn btn-success btn--raised animated bounceIn check" id="check-'.$p->id.'" hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
-                    <form id="form-delete" onclick="javascript:confirmation($(this));return false;"action="'.site_url("utilisateur/delete").'" method="post" style="float:right;">                                
-                        <input type="hidden" value='.$p->id.' name="id">
-                        <button id="delete" class="btn btn-danger btn--raised" title="Supprimer">
-                            <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
-                        </button>
-                    </form>       
-                    <form action="'.site_url("utilisateur/user_detail").'" method="post" style="float:right; margin-right:60px">                                
-                    <input type="hidden" value='.$p->id.' name="id_patient">
-                    <input type="hidden" value='.$p->nomcomplet.' name="name_patient">
-                    <button id="see" class="btn btn-secondary btn--raised" title="See">
-                        <i class="zmdi zmdi-eye zmdi-hc-fw"></i>
-                    </button>
-                    </form>                                                                           
-                </td>
-            </tr>';    
-       }
+        $this->session->set_flashdata(['user_add'=>true]);
 
-       echo $html;
-       
+        $html = 'Good work';
+
+       echo $html;       
     }
 
     public function edit_user()
@@ -214,7 +185,7 @@ class Ajax extends CI_Controller
         //===Chargement du model===
         $this->load->model('Crud');
         //===-------------------===
-        $d['doctor_id'] = $this->input->post('doctor');
+        $d['doctor_id'] = $this->session->id;
         $d['patient_id'] = $this->input->post('patient');
         $d['date'] = $this->input->post('date');
         $d['heure'] = $this->input->post('heure');
@@ -272,6 +243,39 @@ class Ajax extends CI_Controller
                 </div>';
         
         echo $html;    
+    }
+
+    public function con_detail()
+    {
+        $id = $this->input->post('id');
+
+        //===Chargement du model===
+        $this->load->model('Crud');
+        //===-------------------===
+
+        $this->Crud->update_data('utilisateur',['id'=>$id],['etat'=>1]);
+        $patient = $this->Crud->get_data('utilisateur',['id'=>$id])[0];
+        $username = $patient->username;
+        $mdp = $patient->mdp;
+        $html = $username.'-'.$mdp;        
+
+        echo $html;
+    }
+
+    public function ask_consultation()
+    {
+        //===Chargement du model===
+        $this->load->model('Crud');
+        //===-------------------===
+
+        $doctor_id = $this->input->post('doctor_id');
+
+        $this->Crud->add_data('recommandation',[
+            'doctor_id' => $doctor_id != ''? $doctor_id: null,
+            'utilisateur_id' => $this->session->id,            
+        ]);
+        
+        echo $doctor_id;
     }
 }
 ?>

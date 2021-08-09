@@ -1,31 +1,23 @@
-<div class="card animated fadeIn" id="add" hidden>
+<div class="card animated fadeIn" id="add_doctor" hidden>
     <div class="card-body">
         <header class="content__title">
-            <h1><b>Add a new patient</b></h1>
+            <h1><b>Add a new doctor</b></h1>
         </header>            
-        <form class="row">
+        <form class="row" action="<?=site_url('utilisateur/add_doctor')?>" method="post">
             <div class="col-md-6 offset-md-3">
                 <div class="form-group form-group--float">                        
-                    <input type="text" class="form-control" id="nomcomplet">
+                    <input type="text" class="form-control" name="nomcomplet" required>
                     <label>Full name</label>
                     <i class="form-group__bar"></i>
                 </div>    
-                
-                <div class="form-group form-group--float"> 
-                    <span>Birth date</span>                       
-                    <input type="date" class="form-control" id="birth_date" value="">
-                    <label></label>
-                    <i class="form-group__bar"></i>
-                </div>
 
                 <div class="form-group form-group--float">
                     <label style="margin-top:-9px">Gender</label>
                     <div class="select">
-                        <select class="form-control" name="sex" id="sex">
+                        <select class="form-control" name="sex" id="sex" required>
                             <option value=""></option> 
                             <option value="Male">Male</option>   
                             <option value="Female">Female</option>   
-                            <option value="Female and Pregnant">Female and pregnant</option>       
                         </select>
                         <i class="form-group__bar"></i>
                     </div>            
@@ -33,43 +25,25 @@
                 </div> 
 
                 <div class="form-group form-group--float">                        
-                    <input type="text" class="form-control" id="town">
-                    <label>Town</label>
-                    <i class="form-group__bar"></i>
-                </div>
-
-                <div class="form-group form-group--float">                        
-                    <input type="text" class="form-control" id="street">
-                    <label>Street</label>
-                    <i class="form-group__bar"></i>
-                </div>
-
-                <div class="form-group form-group--float">                        
-                    <input type="text" class="form-control" id="house_number">
-                    <label>House number</label>
-                    <i class="form-group__bar"></i>
-                </div>
-
-                <div class="form-group form-group--float">                        
-                    <input type="email" class="form-control" id="email">
+                    <input type="email" class="form-control" name="email" required>
                     <label>Email</label>
                     <i class="form-group__bar"></i>
                 </div>
 
                 <div class="form-group form-group--float">                        
-                    <input type="text" class="form-control" id="phone">
+                    <input type="text" class="form-control" name="phone" required>
                     <label>Phone number</label>
                     <i class="form-group__bar"></i>
                 </div>
 
                 <div class="form-group form-group--float">                        
-                    <input type="text" class="form-control" id="username">
+                    <input type="text" class="form-control" name="username" required>
                     <label>User name</label>
                     <i class="form-group__bar"></i>
                 </div>
 
                 <div class="form-group form-group--float">                        
-                    <input type="password" class="form-control" id="mdp">
+                    <input type="password" class="form-control" name="mdp" required>
                     <label>Password</label>
                     <i class="form-group__bar"></i>
                 </div>                
@@ -84,6 +58,3 @@
         </form>
     </div>
 </div>
-    
-<hr id="hr" hidden>
-<br id="br" hidden>

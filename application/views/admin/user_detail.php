@@ -169,11 +169,10 @@
 
                 <table id="data-table" class="table table-bordered">
                     <thead class="thead-default">
-                        <tr>
-                            <th>No</th>
-                            <th>Doctor</th>
-                            <th>Date</th>
-                            <th>heure</th>     
+                        <tr class="alert alert-secondary">
+                            <th style="text-align: center;">No</th>
+                            <th style="text-align: center;">Date</th>
+                            <th style="text-align: center;">hour</th>     
                         </tr>
                     </thead>                    
                     <tbody id="t-body">
@@ -182,10 +181,9 @@
                             foreach($appointment as $a)
                             { $num++?> 
                                 <tr>
-                                    <td style="text-align: center;"><?=$num?></td>
-                                    <td style="text-align: center;"><?=$a->doctor?></td>
-                                    <td style="text-align: center;"><?=$a->date?></td>
-                                    <td style="text-align: center;"><?=$a->heure?></td> 
+                                    <td style="text-align: center;" class="alert alert-secondary"><?=$num?></td>
+                                    <td style="text-align: center;" class="alert alert-success"><?=$a->date?></td>
+                                    <td style="text-align: center;" class="alert alert-success"><?=$a->heure?></td> 
                                 </tr>
                         <?php
                             }
@@ -213,7 +211,18 @@
         {
             e.preventDefault();
 
-            $('#new_consultation').removeAttr('hidden');            
+            $('#new_consultation').removeClass('zoomOut'); 
+            $('#new_consultation').addClass('zoomIn');
+            $('#new_consultation').removeAttr('hidden');                                   
+        })
+
+        $('#cancel-new_consultation').click(function(e)
+        {
+            e.preventDefault();
+
+            $('#new_consultation').removeClass('zoomIn');
+            $('#new_consultation').addClass('fadeOutUp');
+            setTimeout(function(){$('#new_consultation').attr('hidden',true);},700)            
         })
     })
 
