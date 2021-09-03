@@ -22,9 +22,9 @@ class Crud extends CI_Model
         return $this->db->get($table)->result();
 	}
 
-	public function get_data_desc_by_field($table,$clause=[],$field)
+	public function get_data_desc_by_field($table,$clause=[],$field = null,$direction = null)
 	{
-		$this->db->order_by($field,'DESC');
+		$this->db->order_by($field,$direction);
         $this->db->where($clause);
         return $this->db->get($table)->result();
 	}
@@ -59,7 +59,7 @@ class Crud extends CI_Model
 
 	public function join_on_view_result($pass_id)
 	{
-		$this->db->select("*, question.id as id_question");
+		$this->db->select("*, question.id as id_question, passation.id as id_passation");
 		$this->db->from('exercice');
 		$this->db->join('passation', 'passation.exercice_id = exercice.id');
 		$this->db->join('question', 'exercice.id = question.exercice_id');

@@ -15,7 +15,7 @@ class Utilisateur extends CI_Controller {
 		$this->load->view('layout/topbar');
 		$this->load->view('layout/sidebar');
 		$this->load->view('layout/preloader');
-		//chargement des model============
+		//=====chargement des model============
 		$this->load->model("Utilisateur_model",'utilisateur');
 		$this->load->model("Passation_model",'passation');
 		$this->load->model("Crud");
@@ -38,7 +38,7 @@ class Utilisateur extends CI_Controller {
 			$patients = $this->Crud->get_data_desc('utilisateur',['type'=>'patient']);
 			$d['admins'] = $this->Crud->get_data('utilisateur',['type'=>'admin']);			
 			$d['appointment'] = $this->session->type == 'doctor'?$this->Crud->get_data('rendezvous',['etat'=>0,'doctor_id'=>$this->session->id]):[];
-			$consultation_ask = $this->Crud->get_data('recommandation');
+			$consultation_ask = $this->Crud->get_data('recommandation',['etat'=>0]);
 			
 			$d['consultation_ask'] = $consultation_ask;
 			$d['doctors'] = $doc;
@@ -130,22 +130,16 @@ class Utilisateur extends CI_Controller {
 		$this->load->view('layout/footer');
     }
 
-	//recuperer ledernier niveau
-	public function last_niveau($id)
-    {
-        $user_id = $id;
+	//Validate a consultation request
+	public function consultation_request()
+	{
+		$id_request = $this->input->post('id_request');
 
-        if(count($this->Crud->get_data('detailniveau',['utilisateur_id'=>$user_id])) > 0)
-        {
-            $niveau = $this->Crud->get_data('niveau',['id'=>
-            $this->Crud->get_data_desc('detailniveau',
-            ['utilisateur_id'=>$user_id])[0]->niveau_id])[0];
-        }else{
-            $niveau = null;
-        }
-       
-        return $niveau;
-    }
+		$this->Crud->update_data('recommandation',['id'=>$id_request],['etat'=>1]);
+
+		$this->session->set_flashdata(['request_validated'=>true]);
+		redirect('utilisateur');
+	}
 
 	//voir resultat de la consultation cote admin
 	public function voir_resultat()
@@ -163,10 +157,11 @@ class Utilisateur extends CI_Controller {
 			$passation_id = $this->session->ordonnance_passation;
 		}
 
-		$reponse = $this->Crud->get_data('reponse',['passation_id'=>$passation_id]);
+		$reponse = $this->Crud->get_data_desc_by_field('reponse',['passation_id'=>$passation_id],'question_id','Asc');
 		$data = $this->Crud->join_on_view_result($passation_id);
-		$ordonnance = $this->Crud->get_data('ordonnance',['passation_id'=>$passation_id]);
-
+		$ordonnance = $this->Crud->get_data('ordonnance',['passation_id'=>$passation_id,'type'=>'doctor']);
+		$ordonnance_patient = $this->Crud->get_data('ordonnance',['passation_id'=>$passation_id,'type'=>'patient']);
+		
 		$reponse_indice = 0;
 
 		foreach($data as $dt)
@@ -181,6 +176,7 @@ class Utilisateur extends CI_Controller {
 		$d['passation_id'] = $passation_id;
 		$d['id_patient'] = $id_patient;
 		$d['ordonnance'] = $ordonnance;
+		$d['ordonnance_patient'] = $ordonnance_patient;
 		$d['data'] = $data;		
 		$d['patient'] = $this->Crud->get_data('utilisateur',['id'=>$id_patient])[0]; 
 		
@@ -199,6 +195,5 @@ class Utilisateur extends CI_Controller {
 		$this->session->set_flashdata(['doctor_added'=>true]);
 
 		redirect('utilisateur/index');
-	}
-	
+	}	
 }

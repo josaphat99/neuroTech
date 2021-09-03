@@ -120,6 +120,8 @@
                                             <form action=<?=site_url('passation/voir_ordonnance_patient')?> method="post">
                                                 <input type="text" name="exercice_titre" value="<?=$e->titre?>" hidden>
                                                 <input type="text" name="doctor" value="<?=$e->doctor?>" hidden> 
+                                                <input type="text" name="diagnostic_file" value="<?=$e->diagnostic_file?>" hidden>
+                                                <input type="text" name="medical_plan_file" value="<?=$e->medical_plan_file?>" hidden>
                                                 <input type="text" name="date_passation" value="<?=date('d-m-Y',strtotime($e->datepassation))?>" hidden>                                           
                                                 <input type="text" name="passation_id" value="<?=$e->passation_id?>" hidden>
                                                 <button class="btn btn-secondary btn--raised" title="Voir"><i class="zmdi zmdi-eye zmdi-hc-fw"></i>&nbsp;<span class="badge-pill"><?=count($e->ordonnance)?></span></button>

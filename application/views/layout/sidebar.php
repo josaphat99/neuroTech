@@ -41,9 +41,9 @@
                 <li>
                     <a href=<?=site_url('exercice/view_consultations')?>><i class="zmdi zmdi-card-membership zmdi-hc-fw"></i> All past consultations</a>                   
                 </li>
-                <li>
-                    <a href=<?=site_url('acceuil/view_guide')?>><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i>  User manual</a>                   
-                </li>
+                <!-- <li>
+                    <a href=<site_url('acceuil/view_guide')?>><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i>  User manual</a>                   
+                </li> -->
         <?php
             }
         ?>

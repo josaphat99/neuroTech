@@ -1,65 +1,49 @@
-<?php
-    if(($this->session->account_created))
-    {
-?>
-        <script>
-            Swal.fire({            
-            icon: 'success',
-            title: 'Compte creé avec succés',
-            showConfirmButton: false,
-            timer: 3000
-            })
-        </script>
-<?php
-    }
-?>
+
 <body data-ma-theme="green">
-        <div class="login">
+    <div class="login animated fadeIn" id="login-section">
 
-            <!-- Login -->
-            <div class="login__block active" id="l-register">
-                <div class="login__block__header">
-                    <i class="zmdi zmdi-account-circle"></i>
-                    Login please       
-                    <div class="actions actions--inverse text-right">
-                        <div class="dropdown">
-                            <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href=<?=site_url("acceuil/view_guide")?>>How to use the app?</a>                               
-                            </div>
+        <!-- Login -->
+        <div class="login__block active" id="l-register">
+            <div class="login__block__header">
+                <i class="zmdi zmdi-account-circle"></i>
+                Login please       
+                <!-- <div class="actions actions--inverse text-right">
+                    <div class="dropdown">
+                        <i data-toggle="dropdown" class="zmdi zmdi-more-vert actions__item"></i>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href=<site_url("acceuil/view_guide")?>>How to use the app?</a>
                         </div>
-                    </div>             
-                </div>                
-                
-                <div class="login__block__body">                   
-                    <form action=<?=site_url("signinup/connexion")?> method="post" id="form">
+                    </div>
+                </div>              -->
+            </div>                
+            
+            <div class="login__block__body">                   
+                <form action=<?=site_url("signinup/connexion")?> method="post" id="form">
 
-                        <div class="form-group form-group--float form-group--centered">
-                            <input type="text" class="form-control" name="username" id="username1">
-                            <label>User name</label>
-                            <i class="form-group__bar"></i>                            
-                        </div>
+                    <div class="form-group form-group--float form-group--centered">
+                        <input type="text" class="form-control" name="username" id="username1">
+                        <label>User name</label>
+                        <i class="form-group__bar"></i>                            
+                    </div>
 
-                        <p><span id="userspan"></span></p>
+                    <p><span id="userspan"></span></p>
 
-                        <div class="form-group form-group--float form-group--centered">
-                            <input type="password" class="form-control" name="mdp" id="mdp1">
-                            <label>Password</label>
-                            <i class="form-group__bar"></i>                            
-                        </div>      
+                    <div class="form-group form-group--float form-group--centered">
+                        <input type="password" class="form-control" name="mdp" id="mdp1">
+                        <label>Password</label>
+                        <i class="form-group__bar"></i>                            
+                    </div>      
 
-                        <p><span id="mdpspan"></span></p>
+                    <p><span id="mdpspan"></span></p>
 
-                        <input type="text" value="login" name="login" hidden>
-                        <p style="color:red"><?=$this->session->error_login?></p>
-                        <button type="submit" id="loginSub" class="btn btn--icon login__block__btn"><i class="zmdi zmdi-check"></i></button>                    
-                    </form>                    
-                </div>         
-            </div>
+                    <input type="text" value="login" name="login" hidden>
+                    <p style="color:red"><?=$this->session->error_login?></p>
+                    <button type="submit" id="loginSub" class="btn btn--icon login__block__btn"><i class="zmdi zmdi-check"></i></button>                    
+                </form>                    
+            </div>         
         </div>
+    </div>    
 
-
-<!--Les scripts-->
 
 <script>
     //=====================validation formulaire de login=======================
@@ -78,15 +62,13 @@
                   
             if(mdp1.value.length <= 0){
                 mdp1.setAttribute("style","border-color:red;transition:2s");
-                mdpspan.innerHTML = "Le mot de passe est requis";
+                mdpspan.innerHTML = "The password is required";
                 mdpspan.setAttribute("style","color:red;transition:1s;")
-                console.log("mdp pass pas");
             }
             if(username1.value.length <= 0){
                 username1.setAttribute("style","border-color:red;transition:1s")
-                userspan.innerHTML = "Le nom d'utilisateur est requis";
+                userspan.innerHTML = "The user name is required";
                 userspan.setAttribute("style","color:red;transition:2s;");
-                console.log("username pass pas");
             }
         }
         else{
@@ -104,3 +86,4 @@
         mdpspan.innerHTML = "";        
     });
 </script>
+

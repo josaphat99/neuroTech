@@ -14,6 +14,7 @@
 <script src=<?= base_url('assets/vendors/sparkline/jquery.sparkline.min.js')?>></script>
 <script src=<?= base_url('assets/vendors/moment/moment.min.js')?>></script>
 <script src=<?= base_url('assets/vendors/fullcalendar/fullcalendar.min.js')?>></script>
+<script src="<?=base_url('assets/js/popper.min.js')?>"></script>
 
 <!-- Charts and maps-->
 <script src=<?= base_url('assets/demo/js/flot-charts/curved-line.js')?>></script>

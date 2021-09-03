@@ -47,7 +47,11 @@ class SignInUp extends CI_Controller
     //===Authentification===
     public function connexion()
     {
-        if (count($_POST) <= 0) {
+        if (count($_POST) <= 0) 
+        {
+            //destruction de la session
+            $this->session->sess_destroy();
+            
             $this->load->view('public/signin');
             $this->load->view('layout/js');        
         } 
@@ -95,7 +99,7 @@ class SignInUp extends CI_Controller
                 }
             }
             else{
-                $session_flash = array("error_login" => "Login ou mot de passe incorrecte!! veuillez reesayer");
+                $session_flash = array("error_login" => "The username or the password is wrong!! Retry please");
                 $this->session->set_flashdata($session_flash);
                 redirect("signinup/connexion");
             }
@@ -107,7 +111,7 @@ class SignInUp extends CI_Controller
     public function deconnexion()
     {
         $this->session->sess_destroy();
-		redirect("signinup/connexion");
+		redirect("acceuil");
     }
 
     //===profile===

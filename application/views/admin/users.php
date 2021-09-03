@@ -31,7 +31,19 @@
         </script>
 <?php
     }
-
+    if(($this->session->request_validated))
+    {
+?>
+        <script>
+            Swal.fire({            
+            icon: 'success',
+            title: 'Request in process',
+            showConfirmButton: false,
+            timer: 3000
+            })
+        </script>
+<?php
+    }
 ?>
 
 <section class="content">
@@ -164,7 +176,7 @@
                             <th>Town</th>
                             <th>Street</th>
                             <th>House number</th>
-                            <th>Actions</th>
+                            <th class="action_patient">Actions</th>
                         </tr>
                     </thead>                    
                     <tbody id="user_space">
@@ -176,16 +188,20 @@
                                     <td style="text-align: center;" class="alert alert-secondary"><?=$num?></td>                                    
                                     <td style="text-align: center;"><?=$p->nomcomplet?></td>
                                     <td style="text-align: center;"><?=date('d-m-Y',strtotime($p->birth_date))?></td>
-                                    <td style="text-align: center;"><?=$p->sex?></td>
-                                    <td style="text-align: center;"><?=$p->town?></td>
-                                    <td style="text-align: center;"><?=$p->street?></td>        
-                                    <td style="text-align: center;"><?=$p->house_number?></td>            
+                                    <td style="text-align: center;"><?=$p->sex?></td>                                    
+                                    <td class="<?='td'.$p->id?>" style="text-align: center;"><?=$p->town?></td>
+                                    <td class="<?='td-form'.$p->id?>" hidden><input id="<?='town-'.$p->id?>" class="form-control animated bounceIn" type="text" value="<?=$p->town?>"></td>
+                                    <td class="<?='td'.$p->id?>" style="text-align: center;"><?=$p->street?></td>
+                                    <td class="<?='td-form'.$p->id?>" hidden><input id="<?='street-'.$p->id?>" class="form-control animated bounceIn" type="text" value="<?=$p->street?>"></td>
+                                    <td class="<?='td'.$p->id?>" style="text-align: center;"><?=$p->house_number?></td>  
+                                    <td class="<?='td-form'.$p->id?>" hidden><input id="<?='house_number-'.$p->id?>" class="form-control animated bounceIn" type="text" value="<?=$p->house_number?>"></td>
+                                    
                                     <td>
                                         <?php 
                                             if ($this->session->type == 'admin') {
                                         ?>
-                                        <button class="btn btn-success btn--raised edit" id=<?='edit-'.$p->id?>><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
-                                        <button class="btn btn-success btn--raised animated bounceIn check" id=<?='check-'.$p->id?> hidden><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
+                                        <button class="btn btn-success btn--raised edit" id=<?='edit-'.$p->id?>><i id=<?='edit_icon-'.$p->id?> class="zmdi zmdi-edit zmdi-hc-fw edit"></i></button>
+                                        <button class="btn btn-success btn--raised animated bounceIn check" id=<?='check-'.$p->id?> hidden><i id=<?='check_icon-'.$p->id?> class="zmdi zmdi-check zmdi-hc-fw check"></i></button>
 
                                         <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("utilisateur/delete")?>" method="post" style="float:right;">                                
                                             <input type="hidden" value="<?=$p->id?>" name="id">
@@ -195,7 +211,8 @@
                                         </form>                                          
                                         <?php
                                         }
-                                            if($this->session->type == 'doctor'){
+                                            if($this->session->type == 'doctor')
+                                            {
                                         ?>
                                         <form action="<?= site_url("utilisateur/user_detail")?>" method="post" style="float:right; margin-right:90px">                                
                                             <input type="hidden" value="<?=$p->id?>" name="id_patient">
@@ -206,17 +223,14 @@
                                         </form>  
                                         <?php
                                         }
-                                        if($this->session->type == 'reception' || $this->session->type == 'admin'){
-                                            $margin_right = $this->session->type == 'reception'? "15px":"10px";
-                                            ?>
-                                            <form action="<?= site_url("utilisateur/user_detail")?>" method="post" style="float:right; margin-right:<?=$margin_right?>">                                
-                                                <input type="hidden" value="<?=$p->id?>" name="id_patient">
-                                                <input type="hidden" value="<?=$p->nomcomplet?>" name="name_patient">
-                                                <?php $disabled = $p->etat == 1? 'disabled': '';?>
-                                                <button id=<?="con_detail-".$p->id?> class="btn btn-secondary btn--raised con_detail" title="Connexion details" <?=$disabled?>>
-                                                    <span><i class="zmdi zmdi-square-down zmdi-hc-fw con_detail"></i><span>
-                                                </button>
-                                            </form>  
+                                        if($this->session->type == 'reception' || $this->session->type == 'admin')
+                                        { 
+                                            $margin_right = $this->session->type == 'reception'? "0px":"-30px";
+                                        ?>
+                                             <?php $disabled = $p->etat == 1? 'disabled': '';?>
+                                                <button id=<?="con_detail-".$p->id?> class="btn btn-secondary btn--raised con_detail" title="Connexion details" <?=$disabled?> style="margin-right:<?=$margin_right?>">
+                                                    <span><i id=<?="con_icon-".$p->id?> class="zmdi zmdi-square-down zmdi-hc-fw con_detail"></i><span>
+                                                </button>                                            
                                             <?php
                                             }
                                         ?>                                                                                                                 
@@ -259,7 +273,7 @@
                             <th>Gender</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th style="width:210px">Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>                    
                     <tbody id="t-body-admin">
@@ -273,8 +287,7 @@
                                     <td style="text-align: center;"><?=$a->sex?></td>
                                     <td style="text-align: center;"><?=$a->email?></td>
                                     <td style="text-align: center;"><?=$a->phone?></td>
-                                    <td>
-                                        <button class="btn btn-success btn--raised edit" id=<?='edit-'.$a->id?>><i class="zmdi zmdi-edit zmdi-hc-fw"></i></button>
+                                    <td>                                     
                                         
                                         <form id="form-delete" onclick='javascript:confirmation($(this));return false;'action="<?= site_url("utilisateur/delete")?>" method="post" style="float:right;">                                
                                             <input type="hidden" value="<?=$a->id?>" name="id">
@@ -282,15 +295,11 @@
                                                 <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
                                             </button>
                                         </form> 
-                                                                        
-                                        <form action="<?= site_url("utilisateur/user_detail")?>" method="post" style="float:right; margin-right:20px">                                
-                                            <input type="hidden" value="<?=$a->id?>" name="id_patient">
-                                            <input type="hidden" value="<?=$a->nomcomplet?>" name="name_patient">
-                                            <?php $disabled = $a->etat == 1? 'disabled': '';?>
-                                            <button id="see" class="btn btn-secondary btn--raised" title="Connexion details" <?=$disabled?>>
-                                                <span><i class="zmdi zmdi-square-down zmdi-hc-fw"></i> <span>
-                                            </button>
-                                        </form> 
+
+                                        <?php $disabled = $a->etat == 1? 'disabled': '';?>
+                                        <button id=<?="con_detail-".$a->id?> class="btn btn-secondary btn--raised con_detail" title="Connexion details" <?=$disabled?> style="margin-right:-45px">
+                                            <span><i id=<?="con_icon-".$a->id?> class="zmdi zmdi-square-down zmdi-hc-fw con_detail"></i> <span>
+                                        </button>
                                     </td>
                                 </tr>
                         <?php
@@ -367,12 +376,14 @@
                             <th>Date</th>
                             <th>heure</th>                            
                         </tr>
-                    </thead>                    
+                    </thead>  
+
                     <tbody id="appointment_space">
+                    <?php if(count($appointment) > 0){?>
                         <?php
                             $num = 0;
-                            foreach($appointment as $a)
-                            { $num++?> 
+                            foreach ($appointment as $a) {
+                                $num++?> 
                                 <tr>
                                     <td style="text-align: center;" class="alert alert-secondary"><?=$num?></td>
                                     <td style="text-align: center;" class="alert alert-success"><?=$a->patient?></td>
@@ -381,9 +392,13 @@
                                 </tr>
                         <?php
                             }
-                        ?>                                                          
+                        }else{
+                            ?>               
+                <p class="text-center">You don't have any appointment!</p>
+                <?php
+                }?>
                     </tbody>
-                </table>  
+                </table> 
             </div>
         </div>
     </div>
@@ -424,9 +439,12 @@
                                         <td style="text-align: center;" class="<?=$class?>"><?=$a->patient?></td>
                                         <td style="text-align: center;" class="<?=$class?>"><?=$a->doctor?></td>
                                         <td style="text-align: center;" class="<?=$class?>">
-                                            <button class="btn-success">
-                                                <i class="zmdi zmdi-check zmdi-hc-fw"></i> 
-                                            </button>                                        
+                                            <form action="<?=site_url('utilisateur/consultation_request')?>" method="post">
+                                                <input type="hidden" name="id_request" value="<?=$a->id?>">
+                                                <button class="btn-success" type="submit">
+                                                    <i class="zmdi zmdi-check zmdi-hc-fw"></i> 
+                                                </button>  
+                                            </form>                                                                                  
                                         </td>
                                     </tr>
                             <?php
@@ -549,11 +567,12 @@ if($this->session->type == 'admin'){
             e.preventDefault();
 
             var id = e.target.getAttribute('id').split('-')[1];
-           
+
             $('.td'+id).attr('hidden',true);
             $('.td-form'+id).removeAttr('hidden'); 
             $('#edit-'+id).attr('hidden',true);
             $('#check-'+id).removeAttr('hidden');
+            $(".action_patient").css('width','180px');
         })
 
         $('.check').click(function(e)
@@ -562,20 +581,15 @@ if($this->session->type == 'admin'){
 
             var id = e.target.getAttribute('id').split('-')[1];
 
-            var nomcomplet = $('#nomcomplet-'+id).val();
-            var type = $('#type-'+id).val();
-            var username = $('#username-'+id).val();
-            var email = $('#email-'+id).val();
+            var town = $('#town-'+id).val();
+            var street = $('#street-'+id).val();
+            var house_number = $('#house_number-'+id).val();
 
-            $.post('<?=site_url('ajax/edit_user')?>', { nomcomplet: nomcomplet, email: email, username:username,
-                type:type,id:id},
+            $.post('<?=site_url('ajax/edit_user')?>', { town: town, street: street, house_number:house_number,
+                id:id},
                     function(data,textStatus, jqXHR) 
                     {
-                        $("#user_space").html(data);
-                        $('.td'+id).removeAttr('hidden');
-                        $('.td-form'+id).attr('hidden',true); 
-                        $('#edit-'+id).removeAttr('hidden');
-                        $('#check-'+id).attr('hidden',true);                       
+                      location.assign('<?=site_url("utilisateur")?>')                    
                     }
                 )
         })        
@@ -631,12 +645,26 @@ if($this->session->type == 'admin'){
                 var username = response.split('-')[0];
                 var mdp = response.split('-')[1];
                 // alert(username+' '+mdp);
-                Swal.fire({      
-                title: 'Connexion details',
-                html : '<br/><h4>Username : '+username+'</h4><br/><h4>Password : '+mdp+'</h4>',
-                showConfirmButton: true,
-                })
+                if(navigator.onLine)
+                {
+                    Swal.fire({      
+                    title: 'Connexion details',
+                    html : '<br/><h4>Username : '+username+'</h4><br/><h4>Password : '+mdp+'</h4>',
+                    showConfirmButton: true,
+                    })
+                }else{
+                    alert("Username : "+username+"  Password : "+mdp);
+                }
+               
             })
         })
     })
 </script> 
+<!-- 
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+  // true for mobile device
+  document.write("mobile device");
+}else{
+  // false for not mobile device
+  document.write("not mobile device");
+} -->
