@@ -36,7 +36,7 @@
                     <i class="form-group__bar"></i>
                 </div>
 
-                <div class="form-group form-group--float">                        
+                <!-- <div class="form-group form-group--float">                        
                     <input type="text" class="form-control" name="username" required>
                     <label>User name</label>
                     <i class="form-group__bar"></i>
@@ -46,7 +46,7 @@
                     <input type="password" class="form-control" name="mdp" required>
                     <label>Password</label>
                     <i class="form-group__bar"></i>
-                </div>                
+                </div>                 -->
                 
                 <div class="text-center">
                     <p id="error_message" class="text-red animated fadeInUp" hidden>Please give all the informations needed!!</p>

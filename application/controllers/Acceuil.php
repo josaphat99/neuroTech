@@ -8,7 +8,7 @@ class Acceuil extends CI_Controller {
 		parent::__construct();
 		$this->load->view('layout/header');
 		$this->load->view('layout/css');
-		$this->load->view('layout/preloader');		
+		//$this->load->view('layout/preloader');		
 	}
 	
 	public function index()

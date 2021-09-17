@@ -189,6 +189,8 @@ class Utilisateur extends CI_Controller {
 	public function add_doctor()
 	{
 		$_POST['type'] = 'doctor';
+		$_POST['username'] = strtolower(explode(' ',$this->input->post('nomcomplet'))[0]);
+        $_POST['mdp'] = '@'.strtolower(explode(' ',$this->input->post('nomcomplet'))[0]).date('Y',time());
 		
 		$this->Crud->add_data('utilisateur',$_POST);
 

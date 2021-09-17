@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// require __DIR__ . '/vendor/autoload.php';
+// use Twilio\Rest\Client;
+
 class Ajax extends CI_Controller
 {
     public function assertion_ajax()
@@ -70,8 +73,8 @@ class Ajax extends CI_Controller
         $d['nomcomplet'] = $this->input->post('nomcomplet');
         $d['email'] = $this->input->post('email');
         $d['type'] = 'patient';
-        $d['username'] = $this->input->post('username');
-        $d['mdp'] = $this->input->post('mdp');
+        $d['username'] = strtolower(explode(' ',$this->input->post('nomcomplet'))[0]);
+        $d['mdp'] = '@'.strtolower(explode(' ',$this->input->post('nomcomplet'))[0]).date('Y',time());
         $d['birth_date'] = $this->input->post('bthdate');
         $d['phone'] = $this->input->post('phone');
         $d['town'] = $this->input->post('town');
@@ -132,29 +135,8 @@ class Ajax extends CI_Controller
         $d['heure'] = $this->input->post('heure');
         //===Insertion===
         $this->Crud->add_data('rendezvous',$d);
-        
-       //===recuperation des donnees dans la BD===
-       $appoint = $this->Crud->get_data_desc('rendezvous',['etat'=>0]);
-       $html = '';
-       $num = 0;
 
-       foreach($appoint as $a)
-       {
-           $num++;
-           $doctor = $this->Crud->get_data('utilisateur',['id'=>$a->doctor_id])[0]->nomcomplet;
-           $patient = $this->Crud->get_data('utilisateur',['id'=>$a->patient_id])[0]->nomcomplet;
-           $html .='
-           <tr>
-               <td style="text-align: center;">'.$num.'</td>
-               <td >'.$doctor.'</td>
-               <td>'.$patient.'</td>
-               <td>'.$a->date.'</td>
-               <td>'.$a->heure.'</td>
-           </tr>
-           ';           
-       }
-
-       echo $html;
+        echo 'well done';
     }
 
     public function ordonnance()

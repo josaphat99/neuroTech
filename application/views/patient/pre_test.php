@@ -213,11 +213,11 @@
             }     
         });
 
-        $("#assertion-7").change(function(e)
+        $("#assertion-6").change(function(e)
         {
             e.preventDefault();
 
-            if($("#assertion-7").val() == 'No')
+            if($("#assertion-6").val() == 'No')
             {
                 $('.Terminer').removeAttr('hidden');
                 $('.Subtn').attr('hidden',true);                

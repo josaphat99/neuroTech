@@ -527,8 +527,8 @@ if($this->session->type == 'admin'){
         //===selection des elements ajout d'un patient===
         var nom = $('#nomcomplet');
         var email = $('#email');
-        var username = $('#username');
-        var mdp = $('#mdp');
+        // var username = $('#username');
+        // var mdp = $('#mdp');
         var bthdate = $('#birth_date');
         var phone = $('#phone');
         var sex = $('#sex');
@@ -540,8 +540,7 @@ if($this->session->type == 'admin'){
         {
             e.preventDefault();
 
-            if(nom.val().length <= 0 || email.val().length <= 0 || username.val().length <= 0
-            || mdp.val().length <= 0 || bthdate.val().length <= 0 || phone.val().length <= 0
+            if(nom.val().length <= 0 || email.val().length <= 0 || bthdate.val().length <= 0 || phone.val().length <= 0
             || sex.val().length <= 0 || town.val().length <= 0 || street.val().length <= 0
             || house_number.val().length <= 0)
             {
@@ -551,8 +550,7 @@ if($this->session->type == 'admin'){
             {
                 $('#error_message').attr('hidden',true);
 
-                $.post('<?=site_url('ajax/add_user')?>', { nomcomplet: nom.val(), email: email.val(), username:username.val(),
-                mdp:mdp.val(),bthdate:bthdate.val(),phone:phone.val(),sex:sex.val(),town:town.val(),street:street.val(),house_number:house_number.val()},
+                $.post('<?=site_url('ajax/add_user')?>', { nomcomplet: nom.val(), email: email.val(), bthdate:bthdate.val(),phone:phone.val(),sex:sex.val(),town:town.val(),street:street.val(),house_number:house_number.val()},
                     function(data,textStatus, jqXHR) 
                     {
                        location.assign('<?=site_url('utilisateur/index')?>');           
@@ -626,7 +624,7 @@ if($this->session->type == 'admin'){
                 heure:heure.val()},
                     function(data,textStatus, jqXHR) 
                     {
-                        console.log(data);            
+                        // console.log(data);            
                         location.assign("<?=site_url("utilisateur/index")?>");                        
                     }
                 )
