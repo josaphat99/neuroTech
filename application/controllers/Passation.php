@@ -44,7 +44,7 @@ class Passation extends CI_Controller {
         foreach($e as $ex)
 		{
 			$ex->doctor = $this->Crud->get_data('utilisateur',['id'=>$ex->doctor_id])[0]->nomcomplet;
-            $ex->ordonnance = $this->Crud->get_data('ordonnance',['passation_id'=>$ex->passation_id]);
+            $ex->ordonnance = $this->Crud->get_data('ordonnance',['passation_id'=>$ex->passation_id,'type'=>'doctor']);
         }
         
         foreach($appointment as $a)
@@ -54,7 +54,7 @@ class Passation extends CI_Controller {
 
         $d['ask_consultation'] = $this->load->view('patient/ask_consultation',['doctors'=>$doc],true);
 
-        $d['ordonnance'] = $this->Crud->get_data('ordonnance',['patient_id'=>$user_id]);
+        $d['ordonnance'] = $this->Crud->get_data('ordonnance',['patient_id'=>$user_id,'type'=>'doctor']);
         $d['appointment'] = $appointment;
         $d['consultation'] = $consultation;
         $d['exercices'] = $e;      
@@ -84,14 +84,17 @@ class Passation extends CI_Controller {
         $user_id = $this->session->id;
         $no_exercice = false; //variable qui permet de verifier s'il y a une consultation lancée
         $consultation = $this->Crud->get_data('passation',['utilisateur_id'=>$user_id,'started'=>1,'done'=>0]);
-        
+        $test = null;
+
         if(count($consultation) <= 0)
         {
             $no_exercice = true;
         }else{
             $test = $this->Crud->get_data('exercice',['id'=>$consultation[0]->exercice_id])[0];
         }
-  
+
+        $d['no_exercice'] = $no_exercice;
+
         if(!$no_exercice)
         {
             $questions = $this->Crud->get_data('question', ['exercice_id' => $test->id]);
@@ -114,10 +117,17 @@ class Passation extends CI_Controller {
                 //===session de reponses===
                 $this->session->set_userdata(['answer'=>[]]);
                 $this->session->set_userdata(['consultation_id'=>$consultation[0]->id]);
-        }
 
-        $d['no_exercice'] = $no_exercice;
-        $this->load->view('patient/exercice_cognitif',$d);
+                if($test->type == 'pre_test')
+                {
+                    $this->load->view('patient/pre_test',$d);            
+                }else{
+                    $this->load->view('patient/exercice_cognitif',$d);
+                }
+        }else{
+            $this->load->view('patient/exercice_cognitif',$d);
+        }
+        
         $this->js_footer();
    }
 
@@ -161,9 +171,10 @@ class Passation extends CI_Controller {
         $this->session->consultation_id = null;
         $this->session->answer = null;
 
-        $this->session->set_flashdata(['consultation_done'=>true]);
+      
 
-        redirect('passation/index');       
+        $this->load->view('patient/check_prescription',['consultation_id'=>$consultation_id]);
+        $this->js_footer();     
     }
 
    public function voir_resultat_cognitif()
@@ -224,23 +235,6 @@ class Passation extends CI_Controller {
        $this->js_footer();
    }
 
-   //===exercice recommandé===
-   public function recommanded_exercice()
-   {
-       $exercice_id = $this->input->post('exercice_id');
-       $exercice = $this->Crud->get_data('exercice',['id'=>$exercice_id])[0];
-
-       if($exercice->type == 'mmse')
-       {
-           $d = $this->mmse_base($exercice);
-           $d['recommanded'] = true;
-           $this->load->view('patient/mmse',$d);
-           $this->js_footer();
-       }
-       else{
-           $this->cognitive_exercice();
-       }       
-   }
   
    //===new consultation from admin===
    public function new_consultation()
@@ -314,15 +308,54 @@ class Passation extends CI_Controller {
    //===voir_ordonnance_patient===
    public function voir_ordonnance_patient()
    {
-        $passation_id = $this->input->post('passation_id');
+       $passation_id = $this->input->post('passation_id');
 
-        $d['ordonnance'] = $this->Crud->get_data('ordonnance',['passation_id'=>$passation_id]);
+        $d['ordonnance'] = $this->Crud->get_data('ordonnance',['passation_id'=>$passation_id,'type'=>'doctor']);
         $d['doctor'] = $this->input->post('doctor');
         $d['titre'] = $this->input->post('exercice_titre');
         $d['date_passation'] = $this->input->post('date_passation');
+        $d['medical_plan_file'] = $this->input->post('medical_plan_file');
+        $d['diagnostic_file'] = $this->input->post('diagnostic_file');
 
         $this->load->view('patient/view_ordonnance',$d);
         $this->js_footer();
    }
+   
+   public function check_prescription()
+   {
+       if(count($_POST) <= 0)
+       {
+        $this->load->view('patient/check_prescription');
+        $this->js_footer();
+       }
+       else{
+            $nb_prod = $this->input->post('prod_number');
+            $consultation_id = $this->input->post('consultation_id');
+
+            if($nb_prod != null)
+            {
+                $descript = '';
+
+                for ($i = 0; $i < $nb_prod; $i++) 
+                {
+                    $j = $i + 1;
+                    $descript .= $j == $nb_prod ? $this->input->post('prod'.$j):$this->input->post('prod'.$j).',';
+                    
+                }
+
+                $this->Crud->add_data('ordonnance',[
+                    'description' => $descript,
+                    'patient_id' => $this->session->id,
+                    'type' => 'patient',
+                    'passation_id' => $consultation_id
+                ]);
+            }
+
+            $this->session->set_flashdata(['consultation_done'=>true]);
+            redirect('passation/index');  
+       }
+        
+   }
+    
 }
 //+27 41 390 1239

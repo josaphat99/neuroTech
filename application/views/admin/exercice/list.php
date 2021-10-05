@@ -87,8 +87,8 @@
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Valider',
-        cancelButtonText: 'Annuler',
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancel',
         }).then((result) => {
             if (result.value) {
                 Swal.fire(

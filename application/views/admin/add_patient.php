@@ -61,7 +61,7 @@
                     <label>Phone number</label>
                     <i class="form-group__bar"></i>
                 </div>
-
+<!-- 
                 <div class="form-group form-group--float">                        
                     <input type="text" class="form-control" id="username">
                     <label>User name</label>
@@ -72,7 +72,7 @@
                     <input type="password" class="form-control" id="mdp">
                     <label>Password</label>
                     <i class="form-group__bar"></i>
-                </div>                
+                </div>                 -->
                 
                 <div class="text-center">
                     <p id="error_message" class="text-red animated fadeInUp" hidden>Please give all the informations needed!!</p>

@@ -99,7 +99,8 @@
                     <thead class="thead-default">
                         <tr class="text-center">
                             <th>No</th>                            
-                            <th>Doctor</th>  
+                            <th>Doctor</th>
+                            <th>Test</th>  
                             <th>Appointment date</th>
                             <th>Start Date</th>                        
                             <th>Done Date</th>
@@ -113,21 +114,22 @@
                         $num++?> 
                                 <tr>
                                     <td style="text-align: center;"><?=$num?></td>
-                                    <td style="text-align: center;"><?=$e->doctor?></td>
+                                    <td style="text-align: center;"><?=$e->doctor_id == $this->session->id? "You":$e->doctor?></td>
+                                    <td style="text-align: center;"><?=$e->titre?></td>
                                     <td style="text-align: center;"><?=date('d-m-Y',strtotime($e->date))?></td>
                                     <td style="text-align: center;"><?=$e->started==1? $e->datestarted: 'None'?></td>                       
                                     <td style="text-align: center;"><?=$e->done==1?date('d-m-Y',strtotime($e->datepassation)): 'None'?></td>
                                     <td class="text-center">     
-                                        <?php $style="float:right";?>                          
+                                        <?php $style= $e->doctor_id == $this->session->id?"float:right":"";?>                          
                                         <form action=<?=site_url('utilisateur/voir_resultat')?> method="post" style='<?=$e->started==0? $style:""?>'>
                                             <input type="text" name="exercice_id" value=<?=$e->id?> hidden>
                                             <input type="text" name="id_patient" value=<?=$id_patient?> hidden>
                                             <input type="text" name="date" value="<?=date('d-m-Y',strtotime($e->datepassation))?>" hidden>
                                             <input type="text" name="passation" value="<?=$e->passation_id?>" hidden>
-                                            <button class="btn btn-success btn--raised" title="See"><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
+                                            <button class="btn btn-success btn--raised" title="See" <?=$e->doctor_id == $this->session->id?"":"disabled"?>><i class="zmdi zmdi-eye zmdi-hc-fw"></i></button>
                                         </form>
                                     <?php
-                                        if ($e->started ==0) {
+                                        if ($e->started ==0 && $e->doctor_id == $this->session->id) {
                                             ?>                              
                                         <form action=<?=site_url('passation/start_consultation')?> method="post" style="margin-left:-30px">
                                             <input type="text" name="passation_id" value="<?=$e->passation_id?>" hidden>
